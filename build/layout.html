@@ -1,0 +1,126 @@
+<!doctype html>
+<html lang="de" class="no-js">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>{{title}} — CONVIVIO</title>
+<meta name="description" content="{{description}}">
+<meta name="theme-color" content="{{themecolor}}">
+<link rel="canonical" href="https://convivio.example/{{path}}">
+
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="CONVIVIO">
+<meta property="og:title" content="{{title}} — CONVIVIO">
+<meta property="og:description" content="{{description}}">
+<meta property="og:locale" content="de_DE">
+
+<script>document.documentElement.className=document.documentElement.className.replace(/\bno-js\b/,'js')</script>
+
+<link rel="preload" href="{{base}}assets/fonts/fraunces-latin.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="preload" href="{{base}}assets/fonts/inter-latin.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="stylesheet" href="{{base}}assets/css/site.css">
+<link rel="icon" href="{{base}}assets/img/favicon.svg" type="image/svg+xml">
+{{head}}
+</head>
+<body{{worldattr}}>
+
+<a class="skip-link" href="#main">Zum Inhalt springen</a>
+
+<header class="site-header">
+  <div class="wrap site-header__inner">
+    <a class="wordmark" href="{{base}}index.html">
+      CONVIVIO{{wordmarkdesc}}
+    </a>
+
+    <nav class="nav" aria-label="Hauptnavigation">
+      <a href="{{base}}weddings.html"{{cur_weddings}}>Weddings</a>
+      <a href="{{base}}hospitality.html"{{cur_hospitality}}>Hospitality</a>
+      <a href="{{base}}produkte/bundles.html"{{cur_shop}}>Shop</a>
+      <a href="{{base}}custom.html"{{cur_custom}}>Custom</a>
+      <a href="{{base}}about.html"{{cur_about}}>About</a>
+      <a href="{{base}}faq.html"{{cur_faq}}>FAQ</a>
+    </nav>
+
+    <button class="nav-toggle" type="button" aria-expanded="false" aria-controls="mobile-nav" aria-label="Menü">
+      <span></span><span></span><span></span>
+    </button>
+  </div>
+
+  <div class="mobile-nav wrap" id="mobile-nav">
+    <ul>
+      <li><a href="{{base}}weddings.html">Weddings</a></li>
+      <li><a href="{{base}}hospitality.html">Hospitality</a></li>
+      <li><a href="{{base}}produkte/bundles.html">Shop</a></li>
+      <li><a href="{{base}}custom.html">Custom Experiences</a></li>
+      <li><a href="{{base}}about.html">About</a></li>
+      <li><a href="{{base}}faq.html">FAQ</a></li>
+      <li><a href="{{base}}kontakt.html">Kontakt</a></li>
+    </ul>
+  </div>
+</header>
+
+<main id="main">
+{{content}}
+</main>
+
+<footer class="site-footer">
+  <div class="wrap">
+    <div class="site-footer__cols">
+      <div>
+        <a class="wordmark" href="{{base}}index.html">CONVIVIO</a>
+        <p class="small" style="margin:var(--s4) 0 0;max-width:26ch">
+          Digital experiences, beautifully made. For everyone who welcomes someone.
+        </p>
+      </div>
+
+      <div>
+        <h2>Weddings</h2>
+        <ul>
+          <li><a href="{{base}}weddings.html">Übersicht</a></li>
+          <li><a href="{{base}}produkte/wedding-website.html">Wedding Website</a></li>
+          <li><a href="{{base}}produkte/digital-invitation.html">Digital Invitation</a></li>
+          <li><a href="{{base}}produkte/photo-qr.html">Photo QR</a></li>
+          <li><a href="{{base}}produkte/bundles.html">Bundles</a></li>
+          <li><a href="{{base}}demo/hochzeit.html">Live-Demo</a></li>
+        </ul>
+      </div>
+
+      <div>
+        <h2>Hospitality</h2>
+        <ul>
+          <li><a href="{{base}}hospitality.html">Übersicht</a></li>
+          <li><a href="{{base}}hospitality/ferienwohnungen.html">Ferienwohnungen</a></li>
+          <li><a href="{{base}}hospitality/hotels.html">Hotels</a></li>
+          <li><a href="{{base}}demo/gaestemappe.html">Live-Demo</a></li>
+        </ul>
+      </div>
+
+      <div>
+        <h2>Haus</h2>
+        <ul>
+          <li><a href="{{base}}about.html">Über uns</a></li>
+          <li><a href="{{base}}custom.html">Custom Experiences</a></li>
+          <li><a href="{{base}}faq.html">FAQ</a></li>
+          <li><a href="{{base}}kontakt.html">Kontakt</a></li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="site-footer__base">
+      <nav aria-label="Rechtliches" style="display:flex;flex-wrap:wrap;gap:var(--s2) var(--s5)">
+        <a href="{{base}}recht/impressum.html">Impressum</a>
+        <a href="{{base}}recht/datenschutz.html">Datenschutz</a>
+        <a href="{{base}}recht/agb.html">AGB</a>
+        <a href="{{base}}recht/widerruf.html">Widerruf</a>
+        <a href="{{base}}recht/avv.html">AVV</a>
+        <a href="{{base}}recht/barrierefreiheit.html">Barrierefreiheit</a>
+      </nav>
+      <span>© <span id="year">2026</span> CONVIVIO</span>
+    </div>
+  </div>
+</footer>
+
+<script src="{{base}}assets/js/site.js" defer></script>
+<script>document.getElementById('year').textContent=new Date().getFullYear()</script>
+</body>
+</html>

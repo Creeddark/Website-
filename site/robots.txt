@@ -1,0 +1,7 @@
+User-agent: *
+Allow: /
+
+# Rechtstexte sind Entwürfe — bis zur anwaltlichen Freigabe nicht indexieren
+Disallow: /recht/
+
+Sitemap: https://convivio.example/sitemap.xml

@@ -1,0 +1,54 @@
+<!-- {
+  "title": "Kontakt",
+  "description": "Fragen zu Produkten, Anfragen für Custom Experiences oder Hospitality — so erreichen Sie uns.",
+  "world": "",
+  "nav": ""
+} -->
+
+<section class="section section--tight">
+  <div class="wrap">
+    <p class="label" style="margin-bottom:var(--s5)">Kontakt</p>
+    <h1 class="display-l" style="max-width:14ch">
+      <span class="reveal-line"><span>Schreiben Sie uns.</span></span>
+    </h1>
+    <p class="subhead" style="margin-top:var(--s5)">
+      Werktags antworten wir innerhalb von 24 Stunden. Von Mai bis September
+      auch am Wochenende — weil Hochzeiten samstags stattfinden.
+    </p>
+  </div>
+</section>
+
+<section class="section">
+  <div class="wrap split">
+    <div>
+      <p class="label" style="margin-bottom:var(--s5)">Direkt</p>
+      <ul class="feature-list">
+        <li><b>Allgemeine Fragen</b><span>hallo@[domain]</span></li>
+        <li><b>Hospitality und B2B</b><span>hospitality@[domain]</span></li>
+        <li><b>Custom Experiences</b><span>custom@[domain]</span></li>
+        <li><b>Datenschutz</b><span>datenschutz@[domain]</span></li>
+      </ul>
+      <div class="note" style="margin-top:var(--s6)">
+        <p class="label">Noch Platzhalter</p>
+        <p>
+          Die Adressen werden gesetzt, sobald der Markenname und die Domain
+          feststehen. Die vollständigen Anbieterangaben stehen dann im
+          <a class="link" href="{{base}}recht/impressum.html">Impressum</a>.
+        </p>
+      </div>
+    </div>
+
+    <form class="stack stack--5" data-demo-form="Danke — im echten Betrieb ginge Ihre Nachricht jetzt an unser Postfach. Dieses Formular ist noch nicht mit einem Endpunkt verbunden.">
+      <div class="field"><label for="k-name">Name</label><input id="k-name" type="text" required autocomplete="name"></div>
+      <div class="field"><label for="k-mail">E-Mail</label><input id="k-mail" type="email" required autocomplete="email"></div>
+      <div class="field"><label for="k-topic">Thema</label>
+        <select id="k-topic"><option>Frage zu einem Produkt</option><option>Bestellung oder Rechnung</option><option>Hospitality und B2B</option><option>Custom Experience</option><option>Presse</option><option>Etwas anderes</option></select>
+      </div>
+      <div class="field"><label for="k-msg">Nachricht</label><textarea id="k-msg" rows="5" required></textarea></div>
+      <label class="checkbox"><input type="checkbox" required>
+        <span>Ich habe die <a class="link" href="{{base}}recht/datenschutz.html">Datenschutzerklärung</a> zur Kenntnis genommen.</span></label>
+      <button class="btn btn--primary" type="submit" style="align-self:flex-start">Nachricht senden</button>
+      <p class="small" role="status" tabindex="-1" data-form-status hidden></p>
+    </form>
+  </div>
+</section>

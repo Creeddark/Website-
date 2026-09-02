@@ -1,0 +1,47 @@
+<!doctype html>
+<html lang="de" class="no-js">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>{{title}}</title>
+<meta name="description" content="{{description}}">
+<meta name="theme-color" content="{{themecolor}}">
+<meta name="robots" content="index, follow">
+<link rel="canonical" href="https://convivio.example/{{path}}">
+<script>document.documentElement.className=document.documentElement.className.replace(/\bno-js\b/,'js')</script>
+<link rel="preload" href="{{base}}assets/fonts/fraunces-latin.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="preload" href="{{base}}assets/fonts/inter-latin.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="stylesheet" href="{{base}}assets/css/site.css">
+<link rel="icon" href="{{base}}assets/img/favicon.svg" type="image/svg+xml">
+{{head}}
+</head>
+<body{{worldattr}} class="is-demo">
+
+<a class="skip-link" href="#main">Zum Inhalt springen</a>
+
+<!-- Demo-Leiste: macht unmissverständlich klar, dass dies eine Vorschau ist -->
+<div class="demobar">
+  <div class="demobar__inner">
+    <span class="demobar__tag">Live-Demo</span>
+    <span class="demobar__text">{{demonote}}</span>
+    <a class="demobar__cta" href="{{base}}{{democta}}">{{democtalabel}}</a>
+  </div>
+</div>
+
+<main id="main">
+{{content}}
+</main>
+
+<footer class="demo-foot">
+  <div class="wrap">
+    <p class="small">
+      Eine Experience von <a class="link" href="{{base}}index.html">CONVIVIO</a> —
+      digital experiences, beautifully made.
+    </p>
+  </div>
+</footer>
+
+<script src="{{base}}assets/js/site.js" defer></script>
+<script src="{{base}}assets/js/demo.js" defer></script>
+</body>
+</html>
