@@ -110,6 +110,10 @@
   --s5: 24px; --s6: 32px;  --s7: 48px;  --s8: 64px;
   --s9: 96px; --s10: 128px; --s11: 160px;
 
+  /* Zeilenmass. 68 Zeichen ist die Obergrenze, ab der das Auge beim
+     Zeilenwechsel die naechste Zeile nicht mehr sicher findet. */
+  --measure: 68ch;
+
   --radius: 3px;
   --radius-lg: 10px;
 
@@ -214,7 +218,7 @@ button, input, select, textarea { font: inherit; color: inherit; }
 }
 .label--seg { color: var(--seg); }
 .lede { font-size: var(--t-subhead); line-height: 1.55; color: var(--ink-700); }
-.small { font-size: var(--t-small); color: var(--ink-500); }
+.small { font-size: var(--t-small); color: var(--ink-500); max-width: var(--measure); }
 .tiny { font-size: var(--t-tiny); color: var(--ink-500); }
 .muted { color: var(--ink-500); }
 .prose { max-width: var(--prose); }
@@ -238,7 +242,8 @@ a { color: inherit; }
 @media (min-width: 1100px) { .wrap { padding-inline: 64px; } }
 
 .section { padding-block: var(--s8); }
-@media (min-width: 900px) { .section { padding-block: var(--s10); } }
+/* VISUAL_DENSITY 3: eine Stufe mehr Luft auf der vorhandenen Skala. */
+@media (min-width: 900px) { .section { padding-block: var(--s11); } }
 .section--tight { padding-block: var(--s7); }
 @media (min-width: 900px) { .section--tight { padding-block: var(--s8); } }
 .section + .section { padding-top: 0; }
@@ -365,7 +370,9 @@ a { color: inherit; }
 .btn {
   display: inline-flex; align-items: center; justify-content: center; gap: var(--s2);
   min-height: 52px; padding: 0 var(--s6);
-  font-size: var(--t-label); font-weight: 600; letter-spacing: 0.16em; text-transform: uppercase;
+  /* Satzschreibweise. Gesperrte Versalien auf jedem Knopf lassen eine
+     Seite schreien; im Hero standen vier solche Elemente nebeneinander. */
+  font-size: var(--t-small); font-weight: 600; letter-spacing: 0.01em;
   text-decoration: none; cursor: pointer;
   border: 1px solid transparent; border-radius: var(--radius);
   transition: background-color var(--fast) var(--ease), color var(--fast) var(--ease),
@@ -384,7 +391,7 @@ a { color: inherit; }
 
 .arrow-link {
   display: inline-flex; align-items: center; gap: var(--s2);
-  font-size: var(--t-label); font-weight: 600; letter-spacing: 0.16em; text-transform: uppercase;
+  font-size: var(--t-small); font-weight: 600; letter-spacing: 0.01em;
   text-decoration: none; color: var(--ink-900); padding-bottom: 5px;
   border-bottom: 1px solid var(--seg); transition: border-color var(--fast) var(--ease);
 }
@@ -445,7 +452,11 @@ img.plate[src$="produkt-technik.svg"] { object-fit: contain; background: var(--s
 
 /* ---------- 09 · KARTEN & LISTEN --------------------------------------- */
 
-.feature-list { list-style: none; margin: 0; padding: 0; border-top: 1px solid var(--line); }
+/* font-size hier setzen, nicht nur an b und span: die Einheit ch loest sich
+   an der Schriftgroesse DIESES Elements auf. Bei geerbten 17px waeren 68ch
+   real 83 Zeichen des 14px grossen Textes darin. */
+.feature-list { list-style: none; margin: 0; padding: 0; border-top: 1px solid var(--line);
+                font-size: var(--t-small); max-width: var(--measure); }
 .feature-list li { padding: var(--s4) 0; border-bottom: 1px solid var(--line-soft); display: grid; gap: var(--s1); }
 .feature-list b { font-weight: 600; font-size: var(--t-small); }
 .feature-list span { font-size: var(--t-small); color: var(--ink-500); }
@@ -468,7 +479,9 @@ img.plate[src$="produkt-technik.svg"] { object-fit: contain; background: var(--s
 }
 /* Auf dunklem Grund reicht ink-700 nicht für 4.5:1 */
 .is-dark .limits li, .is-dark .checklist li { color: color-mix(in srgb, var(--on-deep) 92%, transparent); }
-.limits li::before { content: "—"; color: var(--ink-300); }
+/* Vorher ein Geviertstrich als Zeichen. Eine gezeichnete Haarlinie sitzt
+   ruhiger auf der Grundlinie und ist kein Schriftzeichen mehr. */
+.limits li::before { content: ""; width: 12px; height: 1px; margin-top: 11px; background: var(--ink-300); }
 
 .steps { list-style: none; margin: 0; padding: 0; display: grid; gap: var(--s5); counter-reset: step; }
 @media (min-width: 800px) { .steps { grid-template-columns: repeat(3, 1fr); gap: var(--s6); } }
@@ -517,36 +530,94 @@ table.data tr.is-hero td, table.data tr.is-hero th { background: var(--surface);
 
 /* ---------- 10 · SEGMENTE ---------------------------------------------- */
 
-.segments { display: grid; gap: var(--s4); }
-@media (min-width: 700px)  { .segments { grid-template-columns: 1fr 1fr; } }
-@media (min-width: 1050px) { .segments { grid-template-columns: repeat(3, 1fr); } }
+/* ---------- SEGMENT-VERZEICHNIS ---------------------------------------- */
+/* Vorher: sechs gleich grosse Karten in einem 3x2-Raster, jede mit Icon in
+   getoenter Kachel, Titel, Satz, Preis und einem gesperrten "ANSEHEN".
+   Das ist das Muster, an dem man erzeugte Seiten erkennt, und es brachte
+   alle sechs Segmentfarben gleichzeitig ins Bild.
 
-.seg-card {
-  display: flex; flex-direction: column; gap: var(--s3);
-  padding: var(--s6) var(--s5) var(--s5);
-  border: 1px solid var(--line); border-radius: var(--radius-lg);
-  background: var(--bg); text-decoration: none; color: inherit;
-  transition: border-color var(--base) var(--ease), transform var(--base) var(--ease),
-              background-color var(--base) var(--ease);
+   Jetzt ein Verzeichnis. Die Ueberschrift steht daneben statt darueber
+   (DESIGN_VARIANCE 7: asymmetrische Bruchteile, kein Masonry), die Eintraege
+   laufen als Zeilen darunter, getrennt von je einer Haarlinie. Name, Satz
+   und Preis stehen in drei Spalten, sodass alle Preise auf einer Achse
+   untereinander liegen und sich vergleichen lassen.
+
+   Der Akzent ist ausschliesslich Gold. Die sechs Segmentfarben leben auf
+   den Segmentseiten, wo jeweils nur eine davon sichtbar ist. */
+.seg-index { display: grid; gap: var(--s7); align-items: start; }
+@media (min-width: 900px) {
+  .seg-index { grid-template-columns: 0.72fr 1.68fr; gap: var(--s6) var(--s8); }
+  /* Die Ueberschrift laeuft mit, solange das Verzeichnis scrollt. */
+  .seg-index__head { position: sticky; top: 112px; }
 }
-.seg-card:hover { border-color: var(--seg); background: var(--seg-tint); transform: translateY(-2px); }
-.seg-card__top { display: flex; align-items: center; gap: var(--s3); }
-.seg-card__mark {
-  width: 34px; height: 34px; flex: none; border-radius: var(--radius);
-  background: var(--seg-tint); border: 1px solid var(--seg);
-  display: grid; place-items: center; color: var(--seg);
+.seg-index__head > p + p { margin: var(--s4) 0 0; }
+.seg-index__head .display-m { margin: var(--s4) 0 0; }
+.seg-index__head .seg-index__lede { margin: var(--s5) 0 0; color: var(--ink-700); max-width: 34ch; }
+
+.seg-list { list-style: none; margin: 0; padding: 0; border-bottom: 1px solid var(--line); }
+
+/* Eine Linie pro Zeile, nicht zwei. Oben am Eintrag, unten einmal am Ende
+   der Liste; ein Strich ueber UND unter jeder Zeile ist doppelt gemoppelt. */
+.seg-row {
+  display: grid; gap: var(--s2); align-items: baseline;
+  grid-template-columns: minmax(0, 1fr);
+  padding: var(--s5) var(--s4);
+  margin-inline: calc(var(--s4) * -1);
+  border-top: 1px solid var(--line);
+  text-decoration: none; color: inherit;
+  transition: background-color var(--fast) var(--ease);
 }
-.seg-card__mark svg { width: 17px; height: 17px; }
-.seg-card:hover .seg-card__mark { background: var(--bg); }
-.seg-card__title { font-family: "Playfair Display", Georgia, serif; font-size: 1.3125rem; font-weight: 500; margin: 0; line-height: 1.2; }
-.seg-card__pain { font-size: var(--t-small); color: var(--ink-700); margin: 0; flex: 1; }
-.seg-card__meta {
-  display: flex; flex-wrap: wrap; gap: var(--s2) var(--s4); align-items: baseline;
-  padding-top: var(--s3); border-top: 1px solid var(--line-soft);
-  font-size: var(--t-tiny); color: var(--ink-500);
+@media (min-width: 768px) {
+  .seg-row {
+    /* auto in der letzten Spalte: alle Preise richten sich am breitesten
+       Preis aus, daher stehen sie exakt untereinander. */
+    /* max-content als Untergrenze: die Spalte ist immer mindestens so
+       breit wie der laengste Name (gemessen 227px), egal welche Namen
+       spaeter dazukommen. Vorher brach "Hotels & Pensionen" bei 215px um. */
+    grid-template-columns: minmax(max-content, 1.06fr) minmax(0, 1.6fr) auto;
+    gap: var(--s2) var(--s5);
+    padding-block: var(--s6);
+  }
 }
-.seg-card__price { font-weight: 600; color: var(--ink-900); font-variant-numeric: tabular-nums; }
-.seg-card__go { font-size: var(--t-label); letter-spacing: 0.16em; text-transform: uppercase; color: var(--seg); font-weight: 600; }
+
+.seg-row__name {
+  display: flex; align-items: center; gap: var(--s3);
+  font-family: "Playfair Display", Georgia, serif;
+  font-size: 1.375rem; font-weight: 500; line-height: 1.2; color: var(--ink-900);
+  text-wrap: balance;
+  transition: color var(--fast) var(--ease);
+}
+.seg-row__name svg { width: 19px; height: 19px; flex: none; color: var(--ink-300);
+                     transition: color var(--fast) var(--ease); }
+.seg-row__pain { font-size: var(--t-small); color: var(--ink-700); margin: 0; }
+.seg-row__price {
+  display: flex; align-items: baseline; gap: var(--s2); flex-wrap: wrap;
+  font-size: var(--t-small); font-weight: 600; color: var(--ink-900);
+  font-variant-numeric: tabular-nums;
+}
+@media (min-width: 768px) {
+  .seg-row__price { display: block; text-align: right; }
+}
+.seg-row__note { display: block; font-size: var(--t-tiny); font-weight: 400; color: var(--ink-500); }
+@media (min-width: 768px) { .seg-row__note { margin-top: 3px; } }
+
+/* Der Pfeil ersetzt sechsmal "ANSEHEN" in gesperrten Versalien. */
+.seg-row__go { display: none; }
+@media (min-width: 768px) {
+  .seg-row { position: relative; }
+  .seg-row__go {
+    display: block; position: absolute; right: calc(var(--s4) * -1 + 2px);
+    top: 50%; margin-top: -0.6em; color: var(--gold-ink);
+    opacity: 0; transform: translateX(-6px);
+    transition: opacity var(--fast) var(--ease), transform var(--fast) var(--ease);
+  }
+  .seg-row { padding-right: var(--s7); }
+}
+.seg-row:hover { background: color-mix(in srgb, var(--gold-soft) 45%, transparent); }
+.seg-row:hover .seg-row__name { color: var(--gold-ink); }
+.seg-row:hover .seg-row__name svg { color: var(--gold-ink); }
+.seg-row:hover .seg-row__go { opacity: 1; transform: translateX(0); }
+.seg-row:focus-visible { background: color-mix(in srgb, var(--gold-soft) 45%, transparent); }
 
 
 /* ---------- 11 · PREISE ------------------------------------------------ */
@@ -768,8 +839,12 @@ table.data tr.is-hero td, table.data tr.is-hero th { background: var(--surface);
 .hero--onDark .btn--secondary:hover { background: var(--on-deep); color: var(--deep); border-color: var(--on-deep); }
 
 /* Preisanker im Hero */
+/* Vorher eine Kette aus drei Angaben, verbunden durch Mittelpunkte. Jetzt
+   trennt Raum statt eines Zeichens, und auf schmalen Schirmen bricht die
+   Reihe sauber um, statt die Punkte mitzunehmen. */
 .hero__anchor {
-  display: inline-flex; align-items: center; gap: var(--s3); margin-top: var(--s5);
+  list-style: none; margin: var(--s5) 0 0; padding: 0;
+  display: flex; flex-wrap: wrap; gap: var(--s3) var(--s6);
   font-size: var(--t-small); color: color-mix(in srgb, var(--on-deep) 84%, transparent);
 }
 .hero__anchor b { color: var(--on-deep); font-variant-numeric: tabular-nums; }
@@ -810,14 +885,18 @@ table.data tr.is-hero td, table.data tr.is-hero th { background: var(--surface);
   background: color-mix(in srgb, var(--deep) 92%, transparent);
 }
 .hero-car__head { display: flex; align-items: center; gap: var(--s3); }
+/* Gold statt Segmentfarbe. Das Karussell zeigt nacheinander alle sechs
+   Segmente; mit --seg-deep liefen ueber eine Runde alle sechs Akzentfarben
+   durch den Hero. Die Segmentfarben gehoeren auf die Segmentseiten, wo
+   jeweils nur eine sichtbar ist. */
 .hero-car__mark {
-  flex: none; width: 24px; height: 24px; color: var(--seg-deep, var(--on-deep));
+  flex: none; width: 24px; height: 24px; color: var(--gold);
 }
 .hero-car__mark svg { width: 100%; height: 100%; display: block; }
 .hero-car__name {
   font-family: "Playfair Display", Georgia, serif; font-weight: 500; margin: 0;
   font-size: var(--t-heading); line-height: 1.15; letter-spacing: -0.014em;
-  color: var(--seg-deep, var(--on-deep));
+  color: var(--on-deep);
 }
 .hero-car__pain {
   margin: 0; font-size: var(--t-small); line-height: 1.5;
