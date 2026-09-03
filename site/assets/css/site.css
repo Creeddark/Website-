@@ -808,7 +808,11 @@ table.data tr.is-hero td, table.data tr.is-hero th { background: var(--surface);
   transition: width var(--fast) var(--ease), background-color var(--fast) var(--ease);
 }
 .js .hero-car__dot:hover i { background: color-mix(in srgb, var(--on-deep) 62%, transparent); }
-.js .hero-car__dot[aria-current="true"] i { animation: none; background: var(--on-deep); width: 32px; }
+/* Der gewählte Punkt wird NICHT über eine eigene Regel hell gesetzt: site.js
+   stellt beim Klick alle sechs Punktanimationen auf denselben Zeitpunkt, dann
+   leuchtet genau der richtige. Ein „animation: none" hier hätte die Animation
+   entfernt — beim nächsten Klick begänne sie neu bei 0 und ein zweiter Punkt
+   bliebe hell. aria-current bleibt die Angabe für Vorleseprogramme. */
 
 .js .hero-car__toggle {
   appearance: none; cursor: pointer; display: inline-flex; align-items: center; gap: var(--s2);

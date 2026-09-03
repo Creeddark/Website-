@@ -164,6 +164,13 @@
       if (!anims.length) return;
       carPicked = i;
       anims[0].currentTime = i * CAR_STEP;
+      /* Die Punkte mitziehen. Bleiben sie stehen, wo sie gerade waren,
+         leuchten zwei gleichzeitig: der angeklickte und der, bei dem die
+         Animation eingefroren wurde. */
+      carDots.forEach(function (d) {
+        var f = d.firstChild;
+        if (f && f.getAnimations) f.getAnimations().forEach(function (a) { a.currentTime = i * CAR_STEP; });
+      });
       car.classList.add("is-paused");
       setToggle(true);
       markDots();
