@@ -17,6 +17,13 @@
   }
 
   /* ---- Mobile Navigation ----------------------------------------------- */
+  /* Der Pause-Knopf des Karussells hiess weiter unten ebenfalls "toggle".
+     Da die ganze Datei EINE Funktion ist und var funktionsweit gilt, war es
+     dieselbe Variable: der Aufbau des Karussells ueberschrieb die Referenz
+     auf den Burger, bevor je jemand klickte. Ein Klick auf den Burger setzte
+     aria-expanded danach auf dem Karussellknopf. Sichtbare Folgen: das
+     Menuesymbol wurde nie zum X, Escape schloss die Navigation nicht, und
+     ein Screenreader meldete "zugeklappt", waehrend das Menue offen stand. */
   var toggle = document.querySelector(".nav-toggle");
   var mobileNav = document.querySelector(".mobile-nav");
   if (toggle && mobileNav) {
@@ -141,9 +148,9 @@
     dotWrap.className = "hero-car__dots";
     dotWrap.setAttribute("role", "group");
     dotWrap.setAttribute("aria-label", "Angebot wählen");
-    var toggle = document.createElement("button");
-    toggle.type = "button";
-    toggle.className = "hero-car__toggle";
+    var pauseBtn = document.createElement("button");
+    pauseBtn.type = "button";
+    pauseBtn.className = "hero-car__toggle";
 
     var markDots = function () {
       carDots.forEach(function (d, i) {
@@ -152,9 +159,9 @@
       });
     };
     var setToggle = function (paused) {
-      toggle.innerHTML = (paused ? PLAY_ICON : PAUSE_ICON) +
+      pauseBtn.innerHTML = (paused ? PLAY_ICON : PAUSE_ICON) +
         "<span>" + (paused ? "Weiter" : "Anhalten") + "</span>";
-      toggle.setAttribute("aria-pressed", String(paused));
+      pauseBtn.setAttribute("aria-pressed", String(paused));
     };
     /* Ein Punkt springt an sein Segment: die CSS-Animation wird auf den
        passenden Zeitpunkt gesetzt und angehalten. Wer wählt, will nicht
@@ -192,7 +199,7 @@
       carDots.push(dot);
     });
 
-    toggle.addEventListener("click", function () {
+    pauseBtn.addEventListener("click", function () {
       var paused = car.classList.toggle("is-paused");
       /* Beim Fortsetzen führt wieder die Animation — sonst bliebe ein
          Punkt hell stehen, der nicht mehr das gezeigte Angebot ist. */
@@ -202,7 +209,7 @@
 
     setToggle(false);
     bar.appendChild(dotWrap);
-    bar.appendChild(toggle);
+    bar.appendChild(pauseBtn);
     car.appendChild(bar);
   }
 

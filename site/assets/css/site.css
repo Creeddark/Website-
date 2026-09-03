@@ -119,6 +119,10 @@
      Zeilenwechsel die naechste Zeile nicht mehr sicher findet. */
   --measure: 68ch;
 
+  /* Erlaubt Uebergaenge auf auto-Groessen, ohne die es keinen weichen
+     Wechsel von "zu" auf "so hoch wie der Inhalt" gibt. */
+  interpolate-size: allow-keywords;
+
   --radius: 3px;
   --radius-lg: 10px;
 
@@ -363,10 +367,32 @@ a { color: inherit; }
 .nav-toggle[aria-expanded="true"] span:nth-child(2) { opacity: 0; }
 .nav-toggle[aria-expanded="true"] span:nth-child(3) { transform: translateY(-6px) rotate(-45deg); }
 
-.mobile-nav { display: none; border-top: 1px solid var(--line); background: var(--bg); }
-.mobile-nav.is-open { display: block; }
-@media (min-width: 1000px) { .mobile-nav, .mobile-nav.is-open { display: none; } }
-.mobile-nav ul { list-style: none; margin: 0; padding: var(--s4) 0 var(--s6); }
+/* Grundzustand ist OFFEN. Vorher war es umgekehrt: display:none im CSS,
+   aufgeklappt nur per JavaScript-Klasse. Damit hatte ein Mobilbesucher ohne
+   JavaScript ueberhaupt keine Navigation, denn die Kopfleiste ist unter
+   1000px ausgeblendet und der Burger tat nichts. Dieselbe Regel wie beim
+   Karussell und beim Chat: das Verstecken macht JS, nie das CSS allein.
+
+   Zugeklappt wird ueber grid-template-rows statt display, weil display
+   keinen Uebergang kennt. Die Hoehe animiert dabei nicht das Layout des
+   Inhalts, nur die Zeilenhoehe des Rasters. */
+.mobile-nav { border-top: 1px solid var(--line); background: var(--bg); }
+.js .mobile-nav {
+  display: grid; grid-template-rows: 0fr; overflow: hidden;
+  border-top-color: transparent;
+  transition: grid-template-rows var(--base) var(--ease),
+              border-top-color var(--base) var(--ease);
+}
+.js .mobile-nav > * { min-height: 0; }
+.js .mobile-nav.is-open { grid-template-rows: 1fr; border-top-color: var(--line); }
+@media (min-width: 1000px) { .mobile-nav, .js .mobile-nav, .mobile-nav.is-open { display: none; } }
+/* Polsterung an den Links, nicht an der Liste. Eine 0fr-Spur setzt die
+   Zeilenhoehe auf null, clippt aber die Polsterung des Rasterkindes nicht:
+   die Liste blieb dadurch 49px hoch statt zu verschwinden. Dieselbe Falle
+   wie bei den Chatzeilen weiter unten. */
+.mobile-nav ul { list-style: none; margin: 0; padding: 0; }
+.mobile-nav li:first-child a { padding-top: var(--s4); }
+.mobile-nav li:last-child a { padding-bottom: var(--s6); }
 .mobile-nav a {
   display: block; padding: var(--s3) 0; font-family: "Playfair Display", Georgia, serif;
   font-size: 1.25rem; text-decoration: none; color: var(--ink-900);
@@ -862,6 +888,17 @@ table.data tr.is-hero td, table.data tr.is-hero th { background: var(--surface);
 }
 .faq details[open] summary::after { transform: rotate(225deg) translate(-3px, -3px); }
 .faq details > div { padding-bottom: var(--s5); max-width: 62ch; color: var(--ink-700); font-size: var(--t-small); }
+
+/* Das Akkordeon sprang auf. Nur der Haken drehte sich, der Text erschien
+   schlagartig. ::details-content ist der einzige Weg, das rein mit CSS zu
+   loesen, ohne dem <details> seine Semantik zu nehmen oder JavaScript
+   dazwischenzuschalten. Wo der Browser es nicht kennt, klappt es wie bisher
+   sofort auf: nichts geht verloren, es fehlt nur der Uebergang. */
+.faq details::details-content {
+  block-size: 0; overflow: hidden;
+  transition: block-size var(--base) var(--ease), content-visibility var(--base) allow-discrete;
+}
+.faq details[open]::details-content { block-size: auto; }
 .faq details > div p { margin: 0 0 var(--s3); }
 .faq details > div p:last-child { margin: 0; }
 
@@ -1656,6 +1693,22 @@ button.eli__link--alt { border-color: var(--line); }
 }
 
 
+/* ---------- EINBLENDEN NACH EINER EINGABE ------------------------------ */
+/* Drei Stellen tauschen Inhalt hart aus: der Abrechnungsschalter, die
+   Reiter der Gaesteseiten und die Rueckmeldung des Formulars. Alle drei
+   schalten ueber display beziehungsweise das hidden-Attribut, und display
+   kennt keinen Uebergang. Deshalb eine kurze Einblendung auf dem Element,
+   das neu erscheint: 180ms, nur Deckkraft und drei Pixel Weg. Genug, damit
+   das Auge den Wechsel bemerkt, zu wenig, um zu bremsen. */
+@keyframes velora-einblenden {
+  from { opacity: 0; transform: translateY(3px); }
+}
+.js [data-pricing] .tier__p,
+.js .guide-panel:not([hidden]),
+.js [data-form-status]:not([hidden]) {
+  animation: velora-einblenden 180ms var(--ease) both;
+}
+
 /* ---------- ZIELFLÄCHEN AUF BERÜHRUNGSGERÄTEN -------------------------- */
 /* Steht bewusst am Dateiende: die Regeln haben dieselbe Spezifitaet wie die
    Grundregeln der jeweiligen Bauteile und muessen daher spaeter kommen.
@@ -1698,3 +1751,18 @@ button.eli__link--alt { border-color: var(--line); }
   .calc__row input[type="range"]::-webkit-slider-thumb { width: 26px; height: 26px; }
   .calc__row input[type="range"]::-moz-range-thumb { width: 26px; height: 26px; }
 }
+
+
+/* ---------- GEDRÜCKT ---------------------------------------------------- */
+/* Nur auf den Elementen, die sich wie ein Knopf anfuehlen. Bewusst NICHT
+   auf .faq summary (eine ueber die volle Breite gestauchte Zeile sieht
+   falsch aus; das Aufklappen ist dort die Rueckmeldung) und nicht auf
+   Fliesstextlinks. */
+.guide-tabs button, .billing__opt span, .nav-toggle, .js .hero-car__toggle {
+  transition: transform var(--fast) var(--ease),
+              background-color var(--fast) var(--ease),
+              color var(--fast) var(--ease),
+              border-color var(--fast) var(--ease);
+}
+.guide-tabs button:active, .billing__opt:active span, .js .hero-car__toggle:active { transform: scale(0.97); }
+.nav-toggle:active { transform: scale(0.94); }
