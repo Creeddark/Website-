@@ -537,13 +537,117 @@
     <div class="sec-head">
       <p class="label" data-reveal>Preise</p>
       <p class="display-m" data-reveal style="margin-top:var(--s4)">Keine Staffelung im Verborgenen.</p>
-      <p data-reveal>Jahrespreise, netto zzgl. USt. Jährlich kündbar, Daten jederzeit exportierbar.</p>
+      <p data-reveal>Monatlich, jährlich oder einmalig — Sie wählen. Alle Beträge netto zzgl. USt., Daten jederzeit exportierbar.</p>
     </div>
 
-    <div class="tiers" data-reveal-group>
+    <div class="pricing" data-pricing data-billing-mode="jahr">
+    <div class="billing" data-billing>
+      <fieldset class="billing__set">
+        <legend class="visually-hidden">Abrechnung wählen</legend>
+        <label class="billing__opt"><input type="radio" name="abrechnung-start" value="monat"><span>Monatlich</span></label>
+        <label class="billing__opt"><input type="radio" name="abrechnung-start" value="jahr" checked><span>Jährlich</span></label>
+        <label class="billing__opt"><input type="radio" name="abrechnung-start" value="einmal"><span>Einmalig</span></label>
+      </fieldset>
+      <p class="billing__note" data-billing-note>Jährlich ist der günstigste laufende Preis. Einmalig ist über drei Jahre am günstigsten.</p>
+    </div>
+      <div class="tiers" data-reveal-group>
       <div class="tier" data-reveal>
         <p class="tier__name">Solo</p>
-        <p class="small" style="margin:0">Für ein Objekt.</p>
+        <p class="small" style="margin:0">Ein Objekt, eine Seite.</p>
+        <div class="tier__prices">
+          <p class="tier__p" data-mode="monat">
+            <span class="tier__price">19 €</span>
+            <span class="tier__per">pro Monat · monatlich kündbar</span>
+            <span class="tier__cmp">228 € im Jahr — 38 € mehr als jährlich</span>
+          </p>
+          <p class="tier__p" data-mode="jahr">
+            <span class="tier__price">190 €</span>
+            <span class="tier__per">pro Jahr · jährlich kündbar</span>
+            <span class="tier__cmp">Entspricht 16 € im Monat</span>
+          </p>
+          <p class="tier__p" data-mode="einmal">
+            <span class="tier__price">490 €</span>
+            <span class="tier__per">einmalig · drei Jahre Laufzeit</span>
+            <span class="tier__cmp">Statt 570 € jährlich — 80 € weniger</span>
+          </p>
+        </div>
+        <ul class="feature-list">
+          <li><b>1 Einheit</b><span>Alle Bausteine</span></li>
+          <li><b>QR-Code + Druckvorlage</b><span>Enthalten</span></li>
+          <li><b>Unbegrenzte Änderungen</b><span>Jederzeit selbst</span></li>
+          <li><b>E-Mail-Support</b><span>Werktags binnen 24 Std.</span></li>
+          <li><b>Datenexport</b><span>Jederzeit</span></li>
+        </ul>
+        <a class="btn btn--secondary btn--block" data-tier-cta="solo"
+           href="{{base}}kontakt.html?tarif=solo&amp;abrechnung=jahr">Starten</a>
+      </div>
+
+      <div class="tier tier--featured" data-reveal>
+        <p class="label label--seg" style="margin-bottom:var(--s2)">Am häufigsten gewählt</p>
+        <p class="tier__name">Team</p>
+        <p class="small" style="margin:0">Mehrere Objekte, eine Verwaltung.</p>
+        <div class="tier__prices">
+          <p class="tier__p" data-mode="monat">
+            <span class="tier__price">39 €</span>
+            <span class="tier__per">pro Monat · monatlich kündbar</span>
+            <span class="tier__cmp">468 € im Jahr — 78 € mehr als jährlich</span>
+          </p>
+          <p class="tier__p" data-mode="jahr">
+            <span class="tier__price">390 €</span>
+            <span class="tier__per">pro Jahr · jährlich kündbar</span>
+            <span class="tier__cmp">Entspricht 32 € im Monat</span>
+          </p>
+          <p class="tier__p" data-mode="einmal">
+            <span class="tier__price">990 €</span>
+            <span class="tier__per">einmalig · drei Jahre Laufzeit</span>
+            <span class="tier__cmp">Statt 1.170 € jährlich — 180 € weniger</span>
+          </p>
+        </div>
+        <ul class="feature-list">
+          <li><b>Bis 5 Einheiten</b><span>Je eigener Guide und QR-Code</span></li>
+          <li><b>Zweisprachig</b><span>Deutsch und Englisch</span></li>
+          <li><b>Vorlagen</b><span>Einmal pflegen, mehrfach nutzen</span></li>
+          <li><b>Rückmeldung mit Foto</b><span>Schäden und Anliegen</span></li>
+          <li><b>Alles aus Solo</b><span>Enthalten</span></li>
+        </ul>
+        <a class="btn btn--primary btn--block" data-tier-cta="team"
+           href="{{base}}kontakt.html?tarif=team&amp;abrechnung=jahr">Starten</a>
+      </div>
+
+      <div class="tier" data-reveal>
+        <p class="tier__name">Pro</p>
+        <p class="small" style="margin:0">Betriebe, Häuser, Verwaltungen.</p>
+        <div class="tier__prices">
+          <p class="tier__p" data-mode="monat">
+            <span class="tier__price">79 €</span>
+            <span class="tier__per">pro Monat · monatlich kündbar</span>
+            <span class="tier__cmp">948 € im Jahr — 158 € mehr als jährlich</span>
+          </p>
+          <p class="tier__p" data-mode="jahr">
+            <span class="tier__price">790 €</span>
+            <span class="tier__per">pro Jahr · jährlich kündbar</span>
+            <span class="tier__cmp">Entspricht 66 € im Monat</span>
+          </p>
+          <p class="tier__p" data-mode="einmal">
+            <span class="tier__price">1.990 €</span>
+            <span class="tier__per">einmalig · drei Jahre Laufzeit</span>
+            <span class="tier__cmp">Statt 2.370 € jährlich — 380 € weniger</span>
+          </p>
+        </div>
+        <ul class="feature-list">
+          <li><b>Bis 15 Einheiten</b><span>Zentral verwaltet</span></li>
+          <li><b>Eigene Domain</b><span>Ihr Name, nicht unserer</span></li>
+          <li><b>Ihr Branding</b><span>Ohne unseren Hinweis im Fuß</span></li>
+          <li><b>Anfragen für Zusatzleistungen</b><span>Formular an Sie</span></li>
+          <li><b>Priority Support</b><span>Antwort binnen eines Werktags</span></li>
+        </ul>
+        <a class="btn btn--secondary btn--block" data-tier-cta="pro"
+           href="{{base}}kontakt.html?tarif=pro&amp;abrechnung=jahr">Starten</a>
+      </div>
+      </div>
+    </div>
+
+    <p class="small" style="margin:0">Für ein Objekt.</p>
         <p class="tier__price">190 €</p>
         <p class="tier__per">pro Jahr · oder 19 € monatlich</p>
         <ul class="feature-list">

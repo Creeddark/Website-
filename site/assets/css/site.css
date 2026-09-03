@@ -534,11 +534,54 @@ table.data tr.is-hero td, table.data tr.is-hero th { background: var(--surface);
 .tier__name { font-family: Fraunces, Georgia, serif; font-size: 1.25rem; font-weight: 500; margin: 0 0 var(--s2); }
 .tier__price {
   font-family: Fraunces, Georgia, serif; font-size: 2.375rem; font-weight: 400;
-  margin: var(--s3) 0 0; line-height: 1; font-variant-numeric: tabular-nums;
+  margin: 0; line-height: 1.05; font-variant-numeric: tabular-nums; color: var(--ink-900);
 }
-.tier__per { font-size: var(--t-small); color: var(--ink-500); margin: var(--s2) 0 var(--s5); }
+.tier__per { font-size: var(--t-small); color: var(--ink-500); margin: var(--s1) 0 0; }
 .tier .feature-list { border-top: 0; margin-bottom: var(--s5); }
 .tier .btn { margin-top: auto; }
+
+
+/* ---------- Abrechnung wählen ------------------------------------------ */
+/* Ohne JavaScript stehen alle drei Preise untereinander — es fehlt dann keine
+   Information, nur die Auswahl. Deshalb wird der Schalter erst mit .js gezeigt. */
+
+.billing { display: none; margin-bottom: var(--s6); }
+.js .billing { display: block; }
+.billing__set {
+  display: inline-flex; margin: 0; padding: 3px; border: 1px solid var(--line);
+  border-radius: var(--radius); background: var(--surface); gap: 2px;
+}
+.billing__opt { position: relative; }
+.billing__opt input {
+  position: absolute; inset: 0; margin: 0; opacity: 0; cursor: pointer; width: 100%; height: 100%;
+}
+.billing__opt span {
+  display: block; min-height: 40px; padding: 0 var(--s5); cursor: pointer;
+  display: flex; align-items: center; justify-content: center;
+  font-size: var(--t-label); font-weight: 600; letter-spacing: 0.14em; text-transform: uppercase;
+  color: var(--ink-500); border-radius: 2px; white-space: nowrap;
+  transition: background-color var(--fast) var(--ease), color var(--fast) var(--ease);
+}
+.billing__opt:hover span { color: var(--ink-900); }
+.billing__opt input:checked + span { background: var(--bg); color: var(--ink-900); box-shadow: 0 0 0 1px var(--line); }
+.billing__opt input:focus-visible + span { outline: 2px solid var(--ink-900); outline-offset: 2px; }
+.billing__note { margin: var(--s4) 0 0; font-size: var(--t-small); color: var(--ink-500); max-width: 52ch; }
+
+.tier__prices { margin: var(--s5) 0; }
+.tier__p { margin: 0 0 var(--s4); display: flex; flex-direction: column; gap: 2px; }
+.tier__p:last-child { margin-bottom: 0; }
+.tier__cmp { font-size: var(--t-tiny); color: var(--ink-500); }
+/* Mit JavaScript zeigt die Kachel genau die gewählte Abrechnung. */
+.js [data-pricing] .tier__p { display: none; }
+.js [data-pricing][data-billing-mode="monat"]  .tier__p[data-mode="monat"],
+.js [data-pricing][data-billing-mode="jahr"]   .tier__p[data-mode="jahr"],
+.js [data-pricing][data-billing-mode="einmal"] .tier__p[data-mode="einmal"] { display: flex; }
+
+@media (max-width: 560px) {
+  .billing__set { display: flex; width: 100%; }
+  .billing__opt { flex: 1; }
+  .billing__opt span { padding: 0 var(--s2); letter-spacing: 0.06em; }
+}
 
 
 /* ---------- 12 · RECHNER ----------------------------------------------- */

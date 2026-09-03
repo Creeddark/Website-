@@ -253,6 +253,38 @@
     });
   });
 
+  /* ---- Abrechnung wählen ------------------------------------------------- */
+  /* Der Schalter blendet nur um. Ohne dieses Skript stehen alle drei Preise
+     untereinander in der Kachel — es fehlt keine Angabe, nur die Auswahl. */
+  var NOTES = {
+    monat:  "Monatlich ist am flexibelsten und aufs Jahr gerechnet rund 20 % teurer.",
+    jahr:   "Jährlich ist der günstigste laufende Preis. Monatlich kostet aufs Jahr rund 20 % mehr.",
+    einmal: "Einmalig zahlen, drei Jahre nutzen — über die Laufzeit der günstigste Preis. " +
+            "Danach entscheiden Sie neu; es verlängert sich nichts von selbst."
+  };
+  document.querySelectorAll("[data-pricing]").forEach(function (pricing) {
+    var radios = pricing.querySelectorAll('[data-billing] input[type="radio"]');
+    var note = pricing.querySelector("[data-billing-note]");
+    if (!radios.length) return;
+
+    var apply = function (mode) {
+      pricing.setAttribute("data-billing-mode", mode);
+      if (note && NOTES[mode]) note.textContent = NOTES[mode];
+      /* Die gewählte Abrechnung reist mit in die Anfrage — dann muss niemand
+         den Tarif noch einmal aushandeln. */
+      pricing.querySelectorAll("[data-tier-cta]").forEach(function (cta) {
+        var base = cta.getAttribute("href").split("?")[0];
+        cta.setAttribute("href", base + "?tarif=" + cta.getAttribute("data-tier-cta") +
+                                 "&abrechnung=" + mode);
+      });
+    };
+
+    radios.forEach(function (r) {
+      r.addEventListener("change", function () { if (r.checked) apply(r.value); });
+      if (r.checked) apply(r.value);
+    });
+  });
+
   /* ---- Aufwandsrechner --------------------------------------------------- */
   /* Rechnet ausschließlich mit den Eingaben des Besuchers. Auch der Anteil
      der wegfallenden Fragen ist ein Regler — wir behaupten keine Quote. */
@@ -320,6 +352,29 @@
       if (inputs[k]) inputs[k].addEventListener("input", update);
     });
     update();
+  }
+
+  /* ---- Tarif aus dem Link ins Formular ----------------------------------- */
+  /* Wer auf der Preisseite „Starten" drückt, hat Tarif und Abrechnung schon
+     gewählt. Hier stehen sie vorausgefüllt — kein zweites Mal aushandeln. */
+  var planSelect = document.querySelector("[data-prefill-plan]");
+  if (planSelect) {
+    var params = new URLSearchParams(window.location.search);
+    var tarif = params.get("tarif");
+    var mode = params.get("abrechnung");
+    var wanted = tarif === "event" ? "event" : (tarif && mode ? tarif + "|" + mode : "");
+    if (wanted) {
+      var hit = planSelect.querySelector('option[value="' + wanted.replace(/"/g, "") + '"]');
+      if (hit) {
+        planSelect.value = hit.value;
+        var hint = document.querySelector("[data-plan-hint]");
+        if (hint) {
+          hint.hidden = false;
+          hint.textContent = "Aus Ihrer Auswahl übernommen: " + hit.textContent.trim() +
+                             ". Änderbar, solange Sie nicht abgeschickt haben.";
+        }
+      }
+    }
   }
 
   /* ---- Formulare: noch kein Endpunkt ------------------------------------ */

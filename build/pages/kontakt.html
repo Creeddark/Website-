@@ -38,6 +38,15 @@
       </div>
     </div>
 
+    <div class="note" style="margin-bottom:var(--s6)">
+      <p class="label">Wie es weitergeht</p>
+      <p class="small" style="margin:0">
+        Der Preis steht auf der <a class="link" href="{{base}}preise.html">Preisseite</a>,
+        es gibt nichts auszuhandeln. Abgerechnet wird derzeit per Rechnung —
+        einen Checkout auf der Seite gibt es noch nicht, und wir tun auch nicht so.
+      </p>
+    </div>
+
     <form class="stack stack--5" data-demo-form="Danke — im echten Betrieb ginge Ihre Anfrage jetzt an unser Postfach und Sie erhielten werktags binnen 24 Stunden Antwort. Dieses Formular ist noch nicht mit einem Endpunkt verbunden.">
       <div class="field"><label for="k-name">Name</label><input id="k-name" type="text" required autocomplete="name"></div>
       <div class="field"><label for="k-org">Unternehmen oder Objekt</label><input id="k-org" type="text" autocomplete="organization"></div>
@@ -54,6 +63,24 @@
           <option>Etwas anderes</option>
         </select>
       </div>
+      <div class="field">
+        <label for="k-plan">Tarif und Abrechnung</label>
+        <select id="k-plan" data-prefill-plan>
+          <option value="">Noch offen — bitte beraten</option>
+          <option value="solo|jahr">Solo · jährlich · 190 €</option>
+          <option value="solo|monat">Solo · monatlich · 19 €</option>
+          <option value="solo|einmal">Solo · einmalig · 490 €</option>
+          <option value="team|jahr">Team · jährlich · 390 €</option>
+          <option value="team|monat">Team · monatlich · 39 €</option>
+          <option value="team|einmal">Team · einmalig · 990 €</option>
+          <option value="pro|jahr">Pro · jährlich · 790 €</option>
+          <option value="pro|monat">Pro · monatlich · 79 €</option>
+          <option value="pro|einmal">Pro · einmalig · 1.990 €</option>
+          <option value="event">Einzelnes Firmenevent · 290 €</option>
+        </select>
+        <p class="small" style="margin:var(--s2) 0 0" data-plan-hint hidden></p>
+      </div>
+
       <div class="field">
         <label for="k-units">Wie viele Einheiten?</label>
         <select id="k-units">

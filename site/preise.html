@@ -4,14 +4,14 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Preise — ATRIA</title>
-<meta name="description" content="Solo 190 €, Team 390 €, Pro 790 € pro Jahr. Einrichtung ab 190 €. Firmenevents ab 290 € pro Event. Alle Preise netto, jährlich kündbar.">
+<meta name="description" content="Monatlich, jährlich oder einmalig — Sie wählen. Solo ab 19 € im Monat, Team ab 39 €, Pro ab 79 €. Firmenevents 290 € pro Event. Kein Preis auf Anfrage, alle Beträge netto.">
 <meta name="theme-color" content="#F6F7F4">
 <link rel="canonical" href="https://atria.example/preise.html">
 
 <meta property="og:type" content="website">
 <meta property="og:site_name" content="ATRIA">
 <meta property="og:title" content="Preise — ATRIA">
-<meta property="og:description" content="Solo 190 €, Team 390 €, Pro 790 € pro Jahr. Einrichtung ab 190 €. Firmenevents ab 290 € pro Event. Alle Preise netto, jährlich kündbar.">
+<meta property="og:description" content="Monatlich, jährlich oder einmalig — Sie wählen. Solo ab 19 € im Monat, Team ab 39 €, Pro ab 79 €. Firmenevents 290 € pro Event. Kein Preis auf Anfrage, alle Beträge netto.">
 <meta property="og:locale" content="de_DE">
 
 <script>document.documentElement.className=document.documentElement.className.replace(/\bno-js\b/,'js')</script>
@@ -65,20 +65,46 @@
       <span class="reveal-line"><span>der Seite stehen.</span></span>
     </h1>
     <p class="subhead" style="margin-top:var(--s5)">
-      Kein „Preis auf Anfrage" für Standardfälle. Alle Beträge netto zzgl. USt.,
-      jährlich kündbar, Daten jederzeit exportierbar.
+      Kein „Preis auf Anfrage". Monatlich, jährlich oder einmalig — Sie wählen,
+      der Preis steht sofort da. Alle Beträge netto zzgl. USt., Daten jederzeit
+      exportierbar.
     </p>
   </div>
 </section>
 
 <section class="section section--tight">
   <div class="wrap">
-    <div class="tiers" data-reveal-group>
+    <div class="pricing" data-pricing data-billing-mode="jahr">
+    <div class="billing" data-billing>
+      <fieldset class="billing__set">
+        <legend class="visually-hidden">Abrechnung wählen</legend>
+        <label class="billing__opt"><input type="radio" name="abrechnung" value="monat"><span>Monatlich</span></label>
+        <label class="billing__opt"><input type="radio" name="abrechnung" value="jahr" checked><span>Jährlich</span></label>
+        <label class="billing__opt"><input type="radio" name="abrechnung" value="einmal"><span>Einmalig</span></label>
+      </fieldset>
+      <p class="billing__note" data-billing-note>Jährlich ist der günstigste laufende Preis. Einmalig ist über drei Jahre am günstigsten.</p>
+    </div>
+      <div class="tiers" data-reveal-group>
       <div class="tier" data-reveal>
         <p class="tier__name">Solo</p>
         <p class="small" style="margin:0">Ein Objekt, eine Seite.</p>
-        <p class="tier__price">190 €</p>
-        <p class="tier__per">pro Jahr · oder 19 € monatlich</p>
+        <div class="tier__prices">
+          <p class="tier__p" data-mode="monat">
+            <span class="tier__price">19 €</span>
+            <span class="tier__per">pro Monat · monatlich kündbar</span>
+            <span class="tier__cmp">228 € im Jahr — 38 € mehr als jährlich</span>
+          </p>
+          <p class="tier__p" data-mode="jahr">
+            <span class="tier__price">190 €</span>
+            <span class="tier__per">pro Jahr · jährlich kündbar</span>
+            <span class="tier__cmp">Entspricht 16 € im Monat</span>
+          </p>
+          <p class="tier__p" data-mode="einmal">
+            <span class="tier__price">490 €</span>
+            <span class="tier__per">einmalig · drei Jahre Laufzeit</span>
+            <span class="tier__cmp">Statt 570 € jährlich — 80 € weniger</span>
+          </p>
+        </div>
         <ul class="feature-list">
           <li><b>1 Einheit</b><span>Alle Bausteine</span></li>
           <li><b>QR-Code + Druckvorlage</b><span>Enthalten</span></li>
@@ -86,15 +112,31 @@
           <li><b>E-Mail-Support</b><span>Werktags binnen 24 Std.</span></li>
           <li><b>Datenexport</b><span>Jederzeit</span></li>
         </ul>
-        <a class="btn btn--secondary btn--block" href="kontakt.html">Starten</a>
+        <a class="btn btn--secondary btn--block" data-tier-cta="solo"
+           href="kontakt.html?tarif=solo&amp;abrechnung=jahr">Starten</a>
       </div>
 
       <div class="tier tier--featured" data-reveal>
         <p class="label label--seg" style="margin-bottom:var(--s2)">Am häufigsten gewählt</p>
         <p class="tier__name">Team</p>
         <p class="small" style="margin:0">Mehrere Objekte, eine Verwaltung.</p>
-        <p class="tier__price">390 €</p>
-        <p class="tier__per">pro Jahr · oder 39 € monatlich</p>
+        <div class="tier__prices">
+          <p class="tier__p" data-mode="monat">
+            <span class="tier__price">39 €</span>
+            <span class="tier__per">pro Monat · monatlich kündbar</span>
+            <span class="tier__cmp">468 € im Jahr — 78 € mehr als jährlich</span>
+          </p>
+          <p class="tier__p" data-mode="jahr">
+            <span class="tier__price">390 €</span>
+            <span class="tier__per">pro Jahr · jährlich kündbar</span>
+            <span class="tier__cmp">Entspricht 32 € im Monat</span>
+          </p>
+          <p class="tier__p" data-mode="einmal">
+            <span class="tier__price">990 €</span>
+            <span class="tier__per">einmalig · drei Jahre Laufzeit</span>
+            <span class="tier__cmp">Statt 1.170 € jährlich — 180 € weniger</span>
+          </p>
+        </div>
         <ul class="feature-list">
           <li><b>Bis 5 Einheiten</b><span>Je eigener Guide und QR-Code</span></li>
           <li><b>Zweisprachig</b><span>Deutsch und Englisch</span></li>
@@ -102,14 +144,30 @@
           <li><b>Rückmeldung mit Foto</b><span>Schäden und Anliegen</span></li>
           <li><b>Alles aus Solo</b><span>Enthalten</span></li>
         </ul>
-        <a class="btn btn--primary btn--block" href="kontakt.html">Starten</a>
+        <a class="btn btn--primary btn--block" data-tier-cta="team"
+           href="kontakt.html?tarif=team&amp;abrechnung=jahr">Starten</a>
       </div>
 
       <div class="tier" data-reveal>
         <p class="tier__name">Pro</p>
         <p class="small" style="margin:0">Betriebe, Häuser, Verwaltungen.</p>
-        <p class="tier__price">790 €</p>
-        <p class="tier__per">pro Jahr · oder 79 € monatlich</p>
+        <div class="tier__prices">
+          <p class="tier__p" data-mode="monat">
+            <span class="tier__price">79 €</span>
+            <span class="tier__per">pro Monat · monatlich kündbar</span>
+            <span class="tier__cmp">948 € im Jahr — 158 € mehr als jährlich</span>
+          </p>
+          <p class="tier__p" data-mode="jahr">
+            <span class="tier__price">790 €</span>
+            <span class="tier__per">pro Jahr · jährlich kündbar</span>
+            <span class="tier__cmp">Entspricht 66 € im Monat</span>
+          </p>
+          <p class="tier__p" data-mode="einmal">
+            <span class="tier__price">1.990 €</span>
+            <span class="tier__per">einmalig · drei Jahre Laufzeit</span>
+            <span class="tier__cmp">Statt 2.370 € jährlich — 380 € weniger</span>
+          </p>
+        </div>
         <ul class="feature-list">
           <li><b>Bis 15 Einheiten</b><span>Zentral verwaltet</span></li>
           <li><b>Eigene Domain</b><span>Ihr Name, nicht unserer</span></li>
@@ -117,7 +175,9 @@
           <li><b>Anfragen für Zusatzleistungen</b><span>Formular an Sie</span></li>
           <li><b>Priority Support</b><span>Antwort binnen eines Werktags</span></li>
         </ul>
-        <a class="btn btn--secondary btn--block" href="kontakt.html">Starten</a>
+        <a class="btn btn--secondary btn--block" data-tier-cta="pro"
+           href="kontakt.html?tarif=pro&amp;abrechnung=jahr">Starten</a>
+      </div>
       </div>
     </div>
   </div>
@@ -141,16 +201,16 @@
           </tr>
           <tr><th scope="row">Einzelnes Firmenevent</th><td class="muted">Ein Termin, 6 Monate Laufzeit</td><td class="num">290 €</td></tr>
           <tr><th scope="row">Firmenevents im Jahresvertrag</th><td class="muted">Mehrere Termine pro Jahr</td><td class="num">790 € / Jahr</td></tr>
-          <tr><th scope="row">Mehr als 15 Einheiten</th><td class="muted">Hotelgruppen, Ferienparks, Verwaltungen</td><td class="num">auf Anfrage</td></tr>
-          <tr><th scope="row">Hausverwaltung</th><td class="muted">Preis pro Objekt, ab 10 Häusern gestaffelt</td><td class="num">auf Anfrage</td></tr>
+          <tr><th scope="row">Mehr als 15 Einheiten</th><td class="muted">Hotelgruppen, Ferienparks — Pro plus Aufschlag je Einheit</td><td class="num">790 € + 35 € je weitere Einheit / Jahr</td></tr>
+          <tr><th scope="row">Hausverwaltung</th><td class="muted">Preis pro Objekt, gestaffelt</td><td class="num">190 € / Objekt · ab 10 Objekten 140 € · ab 25 Objekten 110 €</td></tr>
           <tr><th scope="row">Weitere Sprache</th><td class="muted">Über Deutsch und Englisch hinaus</td><td class="num">90 € / Jahr</td></tr>
           <tr><th scope="row">Individuelles Projekt</th><td class="muted">Eigene Struktur, eigene Gestaltung</td><td class="num">2.500 – 9.000 €</td></tr>
         </tbody>
       </table>
     </div>
     <p class="small" style="margin-top:var(--s5)" data-reveal>
-      „Auf Anfrage" heißt hier nicht „teuer", sondern „hängt von der Anzahl ab".
-      Wir nennen den Preis im ersten Gespräch, nicht nach drei Terminen.
+      Hier steht kein „auf Anfrage" mehr. Auch die Fälle, die von der Anzahl
+      abhängen, haben eine Rechnung, die Sie selbst aufmachen können.
     </p>
   </div>
 </section>
@@ -159,8 +219,12 @@
   <div class="wrap" style="max-width:52rem">
     <div class="sec-head"><p class="display-m" data-reveal>Fragen zum Preis</p></div>
     <div class="faq" data-faq-exclusive data-reveal>
-      <details><summary>Warum jährlich statt monatlich?</summary><div>
-        <p>Monatlich geht auch — es kostet dann etwa zwei Monatsbeiträge mehr im Jahr. Jährlich ist für uns günstiger in der Verwaltung, und wir geben das weiter.</p></div></details>
+      <details><summary>Monatlich, jährlich oder einmalig — was lohnt sich?</summary><div>
+        <p>Monatlich ist am flexibelsten und aufs Jahr gerechnet rund 20 % teurer. Jährlich ist der günstigste laufende Preis. Einmalig ist über die drei Jahre Laufzeit am günstigsten, dafür zahlen Sie alles auf einmal.</p>
+        <p>Wir verstecken das nicht in Fußnoten: In jeder Kachel steht, was die gewählte Art aufs Jahr gerechnet bedeutet.</p></div></details>
+      <details><summary>Was passiert nach den drei Jahren bei „Einmalig"?</summary><div>
+        <p>Sie entscheiden neu. Verlängern zum dann gültigen Preis, auf monatlich oder jährlich wechseln, oder Inhalte exportieren und gehen. Es verlängert sich nichts automatisch.</p>
+        <p>Warum nicht unbegrenzt? Weil wir für Ihre Seite dauerhaft Hosting, Pflege und Erreichbarkeit schulden. Ein einmaliger Betrag gegen eine unbegrenzte Pflicht wäre ein Versprechen, das wir irgendwann brechen müssten. Drei Jahre können wir zusagen.</p></div></details>
       <details><summary>Gibt es eine Mindestlaufzeit?</summary><div>
         <p>Ein Jahr, danach jährlich kündbar. Keine automatische Verlängerung um zwei Jahre, keine Kündigungsfrist von drei Monaten.</p></div></details>
       <details><summary>Was kostet der Wechsel weg von Ihnen?</summary><div>
