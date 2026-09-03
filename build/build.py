@@ -27,7 +27,12 @@ LAYOUT = ROOT / "build" / "layout.html"
 LAYOUT_BARE = ROOT / "build" / "layout-bare.html"
 OUT = ROOT / "site"
 
-BRAND = "VELORA"  # Markenrecherche (DPMA/EUIPO) steht aus, siehe docs/11
+BRAND = "VELORA"
+
+# Absolute Adresse der Seite. og:url und og:image muessen absolut sein, ein
+# relativer Pfad wird von keinem Vorschaudienst aufgeloest. Beim Umzug auf
+# die echte Domain ist das hier die einzige Stelle, die sich aendert.
+SITE = "https://velora.example/"  # Markenrecherche (DPMA/EUIPO) steht aus, siehe docs/11
 
 NAV_KEYS = ["segmente", "produkt", "preise", "demo", "faq"]
 
@@ -124,6 +129,7 @@ def render(page_path: pathlib.Path, layout: str, layout_bare: str) -> tuple[path
         "{{description}}": meta["description"],
         "{{path}}": str(rel).replace("\\", "/"),
         "{{base}}": base,
+        "{{site}}": SITE,
         "{{seg}}": seg,
         "{{segattr}}": seg_attr,
         "{{head}}": meta.get("head", ""),

@@ -579,11 +579,17 @@ img.plate[src$="produkt-technik.svg"] { object-fit: contain; background: var(--s
 }
 .facts p { font-size: var(--t-small); color: var(--ink-500); margin: 0; }
 
-.note { border-left: 2px solid var(--seg); background: var(--surface); padding: var(--s5); border-radius: var(--radius); }
+/* Vorher ein 2px-Farbstreifen links, zusaetzlich zur getoenten Flaeche.
+   Beides zusammen sagt zweimal dasselbe, und der seitliche Streifen ist ein
+   Muster, das man an erzeugten Seiten erkennt. Die Toenung traegt den Kasten
+   allein; eine Haarlinie ringsum schliesst ihn ab. */
+.note { border: 1px solid var(--line); background: var(--surface); padding: var(--s5); border-radius: var(--radius); }
 .note p { margin: 0 0 var(--s3); font-size: var(--t-small); color: var(--ink-700); max-width: 62ch; }
 .note p:last-child { margin: 0; }
 .note .label { margin-bottom: var(--s3); color: var(--seg-ink); }
-.note--flag { border-left-color: var(--err); }
+/* Der Warnkasten behaelt eine eigene Farbe, aber ringsum statt als
+   Streifen: hier traegt die Farbe echte Bedeutung, nicht Dekoration. */
+.note--flag { border-color: var(--err); }
 .note--flag .label { color: var(--err); }
 
 .badge {
@@ -1214,9 +1220,12 @@ table.data tr.is-hero td, table.data tr.is-hero th { background: var(--surface);
   padding: 10px var(--s4); border-top: 1px solid var(--line); background: var(--surface);
 }
 .chat__field {
+  /* Vorher --ink-300 und damit 2,27:1. Ein Platzhalter darf sekundaer
+     wirken, aber lesbar bleiben; --ink-500 ist die naechste Stufe und
+     traegt 5,0:1 auf dem Blasengrund. */
   flex: 1; height: 30px; border-radius: 15px; background: var(--chat-in);
   border: 1px solid var(--line); display: flex; align-items: center;
-  padding: 0 var(--s3); font-size: var(--t-tiny); color: var(--ink-300);
+  padding: 0 var(--s3); font-size: var(--t-tiny); color: var(--ink-500);
 }
 .chat__send {
   flex: none; width: 30px; height: 30px; border-radius: 50%;
