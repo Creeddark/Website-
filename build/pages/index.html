@@ -6,7 +6,7 @@
 } -->
 
 <!-- 01 · HERO — was es ist, für wen, was es kostet ----------------------- -->
-<section class="hero hero--full hero--onDark">
+<section class="hero hero--full hero--offers hero--onDark">
   <div class="hero__media"><img class="plate" src="{{base}}assets/img/hero-home.svg" alt="" data-parallax="5" decoding="async"></div>
   <div class="hero__scrim"></div>
 
@@ -18,11 +18,112 @@
       <span class="reveal-line"><span>Nie wieder erklärt.</span></span>
     </h1>
 
-    <p class="subhead" style="margin-top:var(--s5);max-width:50ch">
-      Ihre Gäste scannen einen QR-Code und finden alles: WLAN, Check-in,
-      Hausregeln, Ablauf, Ihre Empfehlungen. Ohne App, ohne Konto,
-      ohne Anmeldung.
+    <p class="subhead" style="margin-top:var(--s5);max-width:46ch">
+      Ihre Gäste scannen einen QR-Code und finden alles — ohne App,
+      ohne Konto, ohne Anmeldung.
     </p>
+
+    <!-- Segment-Karussell. Ohne JavaScript und bei „Bewegung reduzieren" ist
+         dies ein Raster mit allen sechs Angeboten; erst site.js macht eine
+         laufende Reihe daraus und ergänzt Punkte und Pause-Knopf. -->
+    <div class="hero-car" data-hero-car>
+      <h2 class="visually-hidden" id="hero-car-title">Unsere Angebote</h2>
+      <div class="hero-car__view">
+        <ul class="hero-car__track" aria-labelledby="hero-car-title">
+          <li class="hero-car__slide" data-seg="ferien">
+            <a class="hero-car__link" href="{{base}}segmente/ferienunterkuenfte.html">
+              <span class="hero-car__head">
+                <span class="hero-car__mark" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.4"><path d="M3 11 12 4l9 7"/><path d="M5 10v10h14V10"/><path d="M10 20v-6h4v6"/></svg></span>
+                <span class="hero-car__name">Ferienunterkünfte</span>
+              </span>
+              <span class="hero-car__pain">Jede Woche neue Gäste — jede Woche dieselben fünf Fragen.</span>
+              <span class="hero-car__meta">
+                <span class="hero-car__price">ab 190 € / Jahr</span>
+                <span class="hero-car__go" aria-hidden="true">Ansehen →</span>
+              </span>
+            </a>
+          </li>
+          <li class="hero-car__slide" data-seg="hotels">
+            <a class="hero-car__link" href="{{base}}segmente/hotels.html">
+              <span class="hero-car__head">
+                <span class="hero-car__mark" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.4"><path d="M4 21V4h16v17"/><path d="M8 8h2M14 8h2M8 12h2M14 12h2"/><path d="M10 21v-5h4v5"/></svg></span>
+                <span class="hero-car__name">Hotels &amp; Pensionen</span>
+              </span>
+              <span class="hero-car__pain">Die Mappe im Zimmer ist seit 2019 auf dem Stand von 2019.</span>
+              <span class="hero-car__meta">
+                <span class="hero-car__price">ab 790 € / Jahr</span>
+                <span class="hero-car__go" aria-hidden="true">Ansehen →</span>
+              </span>
+            </a>
+          </li>
+          <li class="hero-car__slide" data-seg="camping">
+            <a class="hero-car__link" href="{{base}}segmente/campingplaetze.html">
+              <span class="hero-car__head">
+                <span class="hero-car__mark" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.4"><path d="M12 4 3 20h18L12 4Z"/><path d="M12 4v16"/></svg></span>
+                <span class="hero-car__name">Campingplätze</span>
+              </span>
+              <span class="hero-car__pain">Hunderte Gäste auf dem Platz, eine Rezeption am Tor.</span>
+              <span class="hero-car__meta">
+                <span class="hero-car__price">ab 790 € / Jahr</span>
+                <span class="hero-car__go" aria-hidden="true">Ansehen →</span>
+              </span>
+            </a>
+          </li>
+          <li class="hero-car__slide" data-seg="events">
+            <a class="hero-car__link" href="{{base}}segmente/firmenevents.html">
+              <span class="hero-car__head">
+                <span class="hero-car__mark" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.4"><rect x="3" y="5" width="18" height="16" rx="2"/><path d="M8 3v4M16 3v4M3 10h18"/></svg></span>
+                <span class="hero-car__name">Firmenevents</span>
+              </span>
+              <span class="hero-car__pain">200 Teilnehmende, ein Ablaufplan, eine Excel-Liste.</span>
+              <span class="hero-car__meta">
+                <span class="hero-car__price">ab 290 € / Event</span>
+                <span class="hero-car__go" aria-hidden="true">Ansehen →</span>
+              </span>
+            </a>
+          </li>
+          <li class="hero-car__slide" data-seg="verwaltung">
+            <a class="hero-car__link" href="{{base}}segmente/hausverwaltungen.html">
+              <span class="hero-car__head">
+                <span class="hero-car__mark" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.4"><path d="M5 21V3h9v18"/><path d="M14 9h5v12"/><path d="M8 7h3M8 11h3M8 15h3"/></svg></span>
+                <span class="hero-car__name">Hausverwaltungen</span>
+              </span>
+              <span class="hero-car__pain">Der Aushang im Flur wird gelesen von: niemandem.</span>
+              <span class="hero-car__meta">
+                <span class="hero-car__price">auf Anfrage</span>
+                <span class="hero-car__go" aria-hidden="true">Ansehen →</span>
+              </span>
+            </a>
+          </li>
+          <li class="hero-car__slide" data-seg="seminar">
+            <a class="hero-car__link" href="{{base}}segmente/seminarhaeuser.html">
+              <span class="hero-car__head">
+                <span class="hero-car__mark" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.4"><rect x="3" y="4" width="18" height="12" rx="1"/><path d="M12 16v4M8 20h8"/></svg></span>
+                <span class="hero-car__name">Seminarhäuser</span>
+              </span>
+              <span class="hero-car__pain">Jede Woche eine neue Gruppe, jedes Mal dieselbe Einweisung.</span>
+              <span class="hero-car__meta">
+                <span class="hero-car__price">ab 790 € / Jahr</span>
+                <span class="hero-car__go" aria-hidden="true">Ansehen →</span>
+              </span>
+            </a>
+          </li>
+          <li class="hero-car__slide" data-seg="ferien" aria-hidden="true">
+            <a class="hero-car__link" href="{{base}}segmente/ferienunterkuenfte.html" tabindex="-1">
+              <span class="hero-car__head">
+                <span class="hero-car__mark" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.4"><path d="M3 11 12 4l9 7"/><path d="M5 10v10h14V10"/><path d="M10 20v-6h4v6"/></svg></span>
+                <span class="hero-car__name">Ferienunterkünfte</span>
+              </span>
+              <span class="hero-car__pain">Jede Woche neue Gäste — jede Woche dieselben fünf Fragen.</span>
+              <span class="hero-car__meta">
+                <span class="hero-car__price">ab 190 € / Jahr</span>
+                <span class="hero-car__go" aria-hidden="true">Ansehen →</span>
+              </span>
+            </a>
+          </li>
+        </ul>
+      </div>
+    </div>
 
     <div class="cluster" style="margin-top:var(--s7);gap:var(--s3)">
       <a class="btn btn--primary" href="{{base}}demo/gaestemappe.html">Live-Beispiel öffnen</a>
@@ -30,11 +131,11 @@
     </div>
 
     <p class="hero__anchor">
-      <b>ab 190 €</b> im Jahr
-      <span aria-hidden="true">·</span>
-      an einem Nachmittag eingerichtet
+      An einem Nachmittag eingerichtet
       <span aria-hidden="true">·</span>
       jährlich kündbar
+      <span aria-hidden="true">·</span>
+      Hosting in der EU
     </p>
   </div>
 </section>

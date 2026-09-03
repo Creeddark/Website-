@@ -109,13 +109,16 @@
   --slow: 680ms;
 }
 
-/* Segmentakzente — alle stark entsättigt, wirken nur als Linie und Label */
-[data-seg="ferien"]      { --seg: #8D6A4A; --seg-tint: #F0E9E1; }
-[data-seg="hotels"]      { --seg: #435466; --seg-tint: #E4E8EC; }
-[data-seg="camping"]     { --seg: #4A6440; --seg-tint: #E6EBE2; }
-[data-seg="events"]      { --seg: #6E4C5C; --seg-tint: #EFE7EA; }
-[data-seg="verwaltung"]  { --seg: #55584F; --seg-tint: #E9EAE6; }
-[data-seg="seminar"]     { --seg: #7A6134; --seg-tint: #F0EBDF; }
+/* Segmentakzente — alle stark entsättigt, wirken nur als Linie und Label.
+   --seg-deep ist derselbe Farbton für dunklen Grund, so weit aufgehellt,
+   bis jeder gegen --deep mindestens 4,6:1 erreicht. Die hellen Töne liegen
+   dort bei 2,3–3,7:1 und wären als Text unlesbar. */
+[data-seg="ferien"]      { --seg: #8D6A4A; --seg-tint: #F0E9E1; --seg-deep: #9C7B5C; }
+[data-seg="hotels"]      { --seg: #435466; --seg-tint: #E4E8EC; --seg-deep: #6F8399; }
+[data-seg="camping"]     { --seg: #4A6440; --seg-tint: #E6EBE2; --seg-deep: #6C8B61; }
+[data-seg="events"]      { --seg: #6E4C5C; --seg-tint: #EFE7EA; --seg-deep: #9B7889; }
+[data-seg="verwaltung"]  { --seg: #55584F; --seg-tint: #E9EAE6; --seg-deep: #7F8378; }
+[data-seg="seminar"]     { --seg: #7A6134; --seg-tint: #F0EBDF; --seg-deep: #997E4D; }
 
 .is-dark {
   --bg: var(--deep);
@@ -654,7 +657,11 @@ table.data tr.is-hero td, table.data tr.is-hero th { background: var(--surface);
 
 /* ---------- 15 · SEKTIONSMUSTER ---------------------------------------- */
 
-.hero { position: relative; display: grid; align-items: end; overflow: hidden; }
+/* minmax(0, 1fr): ohne diese Angabe bemisst sich die Spalte am max-content
+   ihres Inhalts — die 700 % breite Karussellspur würde den ganzen Hero
+   aufblähen und Überschrift wie Text aus dem Bild schieben. */
+.hero { position: relative; display: grid; grid-template-columns: minmax(0, 1fr);
+  align-items: end; overflow: hidden; }
 .hero__media { position: absolute; inset: 0; z-index: 0; }
 .hero__media .plate { width: 100%; height: 100%; border-radius: 0; }
 .hero__scrim {
@@ -667,6 +674,11 @@ table.data tr.is-hero td, table.data tr.is-hero th { background: var(--surface);
 }
 .hero__inner { position: relative; z-index: 2; padding-block: var(--s9) var(--s8); }
 .hero--full { min-height: 76vh; }
+/* Der Hero mit Angebotsauswahl trägt eine Zeile mehr. Ohne diesen engeren
+   Rhythmus endet er bei 900 px Fensterhöhe genau an der Kante — dann fehlt
+   der Hinweis, dass unter dem Bildschirmrand noch etwas kommt. */
+.hero--offers .hero__inner { padding-block: 56px var(--s7); }
+.hero--offers .cluster { margin-top: var(--s6) !important; }
 .hero--mid { min-height: 52vh; }
 .hero--onDark { color: var(--on-deep); }
 .hero--onDark .subhead { color: color-mix(in srgb, var(--on-deep) 92%, transparent); }
@@ -682,6 +694,151 @@ table.data tr.is-hero td, table.data tr.is-hero th { background: var(--surface);
   font-size: var(--t-small); color: color-mix(in srgb, var(--on-deep) 84%, transparent);
 }
 .hero__anchor b { color: var(--on-deep); font-variant-numeric: tabular-nums; }
+
+/* ---------- Segment-Karussell im Hero ----------------------------------- */
+/* Grundzustand ist das RASTER: ohne JavaScript und bei „Bewegung reduzieren"
+   stehen alle sechs Angebote gleichzeitig da. Erst .js schaltet die Spur
+   auf eine Reihe um und lässt sie laufen. So verliert niemand Inhalt,
+   nur weil eine Animation nicht stattfindet. */
+
+.hero-car { margin-top: var(--s6); max-width: 54rem; min-width: 0; }
+.hero-car__view { overflow: visible; min-width: 0; }
+
+.hero-car__track {
+  list-style: none; margin: 0; padding: 0;
+  display: grid; gap: var(--s2);
+  grid-template-columns: repeat(auto-fit, minmax(14.5rem, 1fr));
+}
+
+.hero-car__slide { min-width: 0; }
+/* Die siebte Karte ist die Kopie der ersten; sie schließt allein den
+   Rundlauf der laufenden Reihe. Im Raster wäre sie ein Duplikat. */
+.hero-car__slide[aria-hidden="true"] { display: none; }
+.js .hero-car__slide[aria-hidden="true"] { display: block; }
+
+/* Als Raster braucht jede Karte eine eigene Fläche — sonst laufen die
+   Linien der Illustration mitten durch den Text. */
+.hero-car__link {
+  display: flex; flex-direction: column; gap: var(--s2);
+  padding: var(--s4); height: 100%; text-decoration: none; color: inherit;
+  border: 1px solid color-mix(in srgb, var(--on-deep) 22%, transparent);
+  border-radius: var(--radius);
+  background: color-mix(in srgb, var(--deep) 78%, transparent);
+  transition: border-color var(--fast) var(--ease), background-color var(--fast) var(--ease);
+}
+.hero-car__link:hover {
+  border-color: color-mix(in srgb, var(--on-deep) 48%, transparent);
+  background: color-mix(in srgb, var(--deep) 92%, transparent);
+}
+.hero-car__head { display: flex; align-items: center; gap: var(--s3); }
+.hero-car__mark {
+  flex: none; width: 24px; height: 24px; color: var(--seg-deep, var(--on-deep));
+}
+.hero-car__mark svg { width: 100%; height: 100%; display: block; }
+.hero-car__name {
+  font-family: Fraunces, Georgia, serif; font-weight: 500; margin: 0;
+  font-size: var(--t-heading); line-height: 1.15; letter-spacing: -0.014em;
+  color: var(--seg-deep, var(--on-deep));
+}
+.hero-car__pain {
+  margin: 0; font-size: var(--t-small); line-height: 1.5;
+  color: color-mix(in srgb, var(--on-deep) 88%, transparent);
+}
+.hero-car__price {
+  margin: 0; font-size: var(--t-tiny); font-variant-numeric: tabular-nums;
+  color: color-mix(in srgb, var(--on-deep) 70%, transparent);
+}
+.hero-car__go { display: none; }
+
+/* Die Leiste hat ohne Bewegung nichts zu steuern. */
+.hero-car__bar { display: none; }
+
+
+/* ---- Mit JavaScript: eine Reihe, die läuft ----------------------------- */
+
+.js .hero-car { max-width: 41rem; }
+.js .hero-car__view { overflow: hidden; }
+
+.js .hero-car__track {
+  display: flex; gap: 0; width: 700%;
+  animation: hero-car-slide 36s var(--ease) infinite;
+}
+.js .hero-car__slide { width: calc(100% / 7); padding-right: var(--s7); }
+
+.js .hero-car__link {
+  padding: 0; gap: var(--s3); height: auto; border: 0; background: none;
+  min-height: 7.75rem;                   /* hält die Höhe über alle sechs Texte */
+}
+.js .hero-car__link:hover { background: none; }
+.js .hero-car__meta { display: flex; align-items: baseline; gap: var(--s4); }
+.js .hero-car__name { font-size: var(--t-display-m); }
+.js .hero-car__pain { font-size: var(--t-subhead); }
+.js .hero-car__price { font-size: var(--t-small); }
+.js .hero-car__go {
+  display: inline; font-size: var(--t-small);
+  color: color-mix(in srgb, var(--on-deep) 82%, transparent);
+}
+.js .hero-car__link:hover .hero-car__go,
+.js .hero-car__link:focus-visible .hero-car__go { color: var(--on-deep); }
+
+/* Anhalten: Zeiger im Bild, Tastaturfokus in der Spur, oder Knopf gedrückt.
+   Der Zeiger allein genügt nicht — WCAG 2.2.2 verlangt eine Bedienung,
+   die auch mit Tastatur und auf dem Telefon erreichbar ist. */
+.js .hero-car:hover .hero-car__track,
+.js .hero-car:focus-within .hero-car__track,
+.js .hero-car.is-paused .hero-car__track,
+.js .hero-car:hover .hero-car__dot i,
+.js .hero-car:focus-within .hero-car__dot i,
+.js .hero-car.is-paused .hero-car__dot i { animation-play-state: paused; }
+
+.js .hero-car__bar {
+  display: flex; align-items: center; gap: var(--s4); margin-top: var(--s4);
+}
+.js .hero-car__dots { display: flex; }
+
+/* Die Punkte sind echte Knöpfe: wer nicht warten will, wählt sein Segment. */
+.js .hero-car__dot {
+  appearance: none; background: none; border: 0; cursor: pointer;
+  padding: 11px 7px; display: block; line-height: 0;   /* 24 x 25 px Zielfläche */
+}
+.js .hero-car__dot i {
+  display: block; height: 3px; width: 10px; border-radius: 2px;
+  background: color-mix(in srgb, var(--on-deep) 34%, transparent);
+  animation: hero-car-dot 36s linear infinite;
+  transition: width var(--fast) var(--ease), background-color var(--fast) var(--ease);
+}
+.js .hero-car__dot:hover i { background: color-mix(in srgb, var(--on-deep) 62%, transparent); }
+.js .hero-car__dot[aria-current="true"] i { animation: none; background: var(--on-deep); width: 32px; }
+
+.js .hero-car__toggle {
+  appearance: none; cursor: pointer; display: inline-flex; align-items: center; gap: var(--s2);
+  min-height: 34px; padding: 0 var(--s3);
+  background: none; color: color-mix(in srgb, var(--on-deep) 76%, transparent);
+  border: 1px solid color-mix(in srgb, var(--on-deep) 28%, transparent);
+  border-radius: var(--radius); font: inherit; font-size: var(--t-tiny);
+  transition: color var(--fast) var(--ease), border-color var(--fast) var(--ease);
+}
+.js .hero-car__toggle:hover { color: var(--on-deep); border-color: color-mix(in srgb, var(--on-deep) 56%, transparent); }
+.js .hero-car__toggle svg { width: 11px; height: 11px; fill: currentColor; }
+
+@keyframes hero-car-slide {
+  0.00%,  13.90% { transform: translateX(0); }
+  16.67%, 30.57% { transform: translateX(-14.2857%); }
+  33.33%, 47.23% { transform: translateX(-28.5714%); }
+  50.00%, 63.90% { transform: translateX(-42.8571%); }
+  66.67%, 80.57% { transform: translateX(-57.1429%); }
+  83.33%, 97.23% { transform: translateX(-71.4286%); }
+  100%           { transform: translateX(-85.7143%); }
+}
+@keyframes hero-car-dot {
+  0%,     16.6% { background: var(--on-deep); width: 32px; }
+  16.7%,  100%  { background: color-mix(in srgb, var(--on-deep) 34%, transparent); width: 10px; }
+}
+
+@media (max-width: 699px) {
+  .js .hero-car__slide { padding-right: var(--s5); }
+  .js .hero-car__link { min-height: 10.5rem; }
+}
 
 .statement {
   font-family: Fraunces, Georgia, serif; font-weight: 400;
@@ -819,6 +976,26 @@ table.data tr.is-hero td, table.data tr.is-hero th { background: var(--surface);
   .js [data-reveal="image"] > * { clip-path: none !important; }
   .js .reveal-line > span { transform: none !important; }
   .js [data-parallax] { transform: none !important; }
+
+  /* Ein angehaltenes Karussell zeigt ein Angebot von sechs. Deshalb fällt
+     es hier auf dasselbe Raster zurück wie ohne JavaScript. */
+  .js .hero-car { max-width: 54rem; }
+  .js .hero-car__view { overflow: visible; }
+  .js .hero-car__track {
+    display: grid; gap: var(--s2); width: auto; transform: none !important;
+    grid-template-columns: repeat(auto-fit, minmax(13rem, 1fr));
+  }
+  .js .hero-car__slide { width: auto; padding-right: 0; }
+  .js .hero-car__slide[aria-hidden="true"] { display: none; }
+  .js .hero-car__link {
+    min-height: 0; padding: var(--s4); height: 100%; gap: var(--s2);
+    border: 1px solid color-mix(in srgb, var(--on-deep) 22%, transparent);
+    background: color-mix(in srgb, var(--deep) 78%, transparent);
+  }
+  .js .hero-car__name { font-size: var(--t-heading); }
+  .js .hero-car__pain { font-size: var(--t-small); }
+  .js .hero-car__price { font-size: var(--t-tiny); }
+  .js .hero-car__go, .js .hero-car__bar { display: none; }
 }
 
 @media print {

@@ -62,8 +62,12 @@ Buchstabe), die Domain in `sitemap.xml`, `robots.txt` und den
 
 Die Reihenfolge ist bewusst gewählt: **erst verstehen, dann einordnen.**
 
-1. **Hero** — was es ist, für wen, was es kostet. Preis steht im Hero, nicht
-   drei Klicks später.
+1. **Hero** — was es ist, für wen, was es kostet. Die sechs Angebote wechseln
+   automatisch durch, jedes sechs Sekunden; Preis und Zielgruppe stehen im
+   Hero, nicht drei Klicks später. Die Punkte darunter sind Knöpfe: wer nicht
+   warten will, springt direkt zu seinem Bereich. Daneben ein Pause-Knopf.
+   Ohne JavaScript und bei reduzierter Bewegung wird daraus ein Raster mit
+   allen sechs gleichzeitig — siehe unten.
 2. **Problem** — Nachrichtenverlauf gegen Guide, ohne Text verständlich.
 3. **So funktioniert es** — drei Schritte.
 4. **Segmente** — sechs Karten zur Auswahl. Bewusst *nach* der Erklärung: ein
@@ -85,6 +89,13 @@ Die Reihenfolge ist bewusst gewählt: **erst verstehen, dann einordnen.**
 - **Animationen**: eine Easing-Kurve, drei Dauern, Fade-and-Rise, Bild-Reveals,
   zeilenweiser Text-Reveal, Sticky-Scroll, Parallax bei max. 6 % nur auf
   Desktop. `prefers-reduced-motion` schaltet alles ab.
+- **Angebots-Karussell im Hero**: 36 s Rundlauf, 6 s je Angebot. Die Bewegung
+  kommt aus CSS und läuft auch ohne JavaScript; JavaScript ergänzt nur die
+  Bedienung. Anhalten geht über den beschrifteten Knopf, über Tastaturfokus
+  und über den Zeiger (WCAG 2.2.2 — der Zeiger allein reicht auf dem Telefon
+  nicht). Ohne JavaScript und bei reduzierter Bewegung steht dort statt der
+  Reihe ein Raster mit allen sechs Angeboten: niemand verliert Inhalt, weil
+  eine Animation ausbleibt.
 - **Echte, scannbare QR-Codes** (Fehlerkorrektur H), erzeugt mit `segno` und
   mit einem Decoder gegengeprüft.
 - **Aufwandsrechner**, geprüft gegen Handrechnung und an den Tarifgrenzen.
@@ -92,7 +103,9 @@ Die Reihenfolge ist bewusst gewählt: **erst verstehen, dann einordnen.**
   Anmeldung, Schadensmeldung mit Foto — alles rein im Browser.
 - **Barrierefreiheit**: Sprunglink, sichtbare Fokuszustände, Tastaturbedienung,
   semantische Überschriften, beschriftete Formularfelder. Sämtlicher Text über
-  Bildflächen erreicht WCAG AA — gemessen, nicht geschätzt.
+  Bildflächen erreicht WCAG AA — gemessen, nicht geschätzt. Dafür trägt jeder
+  Segmentton eine zweite Fassung für dunklen Grund (`--seg-deep`); die hellen
+  Töne kommen dort nur auf 2,3–3,7:1 und wären als Text unlesbar.
 - **26 eigene Illustrationen** als SVG, erzeugt aus `build/art/make.py`.
   Zusammen 128 KB, lizenzfrei, auf jedem Display scharf.
 - **Ohne JavaScript** bleiben alle 22 Seiten vollständig lesbar.

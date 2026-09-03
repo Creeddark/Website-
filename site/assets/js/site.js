@@ -117,6 +117,88 @@
     steps.forEach(function (s) { stepIo.observe(s); });
   });
 
+  /* ---- Segment-Karussell im Hero ---------------------------------------- */
+  /* Die Bewegung selbst kommt aus CSS und läuft auch ohne dieses Skript.
+     Hier kommen die Bedienelemente dazu: Punkte zum Anspringen und ein
+     Pause-Knopf. WCAG 2.2.2 verlangt beides — was länger als fünf Sekunden
+     automatisch läuft, muss anhaltbar sein, und „den Zeiger draufhalten"
+     ist auf einem Telefon keine Bedienung. */
+  var car = document.querySelector("[data-hero-car]");
+  var carTrack = car && car.querySelector(".hero-car__track");
+  if (car && carTrack && !reduced && carTrack.getAnimations) {
+    var carSlides = carTrack.querySelectorAll(".hero-car__slide:not([aria-hidden])");
+    var CAR_CYCLE = 36000;                        // identisch zu @keyframes hero-car-slide
+    var CAR_STEP = CAR_CYCLE / carSlides.length;  // 6000 ms je Angebot
+    var carPicked = -1;                           // vom Besucher gewählt, sonst -1
+    var carDots = [];
+
+    var PAUSE_ICON = '<svg viewBox="0 0 12 12" aria-hidden="true"><rect x="2" y="1.5" width="3" height="9"/><rect x="7" y="1.5" width="3" height="9"/></svg>';
+    var PLAY_ICON = '<svg viewBox="0 0 12 12" aria-hidden="true"><path d="M3 1.5 10.5 6 3 10.5Z"/></svg>';
+
+    var bar = document.createElement("div");
+    bar.className = "hero-car__bar";
+    var dotWrap = document.createElement("div");
+    dotWrap.className = "hero-car__dots";
+    dotWrap.setAttribute("role", "group");
+    dotWrap.setAttribute("aria-label", "Angebot wählen");
+    var toggle = document.createElement("button");
+    toggle.type = "button";
+    toggle.className = "hero-car__toggle";
+
+    var markDots = function () {
+      carDots.forEach(function (d, i) {
+        if (i === carPicked) { d.setAttribute("aria-current", "true"); }
+        else { d.removeAttribute("aria-current"); }
+      });
+    };
+    var setToggle = function (paused) {
+      toggle.innerHTML = (paused ? PLAY_ICON : PAUSE_ICON) +
+        "<span>" + (paused ? "Weiter" : "Anhalten") + "</span>";
+      toggle.setAttribute("aria-pressed", String(paused));
+    };
+    /* Ein Punkt springt an sein Segment: die CSS-Animation wird auf den
+       passenden Zeitpunkt gesetzt und angehalten. Wer wählt, will nicht
+       drei Sekunden später weitergeschoben werden. */
+    var showSlide = function (i) {
+      var anims = carTrack.getAnimations();
+      if (!anims.length) return;
+      carPicked = i;
+      anims[0].currentTime = i * CAR_STEP;
+      car.classList.add("is-paused");
+      setToggle(true);
+      markDots();
+    };
+
+    carSlides.forEach(function (slide, i) {
+      var dot = document.createElement("button");
+      dot.type = "button";
+      dot.className = "hero-car__dot";
+      dot.setAttribute("aria-label", slide.querySelector(".hero-car__name").textContent.trim());
+      var fill = document.createElement("i");
+      /* Jeder Punkt leuchtet, wenn sein Angebot an der Reihe ist. Die
+         Verzögerung steht hier und nicht im Stylesheet, weil die Punkte
+         erst aus der Zahl der Karten entstehen. */
+      fill.style.animationDelay = (i * CAR_STEP) + "ms";
+      dot.appendChild(fill);
+      dot.addEventListener("click", function () { showSlide(i); });
+      dotWrap.appendChild(dot);
+      carDots.push(dot);
+    });
+
+    toggle.addEventListener("click", function () {
+      var paused = car.classList.toggle("is-paused");
+      /* Beim Fortsetzen führt wieder die Animation — sonst bliebe ein
+         Punkt hell stehen, der nicht mehr das gezeigte Angebot ist. */
+      if (!paused) { carPicked = -1; markDots(); }
+      setToggle(paused);
+    });
+
+    setToggle(false);
+    bar.appendChild(dotWrap);
+    bar.appendChild(toggle);
+    car.appendChild(bar);
+  }
+
   /* ---- FAQ: nur eine Antwort offen -------------------------------------- */
   document.querySelectorAll("[data-faq-exclusive]").forEach(function (group) {
     var items = group.querySelectorAll("details");
