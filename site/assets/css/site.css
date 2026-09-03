@@ -100,6 +100,11 @@
 
   --radius: 3px;
   --radius-lg: 6px;
+
+  /* Nachrichtenfenster: getönter Grund, hellere Blase, grün getönte Antwort */
+  --chat-ground: #ECEEE9;
+  --chat-in: #F8F9F6;
+  --chat-out: #D9E3DB;
   --content: 1240px;
   --prose: 44rem;
 
@@ -861,18 +866,113 @@ table.data tr.is-hero td, table.data tr.is-hero th { background: var(--surface);
 .sticky-split__step p { color: var(--ink-700); margin: 0; max-width: 40ch; }
 
 /* Vorher/Nachher */
-.compare { display: grid; gap: var(--s4); }
-@media (min-width: 760px) { .compare { grid-template-columns: 1fr 1fr; gap: var(--s5); } }
+/* minmax(0, …) wie im Hero: ohne das bemisst sich die Spalte am max-content
+   ihres Inhalts, und der „Überspringen"-Knopf im Fenster schiebt die ganze
+   Seite bei 360 px über den Rand. */
+.compare { display: grid; grid-template-columns: minmax(0, 1fr); gap: var(--s4); }
+@media (min-width: 760px) {
+  .compare { grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); gap: var(--s5); }
+}
 .compare__side { border: 1px solid var(--line); border-radius: var(--radius-lg); padding: var(--s5); background: var(--bg); }
 .compare__side--now { background: var(--surface); border-color: var(--seg); }
 .compare__side h3 { font-size: var(--t-label); letter-spacing: 0.2em; text-transform: uppercase; margin: 0 0 var(--s4); color: var(--ink-500); font-family: Inter, sans-serif; font-weight: 600; }
 .compare__side--now h3 { color: var(--seg); }
-.chat { display: flex; flex-direction: column; gap: var(--s2); }
-.chat span {
-  font-size: var(--t-tiny); background: var(--surface); border-radius: 10px 10px 10px 2px;
-  padding: var(--s2) var(--s3); align-self: flex-start; max-width: 88%; color: var(--ink-700);
+/* ---------- Nachrichtenfenster ------------------------------------------ */
+/* Bewusst NICHT die Farben und Zeichen eines bestimmten Messengers: das ist
+   fremde Marke. Die eigenen Töne genügen — als Chat liest es sich sofort. */
+
+.chat {
+  display: flex; flex-direction: column; overflow: hidden; min-width: 0;
+  border: 1px solid var(--line); border-radius: var(--radius-lg); background: var(--chat-ground);
 }
-.compare__side--now .chat span { background: var(--bg); }
+
+.chat__bar {
+  display: flex; align-items: center; gap: var(--s3); min-width: 0;
+  padding: var(--s3) var(--s4);
+  background: var(--surface); border-bottom: 1px solid var(--line);
+}
+.chat__avatar {
+  flex: none; width: 34px; height: 34px; border-radius: 50%;
+  border: 1px solid var(--ink-300); display: grid; place-items: center;
+  font-size: var(--t-label); font-weight: 600; letter-spacing: 0.04em; color: var(--ink-500);
+}
+.chat__who { min-width: 0; flex: 1; }
+.chat__name {
+  margin: 0; font-size: var(--t-small); font-weight: 600; color: var(--ink-900);
+  white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+}
+.chat__state { position: relative; height: 15px; margin: 1px 0 0; }
+.chat__state span { position: absolute; left: 0; top: 0; font-size: 12px; color: var(--ink-500); }
+
+/* Der Verlauf steht unten und füllt sich nach oben — wie in jedem Messenger.
+   Die feste Mindesthöhe verhindert, dass das Fenster beim Aufploppen wächst. */
+.chat__body {
+  list-style: none; margin: 0; padding: var(--s4) var(--s4) var(--s2);
+  display: flex; flex-direction: column; justify-content: flex-end; min-height: 292px;
+}
+.chat__row { display: grid; grid-template-rows: 1fr; min-height: 0; }
+/* Die Tippanzeigen gehören zur Animation. Ohne JavaScript oder bei reduzierter
+   Bewegung stünden dort sonst fünf Blasen, in denen ewig jemand tippt. */
+.chat__row--typing { display: none; }
+.chat.is-armed .chat__row--typing { display: grid; }
+/* Der Abstand sitzt an der BLASE, nicht am Feld: ein Innenabstand am Feld
+   bliebe auch dann stehen, wenn die Zeile auf 0fr eingeklappt ist. */
+.chat__cell { overflow: hidden; display: flex; }
+.chat__row--out .chat__cell { justify-content: flex-end; }
+
+.chat__bubble {
+  position: relative; max-width: 82%; margin: 0 0 var(--s2);
+  padding: var(--s2) 11px var(--s2) var(--s3);
+  font-size: var(--t-small); line-height: 1.45; color: var(--ink-700);
+  background: var(--chat-in); border-radius: 12px 12px 12px 3px;
+  display: flex; align-items: flex-end; gap: 10px;
+}
+.chat__row--out .chat__bubble {
+  background: var(--chat-out); color: #2A322D; border-radius: 12px 12px 3px 12px;
+}
+.chat__bubble time {
+  flex: none; font-size: var(--t-label); color: #8A938C;
+  font-variant-numeric: tabular-nums; padding-bottom: 1px;
+}
+.chat__row--out .chat__bubble time { color: #5C6B60; }
+.chat__tick { flex: none; width: 14px; height: 14px; color: #4C7A93; }
+
+.chat__typing {
+  display: inline-flex; align-items: center; gap: var(--s1);
+  margin: 0 0 var(--s2); padding: 11px 14px;
+  background: var(--chat-in); border-radius: 12px 12px 12px 3px;
+}
+.chat__typing i { display: block; width: 5px; height: 5px; border-radius: 50%; background: var(--ink-300); }
+
+/* Eingabezeile: ein Bild, kein Bedienelement — sie täuscht keine Funktion vor. */
+.chat__compose {
+  display: flex; align-items: center; gap: 10px;
+  padding: 10px var(--s4); border-top: 1px solid var(--line); background: var(--surface);
+}
+.chat__field {
+  flex: 1; height: 30px; border-radius: 15px; background: var(--chat-in);
+  border: 1px solid var(--line); display: flex; align-items: center;
+  padding: 0 var(--s3); font-size: var(--t-tiny); color: var(--ink-300);
+}
+.chat__send {
+  flex: none; width: 30px; height: 30px; border-radius: 50%;
+  background: var(--accent); display: grid; place-items: center; color: var(--on-deep);
+}
+.chat__send svg { width: 14px; height: 14px; }
+
+/* Überspringen: die Bewegung dauert über fünf Sekunden, also braucht sie eine
+   Bedienung (WCAG 2.2.2). Der Knopf existiert nur, solange sie läuft. */
+.chat__skip {
+  flex: none; appearance: none; background: none; cursor: pointer;
+  border: 1px solid color-mix(in srgb, var(--ink-500) 34%, transparent);
+  border-radius: var(--radius); padding: 5px var(--s3); min-height: 26px;
+  font: inherit; font-size: var(--t-label); letter-spacing: 0.08em;
+  text-transform: uppercase; font-weight: 600; color: var(--ink-500);
+  transition: color var(--fast) var(--ease), border-color var(--fast) var(--ease);
+}
+.chat__skip:hover { color: var(--ink-900); border-color: var(--ink-500); }
+/* Auf schmalen Geräten konkurriert der Knopf mit dem Namen — enger setzen. */
+@media (max-width: 560px) { .chat__skip { padding: 5px var(--s2); letter-spacing: 0.04em; } }
 
 
 /* ---------- 16 · DEMO -------------------------------------------------- */
@@ -971,6 +1071,55 @@ table.data tr.is-hero td, table.data tr.is-hero th { background: var(--surface);
 
 .js [data-parallax] { will-change: transform; }
 
+
+/* ---- Nachrichtenfenster: der Verlauf schreibt sich einmal selbst -------- */
+/* Der versteckte Zustand wird von site.js gesetzt (.is-armed), NICHT hier.
+   Bleibt das Skript aus oder scheitert es, steht der Verlauf vollständig da —
+   nie kann eine ausbleibende Animation Inhalt verschlucken. */
+
+.chat.is-armed .chat__row { grid-template-rows: 0fr; opacity: 0; }
+.chat.is-armed.is-playing .chat__row--msg {
+  animation: chat-pop 300ms var(--ease) var(--at) both;
+}
+.chat.is-armed.is-playing .chat__row--typing {
+  animation: chat-typing var(--dur) linear var(--at) both;
+}
+.chat.is-armed.is-playing .chat__typing i { animation: chat-bounce 1.15s ease-in-out infinite; }
+.chat.is-armed.is-playing .chat__typing i:nth-child(2) { animation-delay: 0.16s; }
+.chat.is-armed.is-playing .chat__typing i:nth-child(3) { animation-delay: 0.32s; }
+
+/* Nach dem Durchlauf — und beim Überspringen — steht alles endgültig. */
+.chat.is-done .chat__row { grid-template-rows: 1fr; opacity: 1; animation: none; }
+.chat.is-done .chat__row--typing { grid-template-rows: 0fr; opacity: 0; }
+
+/* Anhalten, solange der Zeiger im Fenster ist oder der Fokus darin steht. */
+.chat.is-playing:hover .chat__row, .chat.is-playing:hover .chat__typing i,
+.chat.is-playing:hover .chat__state span,
+.chat.is-playing:focus-within .chat__row, .chat.is-playing:focus-within .chat__typing i,
+.chat.is-playing:focus-within .chat__state span { animation-play-state: paused; }
+
+/* Kopfzeile: „tippt …" genau so lange, wie die Tippanzeige läuft. */
+.chat__typinglabel { opacity: 0; }
+.chat.is-armed.is-playing .chat__online { animation: chat-online 8364ms linear both; }
+.chat.is-armed.is-playing .chat__typinglabel { animation: chat-typinglabel 8364ms linear both; }
+
+@keyframes chat-pop {
+  from { grid-template-rows: 0fr; opacity: 0; transform: translateY(6px) scale(0.97); }
+  to   { grid-template-rows: 1fr; opacity: 1; transform: none; }
+}
+@keyframes chat-typing {
+  0%   { grid-template-rows: 0fr; opacity: 0; }
+  14%  { grid-template-rows: 1fr; opacity: 1; }
+  86%  { grid-template-rows: 1fr; opacity: 1; }
+  100% { grid-template-rows: 0fr; opacity: 0; }
+}
+@keyframes chat-bounce {
+  0%, 60%, 100% { transform: none; opacity: 0.55; }
+  30%           { transform: translateY(-3px); opacity: 1; }
+}
+@keyframes chat-typinglabel { 0% { opacity: 0; } 0.010% { opacity: 0; } 0.000% { opacity: 1; } 15.680% { opacity: 1; } 15.830% { opacity: 0; } 19.745% { opacity: 0; } 19.895% { opacity: 1; } 32.514% { opacity: 1; } 32.664% { opacity: 0; } 46.861% { opacity: 0; } 47.011% { opacity: 1; } 61.160% { opacity: 1; } 61.310% { opacity: 0; } 65.225% { opacity: 0; } 65.375% { opacity: 1; } 79.142% { opacity: 1; } 79.292% { opacity: 0; } 83.207% { opacity: 0; } 83.357% { opacity: 1; } 95.785% { opacity: 1; } 95.935% { opacity: 0; } 100% { opacity: 0; } }
+@keyframes chat-online { 0% { opacity: 1; } 0.010% { opacity: 1; } 0.000% { opacity: 0; } 15.680% { opacity: 0; } 15.830% { opacity: 1; } 19.745% { opacity: 1; } 19.895% { opacity: 0; } 32.514% { opacity: 0; } 32.664% { opacity: 1; } 46.861% { opacity: 1; } 47.011% { opacity: 0; } 61.160% { opacity: 0; } 61.310% { opacity: 1; } 65.225% { opacity: 1; } 65.375% { opacity: 0; } 79.142% { opacity: 0; } 79.292% { opacity: 1; } 83.207% { opacity: 1; } 83.357% { opacity: 0; } 95.785% { opacity: 0; } 95.935% { opacity: 1; } 100% { opacity: 1; } }
+
 @media (prefers-reduced-motion: reduce) {
   *, *::before, *::after {
     animation-duration: 0.01ms !important; animation-iteration-count: 1 !important;
@@ -1000,6 +1149,10 @@ table.data tr.is-hero td, table.data tr.is-hero th { background: var(--surface);
   .js .hero-car__pain { font-size: var(--t-small); }
   .js .hero-car__price { font-size: var(--t-tiny); }
   .js .hero-car__go, .js .hero-car__bar { display: none; }
+
+  /* Der Verlauf steht sofort vollständig — ohne Tippanzeige, ohne Aufploppen. */
+  .chat .chat__row { grid-template-rows: 1fr !important; opacity: 1 !important; }
+  .chat__skip { display: none !important; }
 }
 
 @media print {

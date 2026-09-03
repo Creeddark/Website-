@@ -206,6 +206,42 @@
     car.appendChild(bar);
   }
 
+  /* ---- Nachrichtenfenster ------------------------------------------------ */
+  /* Der Verlauf schreibt sich einmal selbst, sobald er ins Bild kommt.
+     WICHTIG: Das Verstecken der Zeilen macht dieses Skript (.is-armed), nicht
+     das Stylesheet. Fehlt JavaScript oder bricht es hier ab, steht der ganze
+     Verlauf da — eine ausbleibende Animation darf nie Inhalt verschlucken. */
+  document.querySelectorAll("[data-chat]").forEach(function (chat) {
+    var total = parseInt(chat.getAttribute("data-chat-total"), 10) || 9000;
+    var skip = chat.querySelector("[data-chat-skip]");
+    var timer = null;
+
+    var finish = function () {
+      window.clearTimeout(timer);
+      chat.classList.remove("is-armed", "is-playing");
+      chat.classList.add("is-done");
+      if (skip) skip.hidden = true;
+    };
+
+    if (reduced || !("IntersectionObserver" in window)) return;   // alles steht sofort
+
+    chat.classList.add("is-armed");
+    if (skip) skip.addEventListener("click", finish);
+
+    var io = new IntersectionObserver(function (entries) {
+      entries.forEach(function (entry) {
+        if (!entry.isIntersecting) return;
+        io.unobserve(entry.target);
+        chat.classList.add("is-playing");
+        if (skip) skip.hidden = false;
+        /* Grosszügig gerechnet: der Zeiger im Fenster hält die Animation an,
+           dann läuft die Uhr weiter. Der Knopf ist der verlässliche Weg. */
+        timer = window.setTimeout(finish, total + 900);
+      });
+    }, { threshold: 0.35 });
+    io.observe(chat);
+  });
+
   /* ---- FAQ: nur eine Antwort offen -------------------------------------- */
   document.querySelectorAll("[data-faq-exclusive]").forEach(function (group) {
     var items = group.querySelectorAll("details");
