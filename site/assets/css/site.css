@@ -1913,3 +1913,219 @@ button.eli__link--alt { border-color: var(--line); }
 
 @media (max-width: 1023px) { .stand { --b: 190px; --h: 244px; --d: 14px; } .stand__qr { width: 104px; height: 104px; } }
 
+/* ---------- SCHLÜSSELTRESOR, DREIDIMENSIONAL --------------------------- */
+/* Die angespannteste Frage, die ein Gast auf dieser Seite hat, ist "wie
+   komme ich rein". Der Text beantwortet sie; dieser Koerper zeigt sie.
+
+   Er bewegt sich NICHT von selbst. Die Tuer geht auf, wenn man mit dem
+   Zeiger darauf geht oder mit der Tastatur hineinfaehrt. Damit gibt es
+   nichts anzuhalten, WCAG 2.2.2 ist gar nicht beruehrt, und die Bewegung
+   passiert genau dann, wenn jemand sie sehen will. */
+
+/* Die Figur traegt den Tastaturfokus, damit die Tuer auch ohne Zeiger
+   aufgeht. Ein role="img" mit Beschriftung, weil es ein Bild ist und kein
+   Bedienelement: es gibt nichts zu tun ausser hinzusehen. */
+.tresor__figur {
+  display: flex; flex-direction: column; justify-content: center;
+  padding: var(--s6) 0; border-radius: var(--radius);
+}
+.tresor__figur:focus-visible { outline: 2px solid var(--seg-ink); outline-offset: 6px; }
+
+.tresor {
+  --tb: 168px;                      /* Breite  */
+  --th: 210px;                      /* Hoehe   */
+  --td: 62px;                       /* Tiefe   */
+  width: var(--tb); height: var(--th);
+  perspective: 900px;
+  position: relative; margin-inline: auto;
+}
+.tresor__box { position: absolute; inset: 0; transform-style: preserve-3d;
+               transform: rotateX(-6deg) rotateY(-26deg); }
+
+/* Der Korpus. Jede Flaeche wird zuerst mittig gelegt und dann nur noch in
+   ihrem EIGENEN gedrehten Bezug nach vorn geschoben. Mein erster Versuch
+   mischte translateX und translateY dazu, und dann stand der Boden an der
+   falschen Stelle: der Kasten war unten offen.
+
+   Der Korpus sitzt um eine halbe Tiefe nach hinten versetzt, damit seine
+   Vorderkante genau dort liegt, wo die Tuer haengt. */
+.tresor__korpus { position: absolute; inset: 0; transform-style: preserve-3d;
+                  transform: translateZ(calc(var(--td) / -2)); }
+.tresor__f { position: absolute; background: #2A2724; }
+.tresor__f--rueck  { inset: 0; transform: rotateY(180deg) translateZ(calc(var(--td) / 2));
+                     background: #201E1B; }
+.tresor__f--links, .tresor__f--rechts {
+  top: 0; height: var(--th); width: var(--td);
+  left: calc(50% - var(--td) / 2);
+  background: #232120;
+}
+.tresor__f--links  { transform: rotateY(-90deg) translateZ(calc(var(--tb) / 2)); }
+.tresor__f--rechts { transform: rotateY(90deg)  translateZ(calc(var(--tb) / 2)); }
+.tresor__f--oben, .tresor__f--unten {
+  left: 0; width: var(--tb); height: var(--td);
+  top: calc(50% - var(--td) / 2);
+  background: #262422;
+}
+.tresor__f--oben  { transform: rotateX(90deg)  translateZ(calc(var(--th) / 2)); }
+.tresor__f--unten { transform: rotateX(-90deg) translateZ(calc(var(--th) / 2)); }
+
+/* Der Schluessel liegt hinten im Fach und wird erst sichtbar, wenn die
+   Tuer aufgeht. */
+.tresor__schluessel {
+  position: absolute; left: 50%; top: 52%;
+  transform: translate(-50%, -50%) translateZ(calc(var(--td) * -0.55));
+  width: 62px; height: 62px; color: var(--gold);
+  opacity: 0; transition: opacity 260ms var(--ease) 120ms;
+}
+.tresor__schluessel svg { width: 100%; height: 100%; display: block; }
+
+/* Die Tuer haengt am linken Rand und schwingt auf. */
+.tresor__tuer {
+  position: absolute; inset: 0;
+  transform-origin: left center;
+  transform: rotateY(0deg);
+  transition: transform 520ms var(--ease);
+  transform-style: preserve-3d;
+}
+.tresor__blatt {
+  position: absolute; inset: 0; border-radius: 3px;
+  background: linear-gradient(150deg, #3A3733 0%, #2C2A27 62%);
+  box-shadow: inset 0 0 0 1px rgba(255, 247, 238, .1);
+  display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 14px;
+}
+.tresor__tasten {
+  display: grid; grid-template-columns: repeat(3, 20px); gap: 7px;
+}
+.tresor__tasten i {
+  display: block; width: 20px; height: 20px; border-radius: 50%;
+  background: #46423D; box-shadow: inset 0 1px 0 rgba(255,247,238,.14);
+}
+.tresor__griff {
+  width: 34px; height: 6px; border-radius: 3px; background: var(--gold);
+  opacity: .85;
+}
+.tresor__hinweis {
+  margin: var(--s4) 0 0; text-align: center;
+  font-size: var(--t-tiny); color: var(--ink-500);
+}
+
+/* Geoeffnet wird nur, wo es einen Zeiger gibt, und per Tastaturfokus.
+   Auf einem Beruehrungsbildschirm steht die Tuer offen, dort gaebe es
+   kein Verlassen und sie bliebe sonst fuer immer zu. */
+@media (hover: hover) and (pointer: fine) {
+  .tresor__figur:hover .tresor__tuer,
+  .tresor__figur:focus-within .tresor__tuer { transform: rotateY(-104deg); }
+  .tresor__figur:hover .tresor__schluessel,
+  .tresor__figur:focus-within .tresor__schluessel { opacity: 1; }
+}
+/* Zwei Abfragen, kein Bindestrich dazwischen: zusammen decken sie genau
+   das Gegenteil der Regel darueber ab. Mit nur einer davon faellt ein
+   Geraet mit Zeiger, aber grobem Zeiger (Touch-Notebook, Stift) durch
+   beide Raster und die Tuer bliebe fuer immer zu. */
+@media not all and (hover: hover) {
+  .tresor__tuer { transform: rotateY(-104deg); }
+  .tresor__schluessel { opacity: 1; }
+}
+@media not all and (pointer: fine) {
+  .tresor__tuer { transform: rotateY(-104deg); }
+  .tresor__schluessel { opacity: 1; }
+}
+@media (prefers-reduced-motion: reduce) {
+  /* Kein Schwenk, aber der Inhalt bleibt erreichbar: die Tuer ist offen. */
+  .tresor__tuer { transition: none; transform: rotateY(-104deg); }
+  .tresor__schluessel { transition: none; opacity: 1; }
+}
+
+/* ---------- KARTENSTÄNDER, DREIDIMENSIONAL ----------------------------- */
+/* Sechs Karten hintereinander im Raum, eine je Segment. Kein Selbstlaeufer:
+   der Stapel steht still, bis jemand im Verzeichnis daneben eine Zeile
+   anfaehrt. Dann kommt genau die zugehoerige Karte nach vorn.
+
+   Damit ist die Bewegung an Inhalt gebunden statt Dekoration, und weil sie
+   nur auf eine Handlung hin passiert, gibt es nichts anzuhalten.
+
+   Die Verbindung ueber die Spalten hinweg macht :has() am gemeinsamen
+   Vorfahren. Wo der Browser das nicht kennt, steht der Faecher einfach
+   still da; verloren geht nichts, denn die Karten tragen keine Information,
+   die nicht in der Liste danebensteht. */
+
+.karten { display: none; }
+@media (min-width: 900px) {
+  .karten {
+    display: block; position: relative;
+    height: calc(var(--kh) + var(--kschritt) * 5);
+    margin-top: var(--s8);
+    perspective: 1400px; perspective-origin: 22% 118%;
+  }
+}
+.karten {
+  --kb: 172px;       /* Kartenbreite  */
+  --kh: 92px;        /* Kartenhoehe   */
+  --kschritt: 34px;  /* Versatz nach unten je Karte — muss groesser sein
+                        als das Beschriftungsband, sonst verdeckt die
+                        vordere Karte die Schrift der dahinter. */
+}
+.karten__k {
+  position: absolute; left: 0; top: 0;
+  width: var(--kb); height: var(--kh); border-radius: 5px;
+  background: var(--ivory); border: 1px solid var(--line);
+  box-shadow: 0 12px 26px -16px rgba(26, 26, 26, .38);
+  display: flex; align-items: flex-end; gap: var(--s3);
+  padding: 0 var(--s4) 11px;
+  font-family: "Playfair Display", Georgia, serif;
+  font-size: 0.9375rem; line-height: 1; color: var(--ink-700);
+  transition: transform 380ms var(--ease), border-color 380ms var(--ease),
+              box-shadow 380ms var(--ease);
+}
+/* Dieselbe Goldlinie wie bei den Sektionslabels, hier als Kartenreiter. */
+.karten__k::before {
+  content: ""; width: 15px; height: 1px; flex: none;
+  background: var(--gold); margin-bottom: 0.42em;
+}
+/* Die Staffelung liest sich von oben nach unten wie die Liste daneben:
+   vorderste Karte oben, jede weitere tiefer und weiter hinten. Sichtbar
+   bleibt von jeder verdeckten Karte ihr unteres Band mit der Beschriftung. */
+.karten__k:nth-child(1) { transform: translate3d(0px, 0px, 0px); z-index: 6; }
+.karten__k:nth-child(2) { transform: translate3d(9px, 34px, -40px); z-index: 5; }
+.karten__k:nth-child(3) { transform: translate3d(18px, 68px, -80px); z-index: 4; }
+.karten__k:nth-child(4) { transform: translate3d(27px, 102px, -120px); z-index: 3; }
+.karten__k:nth-child(5) { transform: translate3d(36px, 136px, -160px); z-index: 2; }
+.karten__k:nth-child(6) { transform: translate3d(45px, 170px, -200px); z-index: 1; }
+
+/* Kein Selbstlaeufer: der Stapel steht still, bis jemand im Verzeichnis
+   daneben eine Zeile anfaehrt. Dann kommt genau die zugehoerige Karte nach
+   vorn. z-index muss mit, denn .karten ist flach — ohne ihn schoebe sich
+   die Karte zwar nach vorn, bliebe aber unter den vorderen gemalt. */
+.seg-index:has(.seg-list > li:nth-child(1) .seg-row:hover) .karten__k:nth-child(1),
+.seg-index:has(.seg-list > li:nth-child(1) .seg-row:focus-visible) .karten__k:nth-child(1),
+.seg-index:has(.seg-list > li:nth-child(2) .seg-row:hover) .karten__k:nth-child(2),
+.seg-index:has(.seg-list > li:nth-child(2) .seg-row:focus-visible) .karten__k:nth-child(2),
+.seg-index:has(.seg-list > li:nth-child(3) .seg-row:hover) .karten__k:nth-child(3),
+.seg-index:has(.seg-list > li:nth-child(3) .seg-row:focus-visible) .karten__k:nth-child(3),
+.seg-index:has(.seg-list > li:nth-child(4) .seg-row:hover) .karten__k:nth-child(4),
+.seg-index:has(.seg-list > li:nth-child(4) .seg-row:focus-visible) .karten__k:nth-child(4),
+.seg-index:has(.seg-list > li:nth-child(5) .seg-row:hover) .karten__k:nth-child(5),
+.seg-index:has(.seg-list > li:nth-child(5) .seg-row:focus-visible) .karten__k:nth-child(5),
+.seg-index:has(.seg-list > li:nth-child(6) .seg-row:hover) .karten__k:nth-child(6),
+.seg-index:has(.seg-list > li:nth-child(6) .seg-row:focus-visible) .karten__k:nth-child(6) {
+  z-index: 7; border-color: var(--gold); color: var(--ink-900);
+  box-shadow: 0 20px 40px -18px rgba(26, 26, 26, .42);
+}
+.seg-index:has(.seg-list > li:nth-child(1) .seg-row:hover) .karten__k:nth-child(1),
+.seg-index:has(.seg-list > li:nth-child(1) .seg-row:focus-visible) .karten__k:nth-child(1) { transform: translate3d( 0px,   0px, 58px); }
+.seg-index:has(.seg-list > li:nth-child(2) .seg-row:hover) .karten__k:nth-child(2),
+.seg-index:has(.seg-list > li:nth-child(2) .seg-row:focus-visible) .karten__k:nth-child(2) { transform: translate3d( 4px,  34px, 58px); }
+.seg-index:has(.seg-list > li:nth-child(3) .seg-row:hover) .karten__k:nth-child(3),
+.seg-index:has(.seg-list > li:nth-child(3) .seg-row:focus-visible) .karten__k:nth-child(3) { transform: translate3d( 8px,  68px, 58px); }
+.seg-index:has(.seg-list > li:nth-child(4) .seg-row:hover) .karten__k:nth-child(4),
+.seg-index:has(.seg-list > li:nth-child(4) .seg-row:focus-visible) .karten__k:nth-child(4) { transform: translate3d(12px, 102px, 58px); }
+.seg-index:has(.seg-list > li:nth-child(5) .seg-row:hover) .karten__k:nth-child(5),
+.seg-index:has(.seg-list > li:nth-child(5) .seg-row:focus-visible) .karten__k:nth-child(5) { transform: translate3d(16px, 136px, 58px); }
+.seg-index:has(.seg-list > li:nth-child(6) .seg-row:hover) .karten__k:nth-child(6),
+.seg-index:has(.seg-list > li:nth-child(6) .seg-row:focus-visible) .karten__k:nth-child(6) { transform: translate3d(20px, 170px, 58px); }
+
+@media (prefers-reduced-motion: reduce) {
+  /* Der Stapel bleibt raeumlich, aber nichts gleitet mehr. */
+  .karten__k { transition: none; }
+}
+
