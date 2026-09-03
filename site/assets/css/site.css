@@ -374,6 +374,15 @@ a { color: inherit; }
   background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='140' height='140'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='3'/%3E%3CfeColorMatrix type='saturate' values='0'/%3E%3C/filter%3E%3Crect width='140' height='140' filter='url(%23n)' opacity='0.5'/%3E%3C/svg%3E");
 }
 .plate > * { position: relative; z-index: 1; }
+
+/* Als <img> eingesetzte Illustration: füllt dieselbe Fläche wie die
+   Platzhalterfläche. ::before/::after greifen bei ersetzten Elementen nicht,
+   der Verlauf entfällt damit automatisch. */
+img.plate { width: 100%; object-fit: cover; background: transparent; }
+.hero__media img.plate, .cover__media img.plate { height: 100%; }
+/* Diagramme vollständig zeigen statt beschneiden */
+img.plate[src$="produkt-uebersicht.svg"],
+img.plate[src$="produkt-technik.svg"] { object-fit: contain; background: var(--surface); }
 .plate--4x5 { aspect-ratio: 4/5; } .plate--3x2 { aspect-ratio: 3/2; }
 .plate--1x1 { aspect-ratio: 1/1; } .plate--16x9 { aspect-ratio: 16/9; }
 .plate--tall { aspect-ratio: 3/4; }

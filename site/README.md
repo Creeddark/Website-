@@ -93,6 +93,8 @@ Die Reihenfolge ist bewusst gewählt: **erst verstehen, dann einordnen.**
 - **Barrierefreiheit**: Sprunglink, sichtbare Fokuszustände, Tastaturbedienung,
   semantische Überschriften, beschriftete Formularfelder. Sämtlicher Text über
   Bildflächen erreicht WCAG AA — gemessen, nicht geschätzt.
+- **26 eigene Illustrationen** als SVG, erzeugt aus `build/art/make.py`.
+  Zusammen 128 KB, lizenzfrei, auf jedem Display scharf.
 - **Ohne JavaScript** bleiben alle 22 Seiten vollständig lesbar.
 
 ## Was noch fehlt
@@ -100,7 +102,7 @@ Die Reihenfolge ist bewusst gewählt: **erst verstehen, dann einordnen.**
 | Fehlt | Auswirkung | Nächster Schritt |
 |---|---|---|
 | **Markenname** | Überall steht der Arbeitstitel | Entscheidung + DPMA/EUIPO-Recherche |
-| **Echte Bilder** | Alle Bildflächen sind gestaltete Platzhalter | [`IMAGE-BRIEF.md`](IMAGE-BRIEF.md) |
+| **Fotos** | Alle Flächen tragen eigene Strichzeichnungen — Fotos erst, wenn es echte Kundenobjekte zu zeigen gibt | [`IMAGE-BRIEF.md`](IMAGE-BRIEF.md) |
 | **Formular-Empfänger** | Formulare validieren, senden aber nichts | Endpunkt eintragen, Bestätigungsmail |
 | **Zahlung** | Kein Checkout — Verkauf läuft über Anfrage | Bei Self-Serve: Zahlungsanbieter anbinden |
 | **Rechtstexte** | `recht/` ist ein Gerüst. Per `robots.txt` von der Indexierung ausgenommen | Fachanwalt für IT-Recht |

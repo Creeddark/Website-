@@ -1,115 +1,63 @@
-# Bild-Briefing
+# Bildmaterial
 
-Die Website läuft mit **gestalteten Platzhalterflächen** (`.plate`). Sie sehen
-absichtlich nach Kunstrichtung aus und nicht nach grauem Kasten — aber sie sind
-kein Ersatz für echte Bilder.
+Die Website läuft **nicht mehr mit Platzhaltern**. Alle 26 Bildflächen sind
+mit eigenen Strichzeichnungen belegt — architektonische Aufrisse im Markenstil,
+erzeugt aus `build/art/make.py`.
 
-## So ersetzt man einen Platzhalter
-
-Jede Fläche trägt ein `data-img`-Attribut mit ihrem Namen:
-
-```html
-<div class="plate plate--3x2" data-img="hero-ferien"></div>
+```bash
+python3 build/art/make.py      # erzeugt site/assets/img/*.svg
 ```
 
-wird zu
+Zusammen 128 KB für 26 Motive. Sie sind Vektorgrafik, also auf jedem Display
+scharf, und brauchen keine Lizenz, kein Model Release und keine Bildagentur.
 
-```html
-<img class="plate plate--3x2" src="assets/img/hero-ferien.avif"
-     alt="Beschreibender Alternativtext" width="1600" height="1067" loading="lazy">
-```
+## Warum Zeichnungen und keine Fotos
 
-Die Klasse bleibt — sie trägt Seitenverhältnis und Radius. Bei allen `hero-*`
-und `*-cover` **kein** `loading="lazy"`, die stehen oberhalb des Falzes.
+Wir haben keine lizenzierten Fotos, und ein gekauftes Stockfoto von einem
+fremden Ferienhaus wäre eine Behauptung über etwas, das uns nicht gehört. Eine
+Zeichnung ist ehrlich: sie erklärt, statt vorzugeben.
 
-**Technisch:** AVIF mit WebP-Fallback, `srcset` in vier Größen, Hero-Bilder
-unter 180 KB. Jedes Bild braucht einen sinnvollen `alt`-Text — das ist SEO
-*und* Barrierefreiheitspflicht.
-
-> **Vor Veröffentlichung klären:** Model Release für jedes Bild mit erkennbaren
-> Personen, Lizenz für jedes Element schriftlich dokumentieren. Details in
-> `docs/10-legal-and-limits.md`.
-
----
+Für den Start reicht das vollständig. **Fotos lohnen sich erst, wenn es echte
+Kundenobjekte zu zeigen gibt** — dann aber mit schriftlicher Freigabe des
+Betreibers.
 
 ## Bildsprache
 
-Kühl, architektonisch, real. Räume ohne Menschen oder mit Menschen als kleine
-Figur im Raum. Klare Linien, Materialtextur: Holz, Stein, Leinen, Metall.
+Flacher Aufriss auf einer durchgehenden Grundlinie, feine Linien (2,4–2,8 px im
+Koordinatenraum), genau eine getönte Fläche je Motiv — der Telefonbildschirm im
+Segmentton. Die linken 25–30 % bleiben bei allen Hero-Motiven frei, dort steht
+die Überschrift.
 
-**Nicht:** gestellte Business-Fotografie, Handshakes, Menschen die auf Laptops
-zeigen, übersättigte Bearbeitung.
+## Motive
 
-**Wichtig:** Alle `hero-*` und `*-cover` tragen Text. Sie brauchen eine
-**ruhige, eher dunkle Bildhälfte** dort, wo die Typo steht — sonst greift der
-Scrim zu stark und das Bild verschwindet.
-
----
-
-## Marke
-
-| Name | Format | Motiv |
-|---|---|---|
-| `hero-home` | füllend | Das wichtigste Bild. Muss **alle Bereiche** tragen: eine Schwelle, ein Eingang, ein Ankommen. Weder klar Ferienhaus noch klar Büro. Licht auf einer Tür, ein gedeckter Tisch, ein Flur. Untere Hälfte ruhig |
-| `about-portrait` | 3:2 | **Echtes Foto der Gründerinnen und Gründer.** Bis dahin bleibt die Seite ehrlich unbesetzt |
-| `produkt-uebersicht` | 16:9 | Echter Screenshot: mehrere Ansichten nebeneinander, auf Gerät oder als Fläche |
-| `produkt-technik` | 4:5 | Detail des Editors oder der Gastansicht — **echter Screenshot**, kein Mockup |
-| `app-welcome` | füllend | Coverbild in der Telefonvorschau auf der Startseite |
-
-## Segment-Heros
-
-Alle füllend, quer, mit ruhiger unterer Bildhälfte.
-
-| Name | Motiv |
+| Datei | Einsatz |
 |---|---|
-| `hero-ferien` | Ferienhaus-Innenraum oder Eingang, Morgenlicht, aufgeräumt, keine Menschen |
-| `hero-hotels` | Boutique-Hotel: Empfang, Flur oder Zimmerdetail. Material und Licht |
-| `hero-camping` | Campingplatz früh am Morgen: Stellplätze, Bäume, Sanitärhaus. Nicht Werbe-Camping |
-| `hero-events` | Firmenevent: gedeckte Tische im Hof, Lichterkette, vor dem Eintreffen der Gäste |
-| `hero-verwaltung` | Mehrfamilienhaus: Eingang, Briefkästen, Treppenhaus. Nüchtern, gepflegt |
-| `hero-seminar` | Seminarraum: Stuhlkreis oder U-Form, Tageslicht, leer |
+| `hero-home` | Startseite. Haus, Wohnblock, Zelt, Telefon — ein Code, viele Orte |
+| `hero-ferien` · `hero-hotels` · `hero-camping` | Segment-Heros |
+| `hero-events` · `hero-verwaltung` · `hero-seminar` | Segment-Heros |
+| `demo-*-cover` | Titelbilder der drei Live-Beispiele |
+| `produkt-uebersicht` | Diagramm: aus Bausteinen wird eine Seite |
+| `produkt-technik` | Diagramm: Editor → Erzeugung → CDN → Gast |
+| `app-welcome` | Telefoninhalt in der Vorschau |
+| `demo-guide-*` | Vignetten: Eingang, Küche, Wohnraum, Strand, Abreise, Gastgeberin |
+| `demo-haus-*` | Vignetten: Eingang, Hof, Treppenhaus, Waschküche, Technik |
+| `demo-event-map` | Schematische Anfahrtskarte |
 
-## Demo: Ferienhaus
+## Ein Motiv ändern
 
-| Name | Format | Motiv |
-|---|---|---|
-| `demo-guide-cover` | füllend | Ferienhaus an der Küste. Untere Hälfte ruhig |
-| `demo-guide-entrance` | 3:2 | Eingang mit Schlüsseltresor |
-| `demo-guide-kitchen` | 3:2 | Küche mit Induktionsfeld und Geschirrspüler |
-| `demo-guide-living` | 3:2 | Wohnbereich mit Kamin |
-| `demo-guide-beach` | 3:2 | Strand, Dünen, Umgebung |
-| `demo-guide-exit` | 3:2 | Aufgeräumter Raum, Abreisesituation |
-| `demo-guide-host` | 3:2 | Gastgeberin im Türrahmen — **Model Release erforderlich** |
+Szenen sind Funktionen in `build/art/make.py`, zusammengesetzt aus Primitiven
+(`house`, `block`, `tent`, `tree`, `pavilion`, `phone`, `qr_sign`,
+`letterboxes`, `barrier`, `chairs_u`). Funktion anpassen, Skript laufen lassen,
+fertig — die Website bindet die Dateien unverändert ein.
 
-## Demo: Firmenevent
+Farben kommen aus den Konstanten oben im Skript und entsprechen den
+CSS-Tokens. Wird die Palette geändert, muss das Skript einmal neu laufen.
 
-| Name | Format | Motiv |
-|---|---|---|
-| `demo-event-cover` | füllend | Gutshof mit gedeckten Tischen, später Nachmittag |
-| `demo-event-map` | 3:2 | Statische Karte im Markenstil. **Kartenlizenz prüfen** |
+## Wenn später Fotos dazukommen
 
-## Demo: Hausinformation
+Ein `<img class="plate …">` gegen ein anderes tauschen — Klasse und
+Seitenverhältnis bleiben. Für Hero-Motive gilt dann: **ruhige, eher dunkle
+Bildhälfte dort, wo die Typo steht**, sonst greift der Scrim zu stark.
 
-| Name | Format | Motiv |
-|---|---|---|
-| `demo-haus-cover` | füllend | Mehrfamilienhaus von außen, sachlich |
-| `demo-haus-eingang` | 3:2 | Hauseingang mit Klingelschildern und Briefkästen |
-| `demo-haus-hof` | 3:2 | Innenhof mit Mülltonnen-Standplatz |
-| `demo-haus-flur` | 3:2 | Treppenhaus, Tageslicht |
-| `demo-haus-keller` | 3:2 | Waschküche oder Kellergang |
-| `demo-haus-technik` | 3:2 | Heizungsraum oder Zählerschrank |
-
----
-
-## Reihenfolge bei begrenztem Budget
-
-1. **`hero-home`** — die Startseite entscheidet über alles Weitere
-2. **`produkt-uebersicht`, `produkt-technik`** — echte Screenshots, kosten nur
-   Zeit und wirken stärker als jedes gekaufte Bild
-3. **`demo-*-cover`** — die Live-Beispiele sind der wichtigste Conversion-Hebel
-4. **`hero-ferien`, `hero-verwaltung`** — die beiden Segmente mit dem größten Potenzial
-5. Restliche Segment-Heros
-6. **`about-portrait`** — sobald es die Personen zu zeigen gibt
-
-Die Screenshots unter Punkt 2 sind kostenlos und wirken besser als Stockmaterial.
-Sie sollten zuerst entstehen, nicht zuletzt.
+Vor Veröffentlichung: Model Release für erkennbare Personen, Lizenz je Bild
+schriftlich dokumentieren (`docs/10-legal-and-limits.md`).
