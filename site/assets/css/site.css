@@ -818,11 +818,34 @@ table.data tr.is-hero td, table.data tr.is-hero th { background: var(--surface);
 
 /* ---------- 13 · MOCKUPS ----------------------------------------------- */
 
+/* Tiefe statt Effekt. Das Telefon ist die einzige Stelle, an der man das
+   Produkt sieht; wenn es dem Zeiger folgt, wirkt es wie ein Gegenstand auf
+   dem Tisch statt wie eine Zeichnung. Die Winkel sind absichtlich klein
+   (hoechstens 5 Grad): man soll es spueren, nicht bemerken.
+
+   --neig-x und --neig-y setzt das Skript, in Ruhe stehen beide auf 0. Ohne
+   JavaScript liegt das Telefon deshalb flach da, ohne dass hier etwas
+   ausgeschaltet werden muesste. */
 .phone {
   width: 100%; max-width: 290px; aspect-ratio: 9/19;
   border: 1px solid var(--ink-900); border-radius: 26px; padding: 9px;
   background: var(--bg); position: relative;
+  --neig-x: 0; --neig-y: 0;
+  transform: perspective(1400px)
+             rotateX(calc(var(--neig-x) * 1deg))
+             rotateY(calc(var(--neig-y) * 1deg));
+  transform-style: preserve-3d;
+  transition: transform 520ms var(--ease), box-shadow 520ms var(--ease);
+  will-change: transform;
 }
+/* Der Schatten wandert mit der Neigung, sonst schwebt das Geraet ohne Grund. */
+.phone {
+  box-shadow: calc(var(--neig-y) * -1.6px) calc(var(--neig-x) * 1.6px)
+              38px -14px rgba(26, 26, 26, 0.26);
+}
+/* Waehrend der Zeiger fuehrt, folgt es unmittelbar; erst beim Verlassen
+   laeuft es weich in die Ruhelage zurueck. */
+.phone.is-fuehrend { transition: none; }
 .phone::before {
   content: ""; position: absolute; top: 17px; left: 50%; transform: translateX(-50%);
   width: 54px; height: 4px; border-radius: 2px; background: var(--ink-900); opacity: 0.16; z-index: 3;
@@ -1402,6 +1425,9 @@ table.data tr.is-hero td, table.data tr.is-hero th { background: var(--surface);
   .js [data-reveal="image"] > * { clip-path: none !important; }
   .js .reveal-line > span { transform: none !important; }
   .js [data-parallax] { transform: none !important; }
+  /* Die Neigung des Telefons ist Bewegung ohne Informationswert. Bei
+     reduzierter Bewegung entfaellt sie ganz, statt nur schneller zu sein. */
+  .phone { --neig-x: 0 !important; --neig-y: 0 !important; }
 
   /* Ein angehaltenes Karussell zeigt ein Angebot von sechs. Deshalb fällt
      es hier auf dasselbe Raster zurück wie ohne JavaScript. */

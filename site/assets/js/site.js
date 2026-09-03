@@ -384,6 +384,51 @@
     }
   }
 
+  /* ---- Tiefe auf dem Produktbild ---------------------------------------- */
+  /* Das Telefon neigt sich zum Zeiger. Drei Vorbehalte sind eingebaut:
+
+     Nur wo es einen genauen Zeiger gibt. Auf einem Beruehrungsbildschirm
+     gaebe es kein Verlassen, das Geraet bliebe schiefstehen.
+
+     Nur bei erlaubter Bewegung. Wer sie reduziert hat, bekommt gar keine
+     Neigung, nicht bloss eine schnellere.
+
+     Und gerechnet wird im naechsten Bild des Browsers, nicht bei jedem
+     Zeigerereignis: sonst laeuft der Stil-Neuberechner hundertmal je
+     Sekunde und das Scrollen ruckelt. */
+  (function () {
+    var phone = document.querySelector(".phone");
+    if (!phone) return;
+    var fein = window.matchMedia("(hover: hover) and (pointer: fine)");
+    var ruhig = window.matchMedia("(prefers-reduced-motion: reduce)");
+    if (!fein.matches || ruhig.matches) return;
+
+    var buehne = phone.closest(".sticky-split__visual") || phone.parentNode;
+    var MAX = 5;                       /* Grad. Mehr wirkt wie ein Spielzeug. */
+    var offen = false, zx = 0, zy = 0;
+
+    var zeichnen = function () {
+      offen = false;
+      phone.style.setProperty("--neig-x", zx.toFixed(2));
+      phone.style.setProperty("--neig-y", zy.toFixed(2));
+    };
+    buehne.addEventListener("pointermove", function (e) {
+      if (e.pointerType !== "mouse") return;
+      var r = phone.getBoundingClientRect();
+      /* -1 bis 1, gemessen von der Mitte des Geraets aus. */
+      zy = Math.max(-1, Math.min(1, (e.clientX - (r.left + r.width / 2)) / (r.width / 2))) * MAX;
+      zx = Math.max(-1, Math.min(1, ((r.top + r.height / 2) - e.clientY) / (r.height / 2))) * MAX;
+      phone.classList.add("is-fuehrend");
+      if (!offen) { offen = true; requestAnimationFrame(zeichnen); }
+    });
+    buehne.addEventListener("pointerleave", function () {
+      phone.classList.remove("is-fuehrend");
+      zx = zy = 0;
+      phone.style.setProperty("--neig-x", "0");
+      phone.style.setProperty("--neig-y", "0");
+    });
+  })();
+
   /* ---- Formulare: noch kein Endpunkt ------------------------------------ */
   /* Statt einen Versand vorzutäuschen, sagt das Formular, was Sache ist. */
   document.querySelectorAll("form[data-demo-form]").forEach(function (form) {
