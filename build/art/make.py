@@ -192,10 +192,12 @@ def make_hero_home():
     s += tent(950, y, 170, 140)
     s += qr_sign(1075, y, 50, 38)
     s += tree(1185, y, 200)
-    scr = screen_lines(1300, 300, 185, 375, SEG["brand"])
-    s += phone(1300, 300, 185, 375, scr)
-    s += '<path d="M1235 440h48" stroke-dasharray="9 11"/>'
-    return hero_scene(s, "brand", "Ferienhaus, Hotel, Campingplatz und Veranstaltung — überall derselbe QR-Code")
+    # Kein gezeichnetes Telefon mehr. Auf der Startseite steht an dieser
+    # Stelle jetzt der QR-Aufsteller als echter Koerper; zwei Produktbilder
+    # uebereinander waren einmal zu viel. Die Zeichnung traegt hier nur noch
+    # die Orte, an denen der Code haengt.
+    s += qr_sign(1290, y, 62, 47)
+    return hero_scene(s, "brand", "Ferienhaus, Hotel, Campingplatz und Veranstaltung: ueberall derselbe QR-Code")
 
 
 def make_hero_ferien():

@@ -1428,6 +1428,9 @@ table.data tr.is-hero td, table.data tr.is-hero th { background: var(--surface);
   /* Die Neigung des Telefons ist Bewegung ohne Informationswert. Bei
      reduzierter Bewegung entfaellt sie ganz, statt nur schneller zu sein. */
   .phone { --neig-x: 0 !important; --neig-y: 0 !important; }
+  /* Der Aufsteller steht still und zeigt die Vorderseite, statt in einer
+     zufaelligen Drehlage einzufrieren. */
+  .js .stand__body { animation: none !important; transform: rotateX(-4deg) rotateY(-14deg) !important; }
 
   /* Ein angehaltenes Karussell zeigt ein Angebot von sechs. Deshalb fällt
      es hier auf dasselbe Raster zurück wie ohne JavaScript. */
@@ -1801,3 +1804,112 @@ button.eli__link--alt { border-color: var(--line); }
 }
 .guide-tabs button:active, .billing__opt:active span, .js .hero-car__toggle:active { transform: scale(0.97); }
 .nav-toggle:active { transform: scale(0.94); }
+
+/* ---------- QR-AUFSTELLER, DREIDIMENSIONAL ----------------------------- */
+/* Ein echter Koerper, keine perspektivisch gekippte Flaeche: sechs Flaechen
+   mit Materialstaerke, sodass beim Drehen die Schnittkanten sichtbar werden
+   und hinten die Marke steht.
+
+   Warum ausgerechnet dieses Objekt: der Aufsteller ist das Produkt als
+   Gegenstand. Er steht beim Kunden auf der Theke, im Flur, am Empfang. Ein
+   schwebender Wuerfel waere Dekoration, dieser Koerper ist das, was man
+   kauft.
+
+   Gebaut mit transform-style: preserve-3d, ohne Bibliothek. Three.js kostet
+   rund 150 KB und einen WebGL-Kontext; hier sind es sieben Elemente. */
+
+/* Platzierung im Hero: rechts, unterhalb der Ueberschrift, damit er nicht
+   mit der Typografie konkurriert. Unter 1024px entfaellt er ganz; auf einem
+   Telefon waere er entweder winzig oder im Weg. */
+.hero__objekt { display: none; }
+@media (min-width: 1024px) {
+  .hero__objekt {
+    display: block; position: absolute; z-index: 2;
+    right: clamp(4rem, 11vw, 12rem); top: 50%; transform: translateY(-42%);
+  }
+}
+.stand {
+  --b: 250px;                       /* Breite  */
+  --h: 320px;                       /* Hoehe   */
+  --d: 18px;                        /* Staerke */
+  width: var(--b); height: var(--h);
+  perspective: 1500px;
+  position: relative;
+}
+
+.stand__body {
+  position: absolute; inset: 0;
+  transform-style: preserve-3d;
+  /* Leichte Aufsicht, wie auf einen Gegenstand, der vor einem steht. */
+  transform: rotateX(-7deg) rotateY(-24deg);
+}
+/* Die Drehung macht nur JavaScript sichtbar. Ohne JavaScript gibt es keinen
+   Anhalten-Knopf, und dann darf sich nach WCAG 2.2.2 auch nichts drehen. */
+/* Pendeln statt volle Umdrehung. Eine ganze Drehung zeigt die Rueckseite
+   die halbe Zeit, und die ist eine grosse leere Flaeche. Das Pendeln haelt
+   den QR-Code lesbar, zeigt trotzdem beide Schnittkanten abwechselnd und
+   wirkt wie ein Gegenstand auf einem Drehteller, nicht wie ein Schild. */
+.js .stand__body { animation: stand-dreht 15s cubic-bezier(.45,0,.55,1) infinite alternate; }
+/* Derselbe Knopf, der das Karussell anhaelt, haelt auch den Aufsteller an.
+   Zwei Pause-Knoepfe in einem Hero waeren schlechter als einer. */
+.js .hero.is-still .stand__body { animation-play-state: paused; }
+
+@keyframes stand-dreht {
+  from { transform: rotateX(-7deg) rotateY(-34deg); }
+  to   { transform: rotateX(-5deg) rotateY(22deg); }
+}
+
+.stand__face {
+  position: absolute; backface-visibility: hidden;
+  background: var(--cream);
+}
+/* Vorder- und Rueckseite */
+.stand__face--vorn, .stand__face--hinten {
+  inset: 0; border-radius: 4px;
+  display: flex; flex-direction: column; align-items: center; justify-content: center;
+  gap: var(--s3); padding: var(--s5);
+  box-shadow: inset 0 0 0 1px rgba(26, 26, 26, .09);
+}
+.stand__face--vorn   { transform: translateZ(calc(var(--d) / 2)); }
+.stand__face--hinten { transform: rotateY(180deg) translateZ(calc(var(--d) / 2)); }
+
+/* Die vier Schnittkanten. Sie sind der Grund, warum der Koerper als Koerper
+   gelesen wird: eine gekippte Flaeche hat keine. */
+.stand__face--links, .stand__face--rechts {
+  top: 0; left: calc(50% - var(--d) / 2);
+  width: var(--d); height: var(--h);
+  background: var(--beige);
+}
+.stand__face--links  { transform: rotateY(-90deg) translateZ(calc(var(--b) / 2)); }
+.stand__face--rechts { transform: rotateY(90deg)  translateZ(calc(var(--b) / 2)); }
+.stand__face--oben, .stand__face--unten {
+  left: 0; top: calc(50% - var(--d) / 2);
+  width: var(--b); height: var(--d);
+  background: var(--beige);
+}
+.stand__face--oben  { transform: rotateX(90deg)  translateZ(calc(var(--h) / 2)); }
+.stand__face--unten { transform: rotateX(-90deg) translateZ(calc(var(--h) / 2)); }
+
+/* Inhalt der Vorderseite */
+.stand__qr { width: 132px; height: 132px; display: block; }
+.stand__wo {
+  font-family: "Playfair Display", Georgia, serif; font-size: 1.0625rem;
+  color: var(--ink-900); margin: 0; text-align: center; line-height: 1.2;
+}
+.stand__tu {
+  font-size: var(--t-tiny); color: var(--ink-500); margin: 0; text-align: center;
+}
+.stand__marke {
+  font-family: Montserrat, sans-serif; font-size: var(--t-label); font-weight: 600;
+  letter-spacing: 0.34em; color: var(--gold-ink); margin: 0;
+}
+/* Der Schatten liegt auf dem Boden und dreht sich nicht mit: sonst waere es
+   ein Schatten des Bildes, nicht des Gegenstands. */
+.stand::after {
+  content: ""; position: absolute; left: 6%; right: 6%; bottom: -26px; height: 22px;
+  background: radial-gradient(ellipse at center, rgba(0,0,0,.42), transparent 68%);
+  filter: blur(5px);
+}
+
+@media (max-width: 1023px) { .stand { --b: 190px; --h: 244px; --d: 14px; } .stand__qr { width: 104px; height: 104px; } }
+

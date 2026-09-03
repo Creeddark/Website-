@@ -201,6 +201,11 @@
 
     pauseBtn.addEventListener("click", function () {
       var paused = car.classList.toggle("is-paused");
+      /* Derselbe Knopf haelt auch den Aufsteller an. Ein zweiter Pause-Knopf
+         im selben Hero waere fuer alle schlechter als einer, der alles
+         anhaelt, was sich dort bewegt. */
+      var hero = car.closest(".hero");
+      if (hero) hero.classList.toggle("is-still", paused);
       /* Beim Fortsetzen führt wieder die Animation — sonst bliebe ein
          Punkt hell stehen, der nicht mehr das gezeigte Angebot ist. */
       if (!paused) { carPicked = -1; markDots(); }

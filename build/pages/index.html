@@ -8,6 +8,27 @@
 <!-- 01 · HERO: was es ist, für wen, was es kostet ----------------------- -->
 <section class="hero hero--full hero--offers hero--onDark">
   <div class="hero__media"><img class="plate" src="{{base}}assets/img/hero-home.svg" alt="" data-parallax="5" decoding="async"></div>
+
+  <!-- Der Aufsteller als Koerper. Er traegt keine Information, die nicht
+       schon im Text steht, deshalb aria-hidden: ein Vorleseprogramm soll
+       nicht "Ferienhaus Duenenweg, alles zum Haus" vorlesen, wo gerade die
+       Ueberschrift der Seite dran waere. -->
+  <div class="hero__objekt" aria-hidden="true">
+    <div class="stand">
+      <div class="stand__body">
+        <div class="stand__face stand__face--vorn">
+          <img class="stand__qr" src="{{base}}assets/img/qr-guest-guide.svg" alt="" decoding="async">
+          <p class="stand__wo">Ferienhaus Dünenweg</p>
+          <p class="stand__tu">Alles zum Haus. Einfach scannen.</p>
+        </div>
+        <div class="stand__face stand__face--hinten"><p class="stand__marke">VELORA</p></div>
+        <div class="stand__face stand__face--links"></div>
+        <div class="stand__face stand__face--rechts"></div>
+        <div class="stand__face stand__face--oben"></div>
+        <div class="stand__face stand__face--unten"></div>
+      </div>
+    </div>
+  </div>
   <div class="hero__scrim"></div>
 
   <div class="wrap hero__inner">
