@@ -133,9 +133,13 @@
 
   /* Bewegung: eine Kurve, drei Dauern — mehr braucht die Seite nicht */
   --ease: cubic-bezier(0.22, 1, 0.36, 1);
-  --fast: 170ms;
-  --base: 380ms;
-  --slow: 680ms;
+  /* Rueckmeldung auf eine Eingabe gehoert unter 250ms, sonst wirkt die
+     Seite traege. --base lag bei 380ms und trug Hover- und Randwechsel;
+     --slow trug die Einblendungen beim Scrollen, die keine Rueckmeldung
+     sind und daher laenger sein duerfen, aber 680ms waren zaeh. */
+  --fast: 150ms;
+  --base: 240ms;
+  --slow: 460ms;
 }
 
 /* Segmentakzente — warm und entsättigt, jeder Ton gegen beide Gründe
@@ -272,14 +276,22 @@ a { color: inherit; }
 @media (max-width: 879px) { .split--flip > *:first-child { order: 0; } }
 
 .sec-head { max-width: 52rem; margin-bottom: var(--s7); }
+/* Die Sektionsueberschriften sind jetzt <h2>, nicht mehr <p>. Damit hat
+   ein Screenreader eine Gliederung (vorher sprang die Seite von h1 auf h3),
+   und der Abstand wird hier gesetzt statt von der Standardvorgabe des
+   Browsers geerbt, die sich zwischen p und h2 unterscheidet. */
 .sec-head .label { margin-bottom: var(--s4); }
+.sec-head > .display-m, .sec-head > .display-l,
+.seg-index__head > .display-m { margin: 0; }
 /* Die feine Goldlinie ist die Signatur der Marke — rein dekorativ,
    sie trägt nie Information. */
 .sec-head .label::after {
   content: ""; display: block; width: 34px; height: 1px;
   background: var(--gold); margin-top: var(--s3);
 }
-.sec-head > p + p { margin: var(--s4) 0 0; color: var(--ink-700); max-width: 58ch; }
+/* Muss h2 mitnehmen: der Vorgaengerselektor p + p griff nach der
+   Umstellung nicht mehr, und der Nachsatz haette seinen Abstand verloren. */
+.sec-head > p + p, .sec-head > h2 + p { margin: var(--s4) 0 0; color: var(--ink-700); max-width: 58ch; }
 .rule { height: 1px; background: var(--line); border: 0; margin: 0; }
 
 
@@ -386,6 +398,13 @@ a { color: inherit; }
 .btn--secondary:hover { background: var(--ink-900); color: var(--cream); }
 .btn--ghost { background: transparent; color: var(--ink-900); border-color: var(--line); }
 .btn--ghost:hover { border-color: var(--gold-ink); color: var(--gold-ink); }
+/* Der gedrueckte Zustand fehlte auf der ganzen Seite. Ein Knopf, der auf
+   den Druck nicht reagiert, fuehlt sich tot an; 0.97 ist gerade so viel,
+   dass der Finger es merkt. Nur wo der Zeiger genau ist, damit ein Tippen
+   auf dem Telefon nicht in einem haengenden Zustand endet. */
+.btn:active { transform: scale(0.97); }
+.btn { transition: background-color var(--fast) var(--ease), color var(--fast) var(--ease),
+                   border-color var(--fast) var(--ease), transform var(--fast) var(--ease); }
 .btn--sm { min-height: 42px; padding: 0 var(--s5); }
 .btn--block { width: 100%; }
 
@@ -398,10 +417,15 @@ a { color: inherit; }
 .arrow-link svg { transition: transform var(--base) var(--ease); flex: none; }
 .arrow-link:hover { border-color: var(--ink-900); }
 .arrow-link:hover svg { transform: translateX(4px); }
-@media (pointer: coarse) {
-  a.arrow-link { position: relative; }
-  a.arrow-link::before { content: ""; position: absolute; left: 0; right: 0; top: 50%; height: 44px; transform: translateY(-50%); }
-}
+/* Zielflaechen auf Beruehrungsgeraeten. Wo ein Element frei steht, legt eine
+   unsichtbare Flaeche 44px darueber, ohne das Layout zu veraendern. Wo
+   Elemente dicht untereinander stehen (Fusszeile: 18px hoch, 8px Abstand),
+   geht das nicht, denn die Flaechen wuerden einander ueberdecken. Dort wird
+   wirklich gepolstert und der Abstand dafuer herausgenommen, sodass die
+   Reihenteilung genau 44px betraegt statt 26.
+   Fliesstextlinks bleiben aussen vor: sie sind nach WCAG 2.5.8 ausgenommen,
+   und eine 44px-Flaeche wuerde dort in die Nachbarzeilen greifen. */
+
 
 
 /* ---------- 08 · FLÄCHEN ----------------------------------------------- */
@@ -613,11 +637,17 @@ table.data tr.is-hero td, table.data tr.is-hero th { background: var(--surface);
   }
   .seg-row { padding-right: var(--s7); }
 }
-.seg-row:hover { background: color-mix(in srgb, var(--gold-soft) 45%, transparent); }
-.seg-row:hover .seg-row__name { color: var(--gold-ink); }
-.seg-row:hover .seg-row__name svg { color: var(--gold-ink); }
-.seg-row:hover .seg-row__go { opacity: 1; transform: translateX(0); }
+/* Auf einem Beruehrungsbildschirm gibt es kein Verlassen des Zeigers: ein
+   ungeschuetztes :hover bleibt nach dem Antippen haengen. Der Tastaturfokus
+   steht ausserhalb der Abfrage, denn er hat dieses Problem nicht. */
+@media (hover: hover) and (pointer: fine) {
+  .seg-row:hover { background: color-mix(in srgb, var(--gold-soft) 45%, transparent); }
+  .seg-row:hover .seg-row__name { color: var(--gold-ink); }
+  .seg-row:hover .seg-row__name svg { color: var(--gold-ink); }
+  .seg-row:hover .seg-row__go { opacity: 1; transform: translateX(0); }
+}
 .seg-row:focus-visible { background: color-mix(in srgb, var(--gold-soft) 45%, transparent); }
+.seg-row:active { background: color-mix(in srgb, var(--gold-soft) 70%, transparent); }
 
 
 /* ---------- 11 · PREISE ------------------------------------------------ */
@@ -839,13 +869,16 @@ table.data tr.is-hero td, table.data tr.is-hero th { background: var(--surface);
 .hero--onDark .btn--secondary:hover { background: var(--on-deep); color: var(--deep); border-color: var(--on-deep); }
 
 /* Preisanker im Hero */
-/* Vorher eine Kette aus drei Angaben, verbunden durch Mittelpunkte. Jetzt
-   trennt Raum statt eines Zeichens, und auf schmalen Schirmen bricht die
-   Reihe sauber um, statt die Punkte mitzunehmen. */
-.hero__anchor {
-  list-style: none; margin: var(--s5) 0 0; padding: 0;
-  display: flex; flex-wrap: wrap; gap: var(--s3) var(--s6);
-  font-size: var(--t-small); color: color-mix(in srgb, var(--on-deep) 84%, transparent);
+/* Vorher eine Kette aus drei Angaben, verbunden durch Mittelpunkte, und das
+   im Hero. Zwei Aenderungen: Raum trennt jetzt statt eines Zeichens, und die
+   Zeile steht unter dem Hero statt darin. Ein Hero traegt Ueberschrift,
+   Unterzeile, Angebot und Knoepfe; eine vierte Kleinzeile darunter macht ihn
+   voll, ohne etwas hinzuzufuegen, das nicht warten koennte. */
+.trustline { border-bottom: 1px solid var(--line); background: var(--ivory); }
+.trustline ul {
+  list-style: none; margin: 0; padding-block: var(--s4);
+  display: flex; flex-wrap: wrap; gap: var(--s2) var(--s7);
+  font-size: var(--t-small); color: var(--ink-700);
 }
 .hero__anchor b { color: var(--on-deep); font-variant-numeric: tabular-nums; }
 
@@ -957,13 +990,19 @@ table.data tr.is-hero td, table.data tr.is-hero th { background: var(--surface);
 /* Die Punkte sind echte Knöpfe: wer nicht warten will, wählt sein Segment. */
 .js .hero-car__dot {
   appearance: none; background: none; border: 0; cursor: pointer;
-  padding: 11px 7px; display: block; line-height: 0;   /* 24 x 25 px Zielfläche */
+  padding: 14px 5px; display: block; line-height: 0;   /* 40 x 31 px Zielfläche */
 }
+/* Der Balken ist immer 30px breit und wird gestaucht, statt seine Breite zu
+   aendern. Das hat zwei Gruende: eine Breitenanimation zwingt den Browser in
+   jedem Bild zu einer neuen Layoutrechnung, und weil die Punkte in einer
+   Reihe stehen, schoben sich die uebrigen fuenf bei jedem Wechsel seitlich
+   hin und her. Mit scaleX steht die Reihe still. */
 .js .hero-car__dot i {
-  display: block; height: 3px; width: 10px; border-radius: 2px;
+  display: block; height: 3px; width: 30px; border-radius: 2px;
+  transform: scaleX(0.34); transform-origin: left center;
   background: color-mix(in srgb, var(--on-deep) 34%, transparent);
   animation: hero-car-dot 36s linear infinite;
-  transition: width var(--fast) var(--ease), background-color var(--fast) var(--ease);
+  transition: transform var(--fast) var(--ease), background-color var(--fast) var(--ease);
 }
 .js .hero-car__dot:hover i { background: color-mix(in srgb, var(--on-deep) 62%, transparent); }
 /* Der gewählte Punkt wird NICHT über eine eigene Regel hell gesetzt: site.js
@@ -993,8 +1032,8 @@ table.data tr.is-hero td, table.data tr.is-hero th { background: var(--surface);
   100%           { transform: translateX(-85.7143%); }
 }
 @keyframes hero-car-dot {
-  0%,     16.6% { background: var(--on-deep); width: 32px; }
-  16.7%,  100%  { background: color-mix(in srgb, var(--on-deep) 34%, transparent); width: 10px; }
+  0%,     16.6% { background: var(--on-deep); transform: scaleX(1); }
+  16.7%,  100%  { background: color-mix(in srgb, var(--on-deep) 34%, transparent); transform: scaleX(0.34); }
 }
 
 @media (max-width: 699px) {
@@ -1579,4 +1618,48 @@ button.eli__link--alt { border-color: var(--line); }
 @media print {
   .site-header, .site-footer, .nav-toggle, .mobile-nav, .demobar { display: none !important; }
   body { background: #fff; color: #000; }
+}
+
+
+/* ---------- ZIELFLÄCHEN AUF BERÜHRUNGSGERÄTEN -------------------------- */
+/* Steht bewusst am Dateiende: die Regeln haben dieselbe Spezifitaet wie die
+   Grundregeln der jeweiligen Bauteile und muessen daher spaeter kommen.
+   Ein erster Versuch weiter oben wurde vom Karussellpunkt ueberschrieben.
+
+   Zwei Verfahren. Wo ein Element frei steht, legt eine unsichtbare Flaeche
+   44px darueber, ohne das Layout anzufassen. Wo Elemente dicht
+   untereinander stehen, wuerden sich solche Flaechen ueberdecken; dort wird
+   wirklich gepolstert und der Abstand dafuer herausgenommen.
+
+   Fliesstextlinks bleiben aussen vor. WCAG 2.5.8 nimmt sie ausdruecklich
+   aus, und eine 44px-Flaeche griffe dort in die Nachbarzeilen. */
+@media (pointer: coarse) {
+  a.arrow-link, a.wordmark, .demobar__cta, .js .hero-car__toggle { position: relative; }
+  a.arrow-link::before, a.wordmark::before, .demobar__cta::before,
+  .js .hero-car__toggle::before {
+    content: ""; position: absolute; left: 0; right: 0; top: 50%;
+    height: 44px; transform: translateY(-50%);
+  }
+
+  /* Fusszeile: 18px hohe Links mit 8px Abstand, Reihenteilung 26px.
+     Gepolstert auf 44px, Abstand auf 0, Teilung damit genau 44px. */
+  .site-footer ul { gap: 0; }
+  .site-footer ul a { display: block; padding-block: 13px; }
+  .site-footer__base { gap: 0 var(--s6); }
+  .site-footer__base a { display: inline-block; padding-block: 13px; }
+
+  .js .hero-car__dot { padding-block: 21px; }   /* 3px Balken + 42 = 45 */
+  .billing__opt span { min-height: 44px; }
+
+  /* Der Kasten selbst ist das Ziel, auf das gezielt wird, auch wenn die
+     Beschriftung daneben mitklickt. 20px sind dafuer zu klein. */
+  .checkbox { grid-template-columns: 24px 1fr; }
+  .checkbox input { width: 24px; height: 24px; }
+  .choice label { display: flex; align-items: center; gap: var(--s3); min-height: 44px; }
+  .choice input[type="radio"] { width: 24px; height: 24px; }
+
+  /* Regler: gegriffen wird der Knopf, nicht die Schiene. */
+  .calc__row input[type="range"] { height: 44px; }
+  .calc__row input[type="range"]::-webkit-slider-thumb { width: 26px; height: 26px; }
+  .calc__row input[type="range"]::-moz-range-thumb { width: 26px; height: 26px; }
 }
