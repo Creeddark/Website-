@@ -3,21 +3,21 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Preise — ATRIA</title>
+<title>Preise — VELORA</title>
 <meta name="description" content="Monatlich, jährlich oder einmalig — Sie wählen. Solo ab 19 € im Monat, Team ab 39 €, Pro ab 79 €. Firmenevents 290 € pro Event. Kein Preis auf Anfrage, alle Beträge netto.">
 <meta name="theme-color" content="#F6F7F4">
-<link rel="canonical" href="https://atria.example/preise.html">
+<link rel="canonical" href="https://velora.example/preise.html">
 
 <meta property="og:type" content="website">
-<meta property="og:site_name" content="ATRIA">
-<meta property="og:title" content="Preise — ATRIA">
+<meta property="og:site_name" content="VELORA">
+<meta property="og:title" content="Preise — VELORA">
 <meta property="og:description" content="Monatlich, jährlich oder einmalig — Sie wählen. Solo ab 19 € im Monat, Team ab 39 €, Pro ab 79 €. Firmenevents 290 € pro Event. Kein Preis auf Anfrage, alle Beträge netto.">
 <meta property="og:locale" content="de_DE">
 
 <script>document.documentElement.className=document.documentElement.className.replace(/\bno-js\b/,'js')</script>
 
-<link rel="preload" href="assets/fonts/fraunces-latin.woff2" as="font" type="font/woff2" crossorigin>
-<link rel="preload" href="assets/fonts/inter-latin.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="preload" href="assets/fonts/playfair-latin.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="preload" href="assets/fonts/montserrat-latin.woff2" as="font" type="font/woff2" crossorigin>
 <link rel="stylesheet" href="assets/css/site.css">
 <link rel="icon" href="assets/img/favicon.svg" type="image/svg+xml">
 
@@ -28,7 +28,7 @@
 
 <header class="site-header">
   <div class="wrap site-header__inner">
-    <a class="wordmark" href="index.html">ATRIA</a>
+    <a class="wordmark" href="index.html"><img class="wordmark__mark" src="assets/img/mark.svg" alt="" width="30" height="30" aria-hidden="true"><span>VELORA</span></a>
 
     <nav class="nav" aria-label="Hauptnavigation">
       <a href="index.html#segmente">Für wen</a>
@@ -257,7 +257,7 @@
   <div class="wrap">
     <div class="site-footer__cols">
       <div>
-        <a class="wordmark" href="index.html">ATRIA</a>
+        <a class="wordmark" href="index.html"><img class="wordmark__mark" src="assets/img/mark.svg" alt="" width="30" height="30" aria-hidden="true"><span>VELORA</span></a>
         <p class="small" style="margin:var(--s4) 0 0;max-width:30ch">
           Die digitale Infomappe für Orte, an denen Menschen ankommen.
           Alles beantwortet, bevor gefragt wird.
@@ -306,12 +306,63 @@
         <a href="recht/widerruf.html">Widerruf</a>
         <a href="recht/barrierefreiheit.html">Barrierefreiheit</a>
       </nav>
-      <span>© <span id="year">2026</span> ATRIA · Alle Preise netto zzgl. USt.</span>
+      <span>© <span id="year">2026</span> VELORA · Alle Preise netto zzgl. USt.</span>
     </div>
   </div>
 </footer>
 
 <script src="assets/js/site.js" defer></script>
+
+<!-- ELI — digitaler Assistent. Ohne JavaScript erscheint hier nichts;
+     alle Inhalte, die Eli nennt, stehen ohnehin auf den Seiten selbst. -->
+<div class="eli" data-eli data-eli-base="" data-eli-context="preise" data-eli-seg="">
+  <div class="eli__teaser" data-eli-teaser hidden>
+    <p><strong>Hallo, ich bin Eli</strong><span>Ihr digitaler Assistent von VELORA. Wie kann ich helfen?</span></p>
+    <button class="eli__teaser-x" type="button" data-eli-teaser-close aria-label="Hinweis schließen">
+      <svg viewBox="0 0 14 14" aria-hidden="true"><path d="M3 3l8 8M11 3l-8 8"/></svg>
+    </button>
+  </div>
+
+  <button class="eli__launcher" type="button" data-eli-open aria-expanded="false" aria-controls="eli-panel">
+    <img class="eli__face" src="assets/img/eli.png" alt="" width="56" height="56" decoding="async">
+    <span class="eli__pip" aria-hidden="true"></span>
+    <span class="visually-hidden">Eli fragen — digitaler Assistent von VELORA</span>
+  </button>
+
+  <div class="eli__panel" id="eli-panel" data-eli-panel role="dialog" aria-labelledby="eli-title" hidden>
+    <header class="eli__bar">
+      <img class="eli__face eli__face--sm" src="assets/img/eli-sm.png" alt="" width="38" height="38" decoding="async">
+      <div class="eli__who">
+        <p class="eli__name" id="eli-title">Eli <span class="eli__pip eli__pip--inline" aria-hidden="true"></span></p>
+        <p class="eli__role">Ihr Assistent von VELORA</p>
+      </div>
+      <button class="eli__x" type="button" data-eli-close aria-label="Assistent schließen">
+        <svg viewBox="0 0 16 16" aria-hidden="true"><path d="M4 4l8 8M12 4l-8 8"/></svg>
+      </button>
+    </header>
+
+    <ol class="eli__log" data-eli-log role="log" aria-live="polite" aria-label="Gespräch mit Eli"></ol>
+
+    <div class="eli__chips" data-eli-chips hidden></div>
+
+    <form class="eli__form" data-eli-form>
+      <label class="visually-hidden" for="eli-input">Nachricht an Eli</label>
+      <input class="eli__input" id="eli-input" data-eli-input type="text"
+             placeholder="Frage schreiben oder oben wählen" autocomplete="off">
+      <button class="eli__send" type="submit" aria-label="Senden">
+        <svg viewBox="0 0 16 16" aria-hidden="true"><path d="M2 8h10"/><path d="M8 4l4 4-4 4"/></svg>
+      </button>
+    </form>
+
+    <p class="eli__note">
+      Eli führt durch feste Themen und gibt wieder, was auf dieser Website
+      steht — kein Sprachmodell, nichts verlässt Ihren Browser.
+    </p>
+  </div>
+</div>
+
+<script src="assets/js/eli.js" defer></script>
+
 <script>document.getElementById('year').textContent=new Date().getFullYear()</script>
 </body>
 </html>

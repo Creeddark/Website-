@@ -10,77 +10,89 @@
 
 
 /* ---------- 01 · FONTS ------------------------------------------------- */
-/* Selbst gehostet: schneller als ein CDN und keine Drittanbieter-Anfrage.
-   Beide Schriften SIL OFL, damit sie auch in Kundenseiten einbettbar sind. */
+/* Playfair Display für Überschriften, Montserrat für alles andere. Beide
+   SIL OFL, beide selbst gehostet — keine Anfrage an ein fremdes CDN. */
 
 @font-face {
-  font-family: "Fraunces";
-  src: url("../fonts/fraunces-latin.woff2") format("woff2");
-  font-weight: 300 600; font-style: normal; font-display: swap;
-  unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA,
-    U+02DC, U+0304, U+0308, U+0329, U+2000-206F, U+20AC, U+2122, U+2191, U+2193,
+  font-family: "Playfair Display";
+  src: url("../fonts/playfair-latin.woff2") format("woff2");
+  font-weight: 400 700; font-style: normal; font-display: swap;
+  unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC,
+    U+0304, U+0308, U+0329, U+2000-206F, U+20AC, U+2122, U+2191, U+2193,
     U+2212, U+2215, U+FEFF, U+FFFD;
 }
 @font-face {
-  font-family: "Fraunces";
-  src: url("../fonts/fraunces-latin-ext.woff2") format("woff2");
-  font-weight: 300 600; font-style: normal; font-display: swap;
-  unicode-range: U+0100-02BA, U+02BD-02C5, U+02C7-02CC, U+02CE-02D7, U+02DD-02FF,
-    U+1D00-1DBF, U+1E00-1E9F, U+1EF2-1EFF, U+2020, U+20A0-20AB, U+20AD-20C0,
-    U+2113, U+2C60-2C7F, U+A720-A7FF;
+  font-family: "Playfair Display";
+  src: url("../fonts/playfair-latin-ext.woff2") format("woff2");
+  font-weight: 400 700; font-style: normal; font-display: swap;
+  unicode-range: U+0100-02BA, U+02BD-02C5, U+02C7-02CC, U+02CE-02D7, U+02DD-02FF, U+0304,
+    U+0308, U+0329, U+1D00-1DBF, U+1E00-1E9F, U+1EF2-1EFF, U+2020,
+    U+20A0-20AB, U+20AD-20C0, U+2113, U+2C60-2C7F, U+A720-A7FF;
 }
 @font-face {
-  font-family: "Inter";
-  src: url("../fonts/inter-latin.woff2") format("woff2");
-  font-weight: 400 700; font-style: normal; font-display: swap;
-  unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA,
-    U+02DC, U+0304, U+0308, U+0329, U+2000-206F, U+20AC, U+2122, U+2191, U+2193,
+  font-family: "Montserrat";
+  src: url("../fonts/montserrat-latin.woff2") format("woff2");
+  font-weight: 300 700; font-style: normal; font-display: swap;
+  unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC,
+    U+0304, U+0308, U+0329, U+2000-206F, U+20AC, U+2122, U+2191, U+2193,
     U+2212, U+2215, U+FEFF, U+FFFD;
 }
 @font-face {
-  font-family: "Inter";
-  src: url("../fonts/inter-latin-ext.woff2") format("woff2");
-  font-weight: 400 700; font-style: normal; font-display: swap;
-  unicode-range: U+0100-02BA, U+02BD-02C5, U+02C7-02CC, U+02CE-02D7, U+02DD-02FF,
-    U+1D00-1DBF, U+1E00-1E9F, U+1EF2-1EFF, U+2020, U+20A0-20AB, U+20AD-20C0,
-    U+2113, U+2C60-2C7F, U+A720-A7FF;
+  font-family: "Montserrat";
+  src: url("../fonts/montserrat-latin-ext.woff2") format("woff2");
+  font-weight: 300 700; font-style: normal; font-display: swap;
+  unicode-range: U+0100-02BA, U+02BD-02C5, U+02C7-02CC, U+02CE-02D7, U+02DD-02FF, U+0304,
+    U+0308, U+0329, U+1D00-1DBF, U+1E00-1E9F, U+1EF2-1EFF, U+2020,
+    U+20A0-20AB, U+20AD-20C0, U+2113, U+2C60-2C7F, U+A720-A7FF;
 }
 
 
 /* ---------- 02 · TOKENS ------------------------------------------------ */
 
 :root {
-  /* Neutralbasis — kühl, architektonisch. Kein reines Schwarz/Weiß. */
-  --ink-900: #151917;
-  --ink-700: #37403B;
-  --ink-500: #667069;
-  --ink-300: #9AA39C;
-  --line: #DCE0DB;
-  --line-soft: #E7EAE5;
+  /* VELORA — Creme, Ivory, Beige, Gold. Warm, ruhig, wenig Farbe.
+     Jeder Wert unten ist gegen WCAG gemessen, nicht geschätzt. */
 
-  --bg: #F6F7F4;
-  --surface: #EDEFEA;
-  --tone: #E1E5DE;
-  --deep: #131816;
-  --on-deep: #F6F7F4;
+  /* Grundflächen */
+  --cream: #FFF7EE;        /* Seitengrund */
+  --ivory: #F5EFE6;        /* gehobene Fläche */
+  --beige: #EDE5D6;        /* getönte Fläche */
 
-  /* Markenakzent: gedecktes Tannengrün. Kein SaaS-Blau, kein Lila. */
-  --accent: #2E4A3C;
-  --accent-soft: #4A6555;
-  --accent-tint: #E4EBE5;
+  /* Schrift — warme Graustufen statt Neutralgrau */
+  --ink-900: #1A1A1A;     /* 16,4:1 auf Creme */
+  --ink-700: #565046;     /* 7,5:1  — Fliesstext */
+  --ink-500: #6C6559;     /* 4,6:1 auch auf Beige — der dunkelsten hellen Fläche */
+  --ink-300: #AFA99E;     /* 2,2:1  — rein dekorativ, nie Text */
 
-  /* Segmentakzent — wird je Seite überschrieben, Standard = Markenakzent */
-  --seg: var(--accent);
-  --seg-tint: var(--accent-tint);
+  --line: #E4DAC7;
+  --line-soft: #F0E8DB;
+  --bg: var(--cream);
+  --surface: var(--ivory);
+  --tone: var(--beige);
 
-  /* Feste helle Fläche für Elemente, die nie invertieren dürfen (QR) */
-  --paper-fixed: #F6F7F4;
-  --ink-fixed: #151917;
+  /* GOLD — zwei Werte, und das ist Absicht.
+     --gold ist die Signatur: Flächen, Marke, feine Linien. Als Text auf
+     Creme kommt sie auf 1,98:1 und wäre unlesbar. --gold-ink ist derselbe
+     Ton so weit abgedunkelt, dass er als Schrift 4,5:1 erreicht. */
+  --gold: #D4AF37;
+  --gold-ink: #7B641A;  /* 4,5:1 auch auf Beige — Gold, das man lesen kann */
+  --gold-lg: #A98A24;    /* 3,1:1 — nur für grosse Typo */
+  --gold-soft: #F3E9CC;         /* Gold als zarte Fläche */
 
-  /* Semantik — gedeckt */
-  --ok: #3F6350;
-  --warn: #8A6A34;
-  --err: #8B4438;
+  /* Dunkler Grund */
+  --deep: #1A1A1A;
+  --on-deep: #FFF7EE;
+
+  --accent: var(--gold-ink);
+  --accent-soft: var(--gold-lg);
+  --accent-tint: var(--gold-soft);
+  /* Fallback für Seiten ohne data-seg — sonst verlieren Häkchen und
+     Kartenrahmen ihre Farbe und verschwinden. */
+  --seg: var(--gold-ink);
+  --seg-tint: var(--gold-soft);
+  --seg-deep: var(--gold);
+  --ok: #4E7A4A;
+  --err: #A2503F;
 
   /* Typo */
   --t-display-xl: clamp(2.5rem, 6.2vw, 4.75rem);
@@ -99,45 +111,51 @@
   --s9: 96px; --s10: 128px; --s11: 160px;
 
   --radius: 3px;
-  --radius-lg: 6px;
+  --radius-lg: 10px;
 
-  /* Nachrichtenfenster: getönter Grund, hellere Blase, grün getönte Antwort */
-  --chat-ground: #ECEEE9;
-  --chat-in: #F8F9F6;
-  --chat-out: #D9E3DB;
   --content: 1240px;
   --prose: 44rem;
 
+  /* Feste Werte für Flächen, die die Farbe nicht wechseln dürfen */
+  --paper-fixed: var(--cream);
+  --ink-fixed: var(--charcoal-fixed);
+  --charcoal-fixed: #1A1A1A;
+  --warn: #8A6A34;
+
+  /* Nachrichtenfenster: getönter Grund, hellere Blase, Gold-getönte Antwort */
+  --chat-ground: #F2EBE0;
+  --chat-in: #FFFBF5;
+  --chat-out: #EFE2C4;
+
+  /* Bewegung: eine Kurve, drei Dauern — mehr braucht die Seite nicht */
   --ease: cubic-bezier(0.22, 1, 0.36, 1);
   --fast: 170ms;
   --base: 380ms;
   --slow: 680ms;
 }
 
-/* Segmentakzente — alle stark entsättigt, wirken nur als Linie und Label.
-   --seg-deep ist derselbe Farbton für dunklen Grund, so weit aufgehellt,
-   bis jeder gegen --deep mindestens 4,6:1 erreicht. Die hellen Töne liegen
-   dort bei 2,3–3,7:1 und wären als Text unlesbar. */
-[data-seg="ferien"]      { --seg: #8D6A4A; --seg-tint: #F0E9E1; --seg-deep: #9C7B5C; }
-[data-seg="hotels"]      { --seg: #435466; --seg-tint: #E4E8EC; --seg-deep: #6F8399; }
-[data-seg="camping"]     { --seg: #4A6440; --seg-tint: #E6EBE2; --seg-deep: #6C8B61; }
-[data-seg="events"]      { --seg: #6E4C5C; --seg-tint: #EFE7EA; --seg-deep: #9B7889; }
-[data-seg="verwaltung"]  { --seg: #55584F; --seg-tint: #E9EAE6; --seg-deep: #7F8378; }
-[data-seg="seminar"]     { --seg: #7A6134; --seg-tint: #F0EBDF; --seg-deep: #997E4D; }
+/* Segmentakzente — warm und entsättigt, jeder Ton gegen beide Gründe
+   gemessen. --seg trägt Text auf Creme, --seg-deep Text auf Charcoal. */
+[data-seg="ferien"]      { --seg: #A55E3E; --seg-tint: #F1ECE9; --seg-deep: #B67354; }
+[data-seg="hotels"]      { --seg: #49637F; --seg-tint: #EBEDEF; --seg-deep: #6A86A3; }
+[data-seg="camping"]     { --seg: #5A7147; --seg-tint: #EDEFEB; --seg-deep: #728B5D; }
+[data-seg="events"]      { --seg: #895367; --seg-tint: #EFEBED; --seg-deep: #A67688; }
+[data-seg="verwaltung"]  { --seg: #796954; --seg-tint: #EFEDEC; --seg-deep: #92816B; }
+[data-seg="seminar"]     { --seg: #8D6B23; --seg-tint: #F2EFE8; --seg-deep: #A27E32; }
 
 .is-dark {
   --bg: var(--deep);
-  --surface: #1B211E;
-  --tone: #232B27;
+  --surface: #232323;
+  --tone: #2C2A26;
   --ink-900: var(--on-deep);
-  --ink-700: color-mix(in srgb, var(--on-deep) 76%, transparent);
-  --ink-500: color-mix(in srgb, var(--on-deep) 56%, transparent);
-  --ink-300: color-mix(in srgb, var(--on-deep) 38%, transparent);
-  --line: color-mix(in srgb, var(--on-deep) 15%, transparent);
+  --ink-700: color-mix(in srgb, var(--on-deep) 78%, transparent);
+  --ink-500: color-mix(in srgb, var(--on-deep) 60%, transparent);
+  --ink-300: color-mix(in srgb, var(--on-deep) 40%, transparent);
+  --line: color-mix(in srgb, var(--on-deep) 16%, transparent);
   --line-soft: color-mix(in srgb, var(--on-deep) 9%, transparent);
-  --accent: #8FB39C;
-  --accent-soft: #A6C4B1;
-  --seg: #8FB39C;
+  --accent: var(--gold);
+  --accent-soft: var(--gold);
+  --seg: var(--gold);
   background: var(--bg);
   color: var(--ink-900);
 }
@@ -153,7 +171,7 @@ body {
   margin: 0;
   background: var(--bg);
   color: var(--ink-900);
-  font-family: Inter, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+  font-family: Montserrat, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
   font-size: var(--t-body);
   line-height: 1.6;
   -webkit-font-smoothing: antialiased;
@@ -181,11 +199,11 @@ button, input, select, textarea { font: inherit; color: inherit; }
 /* ---------- 04 · TYPOGRAFIE -------------------------------------------- */
 
 .display-xl, .display-l, .display-m, .heading {
-  font-family: Fraunces, Georgia, "Times New Roman", serif;
+  font-family: "Playfair Display", Georgia, "Times New Roman", serif;
   font-optical-sizing: auto; margin: 0; text-wrap: balance;
 }
-.display-xl { font-size: var(--t-display-xl); font-weight: 400; line-height: 1.04; letter-spacing: -0.022em; }
-.display-l  { font-size: var(--t-display-l);  font-weight: 400; line-height: 1.08; letter-spacing: -0.02em; }
+.display-xl { font-size: var(--t-display-xl); font-weight: 400; line-height: 1.06; letter-spacing: -0.014em; }
+.display-l  { font-size: var(--t-display-l);  font-weight: 400; line-height: 1.10; letter-spacing: -0.012em; }
 .display-m  { font-size: var(--t-display-m);  font-weight: 400; line-height: 1.14; letter-spacing: -0.014em; }
 .heading    { font-size: var(--t-heading);    font-weight: 400; line-height: 1.26; }
 
@@ -250,6 +268,12 @@ a { color: inherit; }
 
 .sec-head { max-width: 52rem; margin-bottom: var(--s7); }
 .sec-head .label { margin-bottom: var(--s4); }
+/* Die feine Goldlinie ist die Signatur der Marke — rein dekorativ,
+   sie trägt nie Information. */
+.sec-head .label::after {
+  content: ""; display: block; width: 34px; height: 1px;
+  background: var(--gold); margin-top: var(--s3);
+}
 .sec-head > p + p { margin: var(--s4) 0 0; color: var(--ink-700); max-width: 58ch; }
 .rule { height: 1px; background: var(--line); border: 0; margin: 0; }
 
@@ -271,10 +295,15 @@ a { color: inherit; }
 @media (min-width: 900px) { .site-header__inner { min-height: 76px; } }
 
 .wordmark {
-  font-family: Fraunces, Georgia, serif; font-weight: 500; font-size: 1.0625rem;
-  letter-spacing: 0.2em; text-transform: uppercase; text-decoration: none;
+  display: inline-flex; align-items: center; gap: var(--s3);
+  font-family: "Playfair Display", Georgia, serif; font-weight: 500; font-size: 1.0625rem;
+  letter-spacing: 0.28em; text-transform: uppercase; text-decoration: none;
   color: var(--ink-900); white-space: nowrap; line-height: 1;
 }
+/* Die Sperrung schiebt optisch nach rechts — hier ausgeglichen. */
+.wordmark span { padding-left: 0.28em; }
+.wordmark__mark { width: 30px; height: 30px; flex: none; }
+@media (max-width: 560px) { .wordmark { font-size: 1rem; letter-spacing: 0.22em; gap: var(--s2); } }
 .nav { display: none; }
 @media (min-width: 1000px) { .nav { display: flex; align-items: center; gap: var(--s6); } }
 /* :not(.btn) ist wichtig — sonst überschreibt diese Regel per Spezifität
@@ -308,7 +337,7 @@ a { color: inherit; }
 @media (min-width: 1000px) { .mobile-nav, .mobile-nav.is-open { display: none; } }
 .mobile-nav ul { list-style: none; margin: 0; padding: var(--s4) 0 var(--s6); }
 .mobile-nav a {
-  display: block; padding: var(--s3) 0; font-family: Fraunces, Georgia, serif;
+  display: block; padding: var(--s3) 0; font-family: "Playfair Display", Georgia, serif;
   font-size: 1.25rem; text-decoration: none; color: var(--ink-900);
   border-bottom: 1px solid var(--line);
 }
@@ -317,7 +346,7 @@ a { color: inherit; }
 .site-footer__cols { display: grid; gap: var(--s6); grid-template-columns: 1fr 1fr; }
 @media (min-width: 900px) { .site-footer__cols { grid-template-columns: 1.5fr 1fr 1fr 1fr; gap: var(--s7); } }
 .site-footer h2 {
-  font-family: Inter, sans-serif; font-size: var(--t-label); letter-spacing: 0.2em;
+  font-family: Montserrat, sans-serif; font-size: var(--t-label); letter-spacing: 0.2em;
   text-transform: uppercase; color: var(--ink-500); font-weight: 600; margin: 0 0 var(--s4);
 }
 .site-footer ul { list-style: none; margin: 0; padding: 0; display: flex; flex-direction: column; gap: var(--s2); }
@@ -342,12 +371,14 @@ a { color: inherit; }
   transition: background-color var(--fast) var(--ease), color var(--fast) var(--ease),
               border-color var(--fast) var(--ease);
 }
-.btn--primary { background: var(--ink-900); color: var(--bg); }
-.btn--primary:hover { background: var(--accent); }
+/* Gold als Fläche, Schrift darauf CHARCOAL — nicht weiss.
+   Weiss auf Gold ergibt 2,1:1 und ist unlesbar; Charcoal auf Gold 8,3:1. */
+.btn--primary { background: var(--gold); color: var(--deep); border-color: var(--gold); }
+.btn--primary:hover { background: color-mix(in srgb, var(--gold) 84%, var(--deep)); border-color: transparent; }
 .btn--secondary { background: transparent; color: var(--ink-900); border-color: var(--ink-900); }
-.btn--secondary:hover { background: var(--ink-900); color: var(--bg); }
+.btn--secondary:hover { background: var(--ink-900); color: var(--cream); }
 .btn--ghost { background: transparent; color: var(--ink-900); border-color: var(--line); }
-.btn--ghost:hover { border-color: var(--ink-900); }
+.btn--ghost:hover { border-color: var(--gold-ink); color: var(--gold-ink); }
 .btn--sm { min-height: 42px; padding: 0 var(--s5); }
 .btn--block { width: 100%; }
 
@@ -448,13 +479,13 @@ img.plate[src$="produkt-technik.svg"] { object-fit: contain; background: var(--s
   content: "0" counter(step); display: block; font-size: var(--t-label);
   letter-spacing: 0.2em; color: var(--ink-500); margin-bottom: var(--s3); font-variant-numeric: tabular-nums;
 }
-.steps h3 { font-family: Fraunces, Georgia, serif; font-size: 1.125rem; font-weight: 500; margin: 0 0 var(--s2); }
+.steps h3 { font-family: "Playfair Display", Georgia, serif; font-size: 1.125rem; font-weight: 500; margin: 0 0 var(--s2); }
 .steps p { font-size: var(--t-small); color: var(--ink-500); margin: 0; }
 
 .facts { list-style: none; margin: 0; padding: 0; display: grid; gap: var(--s5); }
 @media (min-width: 800px) { .facts { grid-template-columns: repeat(3, 1fr); gap: var(--s7); } }
 .facts h3 {
-  font-family: Inter, sans-serif; font-size: var(--t-label); font-weight: 600;
+  font-family: Montserrat, sans-serif; font-size: var(--t-label); font-weight: 600;
   letter-spacing: 0.2em; text-transform: uppercase; margin: 0 0 var(--s3); color: var(--ink-900);
 }
 .facts p { font-size: var(--t-small); color: var(--ink-500); margin: 0; }
@@ -507,7 +538,7 @@ table.data tr.is-hero td, table.data tr.is-hero th { background: var(--surface);
 }
 .seg-card__mark svg { width: 17px; height: 17px; }
 .seg-card:hover .seg-card__mark { background: var(--bg); }
-.seg-card__title { font-family: Fraunces, Georgia, serif; font-size: 1.3125rem; font-weight: 500; margin: 0; line-height: 1.2; }
+.seg-card__title { font-family: "Playfair Display", Georgia, serif; font-size: 1.3125rem; font-weight: 500; margin: 0; line-height: 1.2; }
 .seg-card__pain { font-size: var(--t-small); color: var(--ink-700); margin: 0; flex: 1; }
 .seg-card__meta {
   display: flex; flex-wrap: wrap; gap: var(--s2) var(--s4); align-items: baseline;
@@ -531,9 +562,9 @@ table.data tr.is-hero td, table.data tr.is-hero th { background: var(--surface);
 @media (min-width: 860px) {
   .tier--featured { margin-block: calc(var(--s5) * -1); padding-block: calc(var(--s6) + var(--s5)); }
 }
-.tier__name { font-family: Fraunces, Georgia, serif; font-size: 1.25rem; font-weight: 500; margin: 0 0 var(--s2); }
+.tier__name { font-family: "Playfair Display", Georgia, serif; font-size: 1.25rem; font-weight: 500; margin: 0 0 var(--s2); }
 .tier__price {
-  font-family: Fraunces, Georgia, serif; font-size: 2.375rem; font-weight: 400;
+  font-family: "Playfair Display", Georgia, serif; font-size: 2.375rem; font-weight: 400;
   margin: 0; line-height: 1.05; font-variant-numeric: tabular-nums; color: var(--ink-900);
 }
 .tier__per { font-size: var(--t-small); color: var(--ink-500); margin: var(--s1) 0 0; }
@@ -610,7 +641,7 @@ table.data tr.is-hero td, table.data tr.is-hero th { background: var(--surface);
   display: flex; flex-direction: column; gap: var(--s4); justify-content: center;
 }
 .calc__big {
-  font-family: Fraunces, Georgia, serif; font-size: clamp(2.25rem, 5vw, 3.25rem);
+  font-family: "Playfair Display", Georgia, serif; font-size: clamp(2.25rem, 5vw, 3.25rem);
   font-weight: 400; line-height: 1; margin: 0; font-variant-numeric: tabular-nums;
 }
 .calc__unit { font-size: var(--t-small); color: var(--ink-500); }
@@ -658,7 +689,7 @@ table.data tr.is-hero td, table.data tr.is-hero th { background: var(--surface);
   position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%);
   width: 28px; height: 28px; background: var(--paper-fixed);
   display: grid; place-items: center;
-  font-family: Fraunces, Georgia, serif; font-size: 13px; color: var(--ink-fixed);
+  font-family: "Playfair Display", Georgia, serif; font-size: 13px; color: var(--ink-fixed);
 }
 .qr__label {
   font-size: var(--t-label); letter-spacing: 0.2em; text-transform: uppercase; font-weight: 600;
@@ -689,7 +720,7 @@ table.data tr.is-hero td, table.data tr.is-hero th { background: var(--surface);
 .faq summary {
   display: flex; justify-content: space-between; align-items: center; gap: var(--s5);
   padding: var(--s5) 0; cursor: pointer; list-style: none;
-  font-family: Fraunces, Georgia, serif; font-size: 1.0625rem; font-weight: 500;
+  font-family: "Playfair Display", Georgia, serif; font-size: 1.0625rem; font-weight: 500;
 }
 .faq summary::-webkit-details-marker { display: none; }
 .faq summary::after {
@@ -731,8 +762,8 @@ table.data tr.is-hero td, table.data tr.is-hero th { background: var(--surface);
 .hero--onDark { color: var(--on-deep); }
 .hero--onDark .subhead { color: color-mix(in srgb, var(--on-deep) 92%, transparent); }
 .hero--onDark .label { color: color-mix(in srgb, var(--on-deep) 94%, transparent); }
-.hero--onDark .btn--primary { background: var(--on-deep); color: var(--deep); }
-.hero--onDark .btn--primary:hover { background: color-mix(in srgb, var(--on-deep) 86%, var(--deep)); }
+.hero--onDark .btn--primary { background: var(--gold); color: var(--deep); border-color: var(--gold); }
+.hero--onDark .btn--primary:hover { background: color-mix(in srgb, var(--gold) 84%, var(--on-deep)); }
 .hero--onDark .btn--secondary { color: var(--on-deep); border-color: color-mix(in srgb, var(--on-deep) 58%, transparent); }
 .hero--onDark .btn--secondary:hover { background: var(--on-deep); color: var(--deep); border-color: var(--on-deep); }
 
@@ -784,7 +815,7 @@ table.data tr.is-hero td, table.data tr.is-hero th { background: var(--surface);
 }
 .hero-car__mark svg { width: 100%; height: 100%; display: block; }
 .hero-car__name {
-  font-family: Fraunces, Georgia, serif; font-weight: 500; margin: 0;
+  font-family: "Playfair Display", Georgia, serif; font-weight: 500; margin: 0;
   font-size: var(--t-heading); line-height: 1.15; letter-spacing: -0.014em;
   color: var(--seg-deep, var(--on-deep));
 }
@@ -893,7 +924,7 @@ table.data tr.is-hero td, table.data tr.is-hero th { background: var(--surface);
 }
 
 .statement {
-  font-family: Fraunces, Georgia, serif; font-weight: 400;
+  font-family: "Playfair Display", Georgia, serif; font-weight: 400;
   font-size: var(--t-display-m); line-height: 1.18; letter-spacing: -0.014em; margin: 0;
 }
 
@@ -905,7 +936,7 @@ table.data tr.is-hero td, table.data tr.is-hero th { background: var(--surface);
 @media (min-width: 900px) { .sticky-split__steps { gap: var(--s10); } }
 .sticky-split__step { border-top: 1px solid var(--line); padding-top: var(--s5); }
 .sticky-split__step.is-current { border-top-color: var(--ink-900); }
-.sticky-split__step h3 { font-family: Fraunces, Georgia, serif; font-size: var(--t-heading); font-weight: 500; margin: 0 0 var(--s3); }
+.sticky-split__step h3 { font-family: "Playfair Display", Georgia, serif; font-size: var(--t-heading); font-weight: 500; margin: 0 0 var(--s3); }
 .sticky-split__step p { color: var(--ink-700); margin: 0; max-width: 40ch; }
 
 /* Vorher/Nachher */
@@ -918,7 +949,7 @@ table.data tr.is-hero td, table.data tr.is-hero th { background: var(--surface);
 }
 .compare__side { border: 1px solid var(--line); border-radius: var(--radius-lg); padding: var(--s5); background: var(--bg); }
 .compare__side--now { background: var(--surface); border-color: var(--seg); }
-.compare__side h3 { font-size: var(--t-label); letter-spacing: 0.2em; text-transform: uppercase; margin: 0 0 var(--s4); color: var(--ink-500); font-family: Inter, sans-serif; font-weight: 600; }
+.compare__side h3 { font-size: var(--t-label); letter-spacing: 0.2em; text-transform: uppercase; margin: 0 0 var(--s4); color: var(--ink-500); font-family: Montserrat, sans-serif; font-weight: 600; }
 .compare__side--now h3 { color: var(--seg); }
 /* ---------- Nachrichtenfenster ------------------------------------------ */
 /* Bewusst NICHT die Farben und Zeichen eines bestimmten Messengers: das ist
@@ -951,7 +982,7 @@ table.data tr.is-hero td, table.data tr.is-hero th { background: var(--surface);
    Die feste Mindesthöhe verhindert, dass das Fenster beim Aufploppen wächst. */
 .chat__body {
   list-style: none; margin: 0; padding: var(--s4) var(--s4) var(--s2);
-  display: flex; flex-direction: column; justify-content: flex-end; min-height: 292px;
+  display: flex; flex-direction: column; justify-content: flex-end; min-height: 312px;
 }
 .chat__row { display: grid; grid-template-rows: 1fr; min-height: 0; }
 /* Die Tippanzeigen gehören zur Animation. Ohne JavaScript oder bei reduzierter
@@ -971,14 +1002,14 @@ table.data tr.is-hero td, table.data tr.is-hero th { background: var(--surface);
   display: flex; align-items: flex-end; gap: 10px;
 }
 .chat__row--out .chat__bubble {
-  background: var(--chat-out); color: #2A322D; border-radius: 12px 12px 3px 12px;
+  background: var(--chat-out); color: #3A3122; border-radius: 12px 12px 3px 12px;
 }
 .chat__bubble time {
-  flex: none; font-size: var(--t-label); color: #8A938C;
+  flex: none; font-size: var(--t-label); color: #7A7264;
   font-variant-numeric: tabular-nums; padding-bottom: 1px;
 }
-.chat__row--out .chat__bubble time { color: #5C6B60; }
-.chat__tick { flex: none; width: 14px; height: 14px; color: #4C7A93; }
+.chat__row--out .chat__bubble time { color: #6E6144; }
+.chat__tick { flex: none; width: 14px; height: 14px; color: #7C6A3E; }
 
 .chat__typing {
   display: inline-flex; align-items: center; gap: var(--s1);
@@ -1058,7 +1089,7 @@ table.data tr.is-hero td, table.data tr.is-hero th { background: var(--surface);
 .cover__body { position: relative; z-index: 2; }
 .cover__body .label { color: color-mix(in srgb, var(--on-deep) 94%, transparent); }
 .cover__title {
-  font-family: Fraunces, Georgia, serif; font-weight: 400;
+  font-family: "Playfair Display", Georgia, serif; font-weight: 400;
   font-size: clamp(2.25rem, 7vw, 4rem); line-height: 1.05; letter-spacing: -0.02em;
   margin: var(--s5) 0;
 }
@@ -1083,7 +1114,7 @@ table.data tr.is-hero td, table.data tr.is-hero th { background: var(--surface);
 .timeline li { display: grid; grid-template-columns: 68px 1fr; gap: var(--s4); padding: var(--s5) 0; border-bottom: 1px solid var(--line); }
 .timeline li:first-child { border-top: 1px solid var(--line); }
 .timeline__time { font-variant-numeric: tabular-nums; font-size: var(--t-small); color: var(--ink-500); padding-top: 3px; }
-.timeline h3 { font-family: Fraunces, Georgia, serif; font-size: 1.1875rem; font-weight: 500; margin: 0 0 var(--s1); }
+.timeline h3 { font-family: "Playfair Display", Georgia, serif; font-size: 1.1875rem; font-weight: 500; margin: 0 0 var(--s1); }
 .timeline p { margin: 0; font-size: var(--t-small); color: var(--ink-500); }
 
 .demo-result {
@@ -1193,10 +1224,219 @@ table.data tr.is-hero td, table.data tr.is-hero th { background: var(--surface);
   .js .hero-car__price { font-size: var(--t-tiny); }
   .js .hero-car__go, .js .hero-car__bar { display: none; }
 
+  /* Eli steht still — kein Atmen, kein Ring, keine Einblendung. */
+  .js .eli__face, .js .eli__launcher::after, .js .eli__teaser,
+  .js .eli.is-open .eli__panel, .js .eli__typing i { animation: none !important; }
+  .js .eli__launcher::after { opacity: 0; }
+
   /* Der Verlauf steht sofort vollständig — ohne Tippanzeige, ohne Aufploppen. */
   .chat .chat__row { grid-template-rows: 1fr !important; opacity: 1 !important; }
   .chat__skip { display: none !important; }
 }
+
+/* ---------- 18 · ELI ---------------------------------------------------- */
+/* Der Assistent liegt über allem, stört aber nichts: der Knopf ist klein,
+   das Fenster öffnet sich nur auf Klick, und ohne JavaScript ist hier
+   gar nichts — alles, was Eli sagt, steht ohnehin auf den Seiten. */
+
+/* display: flex/block schlägt das hidden-Attribut. Ohne diese Zeile bliebe
+   das Fenster sichtbar und finge Klicks ab, obwohl es „zu" ist. */
+.eli [hidden] { display: none !important; }
+
+/* Ohne JavaScript wäre der Knopf ein Knopf, der nichts tut. Also zeigen
+   wir ihn dann nicht — alles, was Eli sagt, steht ohnehin auf den Seiten. */
+.eli { display: none; }
+.js .eli {
+  position: fixed; right: var(--s5); bottom: var(--s5); z-index: 300;
+  display: flex; flex-direction: column; align-items: flex-end; gap: var(--s3);
+  font-family: Montserrat, system-ui, sans-serif;
+}
+
+/* ---- Der Knopf ---- */
+.eli__launcher {
+  position: relative; appearance: none; cursor: pointer; padding: 0;
+  width: 62px; height: 62px; border-radius: 50%; flex: none;
+  background: var(--cream); border: 1px solid var(--gold);
+  box-shadow: 0 8px 28px -10px rgba(26, 26, 26, 0.32), 0 2px 6px -2px rgba(26, 26, 26, 0.12);
+  transition: transform var(--base) var(--ease), box-shadow var(--base) var(--ease);
+}
+.eli__launcher:hover { transform: translateY(-3px); box-shadow: 0 14px 34px -12px rgba(26, 26, 26, 0.38); }
+.eli__face { width: 100%; height: 100%; border-radius: 50%; object-fit: cover; display: block; }
+.eli__face--sm { width: 38px; height: 38px; flex: none; }
+
+.eli__pip {
+  position: absolute; right: 2px; bottom: 2px; width: 12px; height: 12px;
+  border-radius: 50%; background: var(--ok); border: 2px solid var(--cream);
+}
+.eli__pip--inline {
+  position: static; display: inline-block; width: 7px; height: 7px;
+  border: 0; margin-left: 5px; vertical-align: middle;
+}
+
+/* Ruhiges Atmen. Keine Cartoon-Bewegung — 3 px in 6 Sekunden.
+   Bewegt wird das BILD, nicht der Knopf: sonst wandert die Klickfläche
+   dauernd, und wer mit der Maus nicht sicher zielt, trifft daneben. */
+.js .eli__face { animation: eli-breathe 6s ease-in-out infinite; }
+.js .eli:hover .eli__face, .js .eli.is-open .eli__face { animation-play-state: paused; }
+@keyframes eli-breathe {
+  0%, 100% { transform: translateY(0); }
+  50%      { transform: translateY(-3px); }
+}
+/* Ein einzelner, langsamer Goldring — die Signatur der Marke, nicht ein Blinken. */
+.js .eli__launcher::after {
+  content: ""; position: absolute; inset: -5px; border-radius: 50%;
+  border: 1px solid var(--gold); opacity: 0;
+  animation: eli-halo 6s var(--ease) infinite;
+}
+@keyframes eli-halo {
+  0%   { transform: scale(0.94); opacity: 0; }
+  30%  { opacity: 0.5; }
+  70%  { transform: scale(1.14); opacity: 0; }
+  100% { transform: scale(1.14); opacity: 0; }
+}
+
+/* ---- Der Hinweis ---- */
+.eli__teaser {
+  position: relative; max-width: 19rem; cursor: pointer;
+  background: var(--cream); border: 1px solid var(--line); border-radius: var(--radius-lg);
+  padding: var(--s4) var(--s7) var(--s4) var(--s4);
+  box-shadow: 0 10px 30px -14px rgba(26, 26, 26, 0.28);
+}
+.eli__teaser p { margin: 0; font-size: var(--t-small); color: var(--ink-700); line-height: 1.5; }
+.eli__teaser strong { display: block; font-family: "Playfair Display", Georgia, serif;
+  font-size: 1.0625rem; font-weight: 500; color: var(--ink-900); margin-bottom: 2px; }
+.eli__teaser-x {
+  position: absolute; top: 6px; right: 6px; appearance: none; background: none;
+  border: 0; cursor: pointer; padding: 8px; line-height: 0; color: var(--ink-500);
+}
+.eli__teaser-x svg { width: 14px; height: 14px; fill: none; stroke: currentColor; stroke-width: 1.5; stroke-linecap: round; }
+.eli__teaser-x:hover { color: var(--ink-900); }
+.js .eli__teaser { animation: eli-in var(--slow) var(--ease) both; }
+@keyframes eli-in { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: none; } }
+
+/* ---- Das Fenster ---- */
+/* Das Fenster steht ÜBER dem Knopf — dort erwartet man es. */
+.eli__panel {
+  order: -1;
+  width: min(23.5rem, calc(100vw - 2 * var(--s5)));
+  max-height: min(34rem, calc(100vh - 8rem));
+  display: flex; flex-direction: column; overflow: hidden;
+  background: var(--cream); border: 1px solid var(--line); border-radius: var(--radius-lg);
+  box-shadow: 0 26px 60px -22px rgba(26, 26, 26, 0.38), 0 4px 12px -6px rgba(26, 26, 26, 0.14);
+}
+.js .eli.is-open .eli__panel { animation: eli-open 380ms var(--ease) both; transform-origin: bottom right; }
+@keyframes eli-open {
+  from { opacity: 0; transform: translateY(14px) scale(0.97); }
+  to   { opacity: 1; transform: none; }
+}
+
+.eli__bar {
+  display: flex; align-items: center; gap: var(--s3); flex: none;
+  padding: var(--s3) var(--s4); background: var(--ivory);
+  border-bottom: 1px solid var(--line);
+}
+.eli__who { flex: 1; min-width: 0; }
+.eli__name {
+  margin: 0; font-family: "Playfair Display", Georgia, serif;
+  font-size: 1.0625rem; font-weight: 500; color: var(--ink-900); line-height: 1.2;
+}
+.eli__role { margin: 1px 0 0; font-size: var(--t-tiny); color: var(--ink-500); }
+.eli__x {
+  appearance: none; background: none; border: 0; cursor: pointer; flex: none;
+  padding: 9px; line-height: 0; color: var(--ink-500); border-radius: var(--radius);
+}
+.eli__x svg { width: 16px; height: 16px; fill: none; stroke: currentColor; stroke-width: 1.5; stroke-linecap: round; }
+.eli__x:hover { color: var(--ink-900); background: var(--beige); }
+
+.eli__log {
+  list-style: none; margin: 0; padding: var(--s4); overflow-y: auto; flex: 1;
+  display: flex; flex-direction: column; gap: var(--s3);
+  background: var(--chat-ground); scrollbar-width: thin;
+}
+.eli__row { display: flex; flex-direction: column; align-items: flex-start; gap: var(--s2); }
+.eli__row--me { align-items: flex-end; }
+
+.eli__bubble {
+  margin: 0; max-width: 88%; padding: var(--s3) var(--s4);
+  font-size: var(--t-small); line-height: 1.55; color: var(--ink-700);
+  background: var(--chat-out); border-radius: 12px 12px 3px 12px;
+}
+.eli__bubble--eli { background: var(--chat-in); border-radius: 12px 12px 12px 3px; }
+.eli__bubble strong { color: var(--ink-900); font-weight: 600; }
+.eli__break { display: block; height: var(--s3); }
+
+.eli__actions { display: flex; flex-wrap: wrap; gap: var(--s2); padding-left: 2px; }
+.eli__link {
+  display: inline-flex; align-items: center; min-height: 34px; padding: 0 var(--s4);
+  font-size: var(--t-tiny); font-weight: 600; text-decoration: none;
+  color: var(--deep); background: var(--gold); border-radius: 999px;
+}
+.eli__link:hover { background: color-mix(in srgb, var(--gold) 84%, var(--deep)); }
+.eli__link + .eli__link { background: transparent; color: var(--gold-ink); border: 1px solid var(--line); }
+.eli__link + .eli__link:hover { background: var(--gold-soft); border-color: var(--gold); }
+
+.eli__typing {
+  display: inline-flex; gap: var(--s1); padding: 13px var(--s4);
+  background: var(--chat-in); border-radius: 12px 12px 12px 3px;
+}
+.eli__typing i { display: block; width: 5px; height: 5px; border-radius: 50%; background: var(--ink-300); }
+.js .eli__typing i { animation: chat-bounce 1.15s ease-in-out infinite; }
+.js .eli__typing i:nth-child(2) { animation-delay: 0.16s; }
+.js .eli__typing i:nth-child(3) { animation-delay: 0.32s; }
+
+.eli__chips {
+  display: flex; flex-wrap: wrap; gap: var(--s2); flex: none;
+  padding: var(--s3) var(--s4); border-top: 1px solid var(--line); background: var(--cream);
+}
+.eli__chip {
+  appearance: none; cursor: pointer; min-height: 36px; padding: 0 var(--s4);
+  font: inherit; font-size: var(--t-tiny); color: var(--ink-700);
+  background: var(--cream); border: 1px solid var(--line); border-radius: 999px;
+  transition: border-color var(--fast) var(--ease), color var(--fast) var(--ease),
+              background-color var(--fast) var(--ease);
+}
+.eli__chip:hover { border-color: var(--gold); color: var(--ink-900); background: var(--gold-soft); }
+
+.eli__form {
+  display: flex; align-items: center; gap: var(--s2); flex: none;
+  padding: var(--s3) var(--s4); border-top: 1px solid var(--line); background: var(--cream);
+}
+.eli__input {
+  flex: 1; min-width: 0; min-height: 40px; padding: 0 var(--s4);
+  font-size: var(--t-small); color: var(--ink-900);
+  background: var(--ivory); border: 1px solid var(--line); border-radius: 999px;
+}
+.eli__input::placeholder { color: var(--ink-500); }
+.eli__send {
+  appearance: none; cursor: pointer; flex: none; width: 40px; height: 40px;
+  border: 0; border-radius: 50%; background: var(--gold); color: var(--deep);
+  display: grid; place-items: center;
+}
+.eli__send svg { width: 15px; height: 15px; fill: none; stroke: currentColor; stroke-width: 1.6; stroke-linecap: round; stroke-linejoin: round; }
+.eli__send:hover { background: color-mix(in srgb, var(--gold) 84%, var(--deep)); }
+
+.eli__note {
+  margin: 0; flex: none; padding: var(--s3) var(--s4) var(--s4);
+  font-size: 0.75rem; line-height: 1.5; color: var(--ink-500); background: var(--cream);
+}
+
+/* ---- Telefon: das Fenster wird zum Blatt von unten ---- */
+@media (max-width: 640px) {
+  .js .eli { right: var(--s4); bottom: var(--s4); left: var(--s4); align-items: flex-end; }
+  .eli__teaser { max-width: none; }
+  .eli__panel {
+    position: fixed; left: 0; right: 0; bottom: 0; width: auto;
+    max-height: 88vh; border-radius: var(--radius-lg) var(--radius-lg) 0 0;
+    border-left: 0; border-right: 0; border-bottom: 0;
+  }
+  .js .eli.is-open .eli__panel { transform-origin: bottom center; }
+  .eli.is-open .eli__launcher, .eli.is-open .eli__teaser { display: none; }
+  .eli__bar { padding-block: var(--s4); }
+  .eli__chip { min-height: 40px; }
+}
+
+@media print { .eli { display: none !important; } }
+
 
 @media print {
   .site-header, .site-footer, .nav-toggle, .mobile-nav, .demobar { display: none !important; }

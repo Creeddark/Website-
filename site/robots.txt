@@ -4,4 +4,4 @@ Allow: /
 # Rechtstexte sind Entwürfe — bis zur anwaltlichen Freigabe nicht indexieren
 Disallow: /recht/
 
-Sitemap: https://atria.example/sitemap.xml
+Sitemap: https://velora.example/sitemap.xml

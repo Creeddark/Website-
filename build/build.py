@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 """
-ATRIA — statischer Seitengenerator.
+VELORA — statischer Seitengenerator.
 
 Setzt die Seiten aus build/pages/*.html in das gemeinsame Gerüst und schreibt
 fertiges, abhängigkeitsfreies HTML nach site/. Das Ergebnis ist eingecheckt —
@@ -25,7 +25,7 @@ LAYOUT = ROOT / "build" / "layout.html"
 LAYOUT_BARE = ROOT / "build" / "layout-bare.html"
 OUT = ROOT / "site"
 
-BRAND = "ATRIA"  # Arbeitstitel — Markenrecherche steht aus, siehe docs/11
+BRAND = "VELORA"  # Markenrecherche (DPMA/EUIPO) steht aus, siehe docs/11
 
 NAV_KEYS = ["segmente", "produkt", "preise", "demo", "faq"]
 
@@ -56,7 +56,19 @@ def render(page_path: pathlib.Path, layout: str, layout_bare: str) -> tuple[path
 
     out = out.replace("{{content}}", content.strip())
 
+    # Eli richtet seine Vorschläge nach der Seite, auf der er steht.
+    rel_str = str(rel).replace("\\", "/")
+    if rel_str.startswith("demo/"):
+        elictx = "demo"
+    elif rel_str.startswith("segmente/"):
+        elictx = "segment"
+    elif rel_str in ("preise.html", "produkt.html"):
+        elictx = rel_str[:-5]
+    else:
+        elictx = "start"
+
     replacements = {
+        "{{elictx}}": elictx,
         "{{title}}": meta["title"],
         "{{description}}": meta["description"],
         "{{path}}": str(rel).replace("\\", "/"),
@@ -71,7 +83,7 @@ def render(page_path: pathlib.Path, layout: str, layout_bare: str) -> tuple[path
     for needle, value in replacements.items():
         out = out.replace(needle, value)
 
-    out = out.replace("ATRIA", BRAND)
+    out = out.replace("VELORA", BRAND)
     return OUT / rel, out
 
 

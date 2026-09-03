@@ -1,77 +1,77 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   <url>
-    <loc>https://atria.example/about.html</loc>
+    <loc>https://velora.example/about.html</loc>
     <lastmod>2026-09-03</lastmod>
     <priority>0.6</priority>
   </url>
   <url>
-    <loc>https://atria.example/demo/firmenevent.html</loc>
+    <loc>https://velora.example/demo/firmenevent.html</loc>
     <lastmod>2026-09-03</lastmod>
     <priority>0.7</priority>
   </url>
   <url>
-    <loc>https://atria.example/demo/gaestemappe.html</loc>
+    <loc>https://velora.example/demo/gaestemappe.html</loc>
     <lastmod>2026-09-03</lastmod>
     <priority>0.8</priority>
   </url>
   <url>
-    <loc>https://atria.example/demo/mieterinfo.html</loc>
+    <loc>https://velora.example/demo/mieterinfo.html</loc>
     <lastmod>2026-09-03</lastmod>
     <priority>0.7</priority>
   </url>
   <url>
-    <loc>https://atria.example/faq.html</loc>
+    <loc>https://velora.example/faq.html</loc>
     <lastmod>2026-09-03</lastmod>
     <priority>0.6</priority>
   </url>
   <url>
-    <loc>https://atria.example/index.html</loc>
+    <loc>https://velora.example/index.html</loc>
     <lastmod>2026-09-03</lastmod>
     <priority>1.0</priority>
   </url>
   <url>
-    <loc>https://atria.example/kontakt.html</loc>
+    <loc>https://velora.example/kontakt.html</loc>
     <lastmod>2026-09-03</lastmod>
     <priority>0.6</priority>
   </url>
   <url>
-    <loc>https://atria.example/preise.html</loc>
+    <loc>https://velora.example/preise.html</loc>
     <lastmod>2026-09-03</lastmod>
     <priority>0.9</priority>
   </url>
   <url>
-    <loc>https://atria.example/produkt.html</loc>
+    <loc>https://velora.example/produkt.html</loc>
     <lastmod>2026-09-03</lastmod>
     <priority>0.9</priority>
   </url>
   <url>
-    <loc>https://atria.example/segmente/campingplaetze.html</loc>
+    <loc>https://velora.example/segmente/campingplaetze.html</loc>
     <lastmod>2026-09-03</lastmod>
     <priority>0.8</priority>
   </url>
   <url>
-    <loc>https://atria.example/segmente/ferienunterkuenfte.html</loc>
+    <loc>https://velora.example/segmente/ferienunterkuenfte.html</loc>
     <lastmod>2026-09-03</lastmod>
     <priority>0.9</priority>
   </url>
   <url>
-    <loc>https://atria.example/segmente/firmenevents.html</loc>
+    <loc>https://velora.example/segmente/firmenevents.html</loc>
     <lastmod>2026-09-03</lastmod>
     <priority>0.8</priority>
   </url>
   <url>
-    <loc>https://atria.example/segmente/hausverwaltungen.html</loc>
+    <loc>https://velora.example/segmente/hausverwaltungen.html</loc>
     <lastmod>2026-09-03</lastmod>
     <priority>0.8</priority>
   </url>
   <url>
-    <loc>https://atria.example/segmente/hotels.html</loc>
+    <loc>https://velora.example/segmente/hotels.html</loc>
     <lastmod>2026-09-03</lastmod>
     <priority>0.8</priority>
   </url>
   <url>
-    <loc>https://atria.example/segmente/seminarhaeuser.html</loc>
+    <loc>https://velora.example/segmente/seminarhaeuser.html</loc>
     <lastmod>2026-09-03</lastmod>
     <priority>0.8</priority>
   </url>

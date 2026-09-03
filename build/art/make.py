@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 """
-ATRIA — Illustrationsgenerator.
+VELORA — Illustrationsgenerator.
 
 Erzeugt die Strichgrafiken der Website als SVG. Bewusst als Zeichnung und
 nicht als Fotomontage: wir haben keine lizenzierten Fotos, und eine ehrliche
@@ -17,18 +17,19 @@ import pathlib
 OUT = pathlib.Path(__file__).resolve().parent.parent.parent / "site" / "assets" / "img"
 OUT.mkdir(parents=True, exist_ok=True)
 
-# Palette — identisch zu den CSS-Tokens
-DARK_BG   = "#131816"
-DARK_LINE = "#CBD3CC"
-DARK_SOFT = "#5F6D65"
-LIGHT_BG  = "#EDEFEA"
-LIGHT_LINE= "#2A322D"
-LIGHT_SOFT= "#9AA39C"
+# Palette — identisch zu den CSS-Tokens von VELORA
+DARK_BG   = "#1A1A1A"
+DARK_LINE = "#D8CDB8"      # warmes Elfenbein auf Charcoal
+DARK_SOFT = "#6E6455"
+LIGHT_BG  = "#F5EFE6"
+LIGHT_LINE= "#4A4238"      # warmes Dunkelbraun statt Neutralschwarz
+LIGHT_SOFT= "#AFA99E"
 
 SEG = {
-    "ferien":     "#8D6A4A", "hotels":  "#435466", "camping": "#4A6440",
-    "events":     "#6E4C5C", "verwaltung": "#55584F", "seminar": "#7A6134",
-    "brand":      "#3E6350",
+    "ferien":     "#A55E3E", "hotels":  "#49637F",
+    "camping":    "#5A7147", "events": "#895367",
+    "verwaltung": "#796954", "seminar": "#8D6B23",
+    "brand":      "#D4AF37",
 }
 
 def svg(w, h, body, bg, title, fit="slice"):

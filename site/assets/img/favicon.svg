@@ -1,5 +1,1 @@
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32">
-  <rect width="32" height="32" fill="#151917"/>
-  <text x="16" y="23" text-anchor="middle" fill="#F6F7F4"
-        font-family="Georgia, 'Times New Roman', serif" font-size="21">A</text>
-</svg>
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32" role="img" aria-label="VELORA"><rect width="32" height="32" rx="6" fill="#1A1A1A"/><path d="M 4.4 5.0 L 8.8 5.0 L 16.5 22.6 L 24.2 5.0 L 26.6 5.0 L 16.5 25.4 Z" fill="#D4AF37"/><path d="M 16.5 21.0 Q 16.5 25.6 19.1 25.6 Q 16.5 25.6 16.5 30.200000000000003 Q 16.5 25.6 13.9 25.6 Q 16.5 25.6 16.5 21.0 Z" fill="none" stroke="#1A1A1A" stroke-width="2.2" stroke-linejoin="round"/><path d="M 16.5 21.0 Q 16.5 25.6 19.1 25.6 Q 16.5 25.6 16.5 30.200000000000003 Q 16.5 25.6 13.9 25.6 Q 16.5 25.6 16.5 21.0 Z" fill="#D4AF37"/></svg>

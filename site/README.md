@@ -1,8 +1,9 @@
 # Website
 
-Statische Website für **ATRIA** — die digitale Infomappe für Orte, an denen
-Menschen ankommen. Kein Framework, keine Build-Abhängigkeiten, keine
-Drittanbieter-Anfragen zur Laufzeit.
+Statische Website für **VELORA** — *Premium hospitality. Intelligently
+connected.* Die digitale Infomappe für Orte, an denen Menschen ankommen.
+Kein Framework, keine Build-Abhängigkeiten, keine Drittanbieter-Anfragen
+zur Laufzeit.
 
 ```
 site/                     ← das ist die Website. Ordner hochladen, fertig.
@@ -45,11 +46,10 @@ nicht in 22 Seiten dupliziert werden.
 
 ## Markennamen austauschen
 
-`ATRIA` ist ein **Arbeitstitel**. Zum Wechseln genügt eine Zeile in
-`build/build.py`:
+Zum Wechseln genügt eine Zeile in `build/build.py`:
 
 ```python
-BRAND = "ATRIA"   # → gewünschter Name
+BRAND = "VELORA"   # → gewünschter Name
 ```
 
 Danach neu bauen. Zusätzlich anzupassen: `assets/img/favicon.svg` (der
@@ -88,8 +88,8 @@ Die Reihenfolge ist bewusst gewählt: **erst verstehen, dann einordnen.**
 - **Design System** als Token-Satz. Sechs Segmentakzente über ein einziges
   Attribut (`data-seg`), alle stark entsättigt — sie wirken nur als Linie,
   Label und Kartenrahmen.
-- **Selbst gehostete Schriften** (Fraunces + Inter, beide SIL OFL). Keine
-  Anfrage an ein fremdes CDN.
+- **Selbst gehostete Schriften**: Playfair Display für Überschriften,
+  Montserrat für alles andere. Beide SIL OFL, keine Anfrage an ein fremdes CDN.
 - **Animationen**: eine Easing-Kurve, drei Dauern, Fade-and-Rise, Bild-Reveals,
   zeilenweiser Text-Reveal, Sticky-Scroll, Parallax bei max. 6 % nur auf
   Desktop. `prefers-reduced-motion` schaltet alles ab.
@@ -115,22 +115,42 @@ Die Reihenfolge ist bewusst gewählt: **erst verstehen, dann einordnen.**
 - **Drei Live-Beispiele** mit funktionierender Interaktion: Reiter-Navigation,
   Anmeldung, Schadensmeldung mit Foto — alles rein im Browser.
 - **Barrierefreiheit**: Sprunglink, sichtbare Fokuszustände, Tastaturbedienung,
-  semantische Überschriften, beschriftete Formularfelder. Sämtlicher Text über
-  Bildflächen erreicht WCAG AA — gemessen, nicht geschätzt. Dafür trägt jeder
-  Segmentton eine zweite Fassung für dunklen Grund (`--seg-deep`); die hellen
-  Töne kommen dort nur auf 2,3–3,7:1 und wären als Text unlesbar.
+  semantische Überschriften, beschriftete Formularfelder. **274 Textstellen auf
+  22 Seiten gemessen, alle über der Schwelle** — nicht geschätzt.
+- **Zwei Goldtöne, und das ist Absicht.** `--gold` (#D4AF37) ist die Signatur:
+  Flächen, Marke, feine Linien. Als Schrift auf Creme kommt sie auf **1,98:1**
+  und wäre unlesbar — deshalb gibt es `--gold-ink` (#7B641A), denselben Ton so
+  weit abgedunkelt, dass er 4,5:1 auch auf der getönten Fläche erreicht.
+  Knöpfe mit Goldfläche tragen **dunkle** Schrift (8,3:1), nie weiße (2,1:1).
+  Jeder Segmentton hat zusätzlich eine Fassung für dunklen Grund (`--seg-deep`).
 - **26 eigene Illustrationen** als SVG, erzeugt aus `build/art/make.py`.
   Zusammen 128 KB, lizenzfrei, auf jedem Display scharf.
+- **Eli**, der Assistent. Ein schwebender Knopf mit Elis Porträt; das Fenster
+  öffnet sich auf Klick, auf dem Telefon als Blatt von unten. Er kennt die
+  Seite, auf der er steht, und schlägt passende Themen vor. Der Angebots-Berater
+  fragt zweimal und empfiehlt dann einen Tarif **mit Begründung** — und sagt
+  ehrlich, wenn das günstigere Angebot reicht. Vollständig tastaturbedienbar,
+  Esc schließt.
+
+  **Eli ist kein Sprachmodell**, und die Seite sagt das an drei Stellen offen.
+  Es gibt kein Backend, an das er fragen könnte. Er führt durch feste Themen
+  und gibt wieder, was ohnehin auf der Website steht. Auf freie Fragen sucht er
+  das nächstliegende Thema; findet er keins, sagt er das und verweist auf den
+  Kontakt. Ein Chat, der freie Antworten vortäuscht, wäre genau die Sorte
+  Versprechen, die der Rest dieser Seite vermeidet.
 - **Ohne JavaScript** bleiben alle 22 Seiten vollständig lesbar. Der
   Preisumschalter ist dann ausgeblendet und **alle drei Beträge stehen
   untereinander** in der Kachel — es fehlt keine Angabe, nur die Auswahl.
   Im Nachrichtenfenster stehen alle sechs Nachrichten ohne Tippanzeige.
+  Eli erscheint gar nicht, statt als toter Knopf dazustehen.
 
 ## Was noch fehlt
 
 | Fehlt | Auswirkung | Nächster Schritt |
 |---|---|---|
-| **Markenname** | Überall steht der Arbeitstitel | Entscheidung + DPMA/EUIPO-Recherche |
+| **Markenrecht** | Der Name VELORA steht, die Recherche nicht | DPMA/EUIPO prüfen, bevor die Seite live geht |
+| **Elis Porträt** | Aus dem gelieferten Markenbild freigestellt | Für die Veröffentlichung eine saubere Freistellung mit Alphakanal, idealerweise in mehreren Blickrichtungen |
+| **Eli als KI** | Er führt durch feste Themen, er versteht keine freien Fragen | Für echte Antworten braucht es ein Backend und ein Sprachmodell — und dann auch einen Absatz im Datenschutz |
 | **Fotos** | Alle Flächen tragen eigene Strichzeichnungen — Fotos erst, wenn es echte Kundenobjekte zu zeigen gibt | [`IMAGE-BRIEF.md`](IMAGE-BRIEF.md) |
 | **Formular-Empfänger** | Formulare validieren, senden aber nichts | Endpunkt eintragen, Bestätigungsmail |
 | **Zahlung** | Preise und Abrechnung stehen auf der Seite, gezahlt wird per Rechnung. Der „Starten"-Knopf führt ins Formular, nicht in einen Checkout — und die Seite sagt das dort auch | Zahlungsanbieter anbinden, dann wird aus der Auswahl ein Kauf |
