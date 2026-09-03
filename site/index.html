@@ -3,15 +3,15 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Digital Experiences, beautifully made — CONVIVIO</title>
-<meta name="description" content="Durchdachte digitale Experiences für Hochzeiten, Gäste und unvergessliche Momente. Zwei Welten, eine Handschrift.">
-<meta name="theme-color" content="#F7F5F1">
-<link rel="canonical" href="https://convivio.example/index.html">
+<title>Die digitale Infomappe für Gäste, Mieter und Teilnehmer — ATRIA</title>
+<meta name="description" content="Ein QR-Code, eine Seite: WLAN, Check-in, Regeln, Ablauf, Empfehlungen. Für Ferienunterkünfte, Hotels, Campingplätze, Firmenevents und Hausverwaltungen. Ab 190 € im Jahr.">
+<meta name="theme-color" content="#F6F7F4">
+<link rel="canonical" href="https://atria.example/index.html">
 
 <meta property="og:type" content="website">
-<meta property="og:site_name" content="CONVIVIO">
-<meta property="og:title" content="Digital Experiences, beautifully made — CONVIVIO">
-<meta property="og:description" content="Durchdachte digitale Experiences für Hochzeiten, Gäste und unvergessliche Momente. Zwei Welten, eine Handschrift.">
+<meta property="og:site_name" content="ATRIA">
+<meta property="og:title" content="Die digitale Infomappe für Gäste, Mieter und Teilnehmer — ATRIA">
+<meta property="og:description" content="Ein QR-Code, eine Seite: WLAN, Check-in, Regeln, Ablauf, Empfehlungen. Für Ferienunterkünfte, Hotels, Campingplätze, Firmenevents und Hausverwaltungen. Ab 190 € im Jahr.">
 <meta property="og:locale" content="de_DE">
 
 <script>document.documentElement.className=document.documentElement.className.replace(/\bno-js\b/,'js')</script>
@@ -28,17 +28,15 @@
 
 <header class="site-header">
   <div class="wrap site-header__inner">
-    <a class="wordmark" href="index.html">
-      CONVIVIO
-    </a>
+    <a class="wordmark" href="index.html">ATRIA</a>
 
     <nav class="nav" aria-label="Hauptnavigation">
-      <a href="weddings.html">Weddings</a>
-      <a href="hospitality.html">Hospitality</a>
-      <a href="produkte/bundles.html">Shop</a>
-      <a href="custom.html">Custom</a>
-      <a href="about.html">About</a>
+      <a href="index.html#segmente">Für wen</a>
+      <a href="produkt.html">Produkt</a>
+      <a href="preise.html">Preise</a>
+      <a href="demo/gaestemappe.html">Live-Beispiel</a>
       <a href="faq.html">FAQ</a>
+      <a class="btn btn--primary btn--sm header-cta" href="kontakt.html">Loslegen</a>
     </nav>
 
     <button class="nav-toggle" type="button" aria-expanded="false" aria-controls="mobile-nav" aria-label="Menü">
@@ -48,244 +46,563 @@
 
   <div class="mobile-nav wrap" id="mobile-nav">
     <ul>
-      <li><a href="weddings.html">Weddings</a></li>
-      <li><a href="hospitality.html">Hospitality</a></li>
-      <li><a href="produkte/bundles.html">Shop</a></li>
-      <li><a href="custom.html">Custom Experiences</a></li>
-      <li><a href="about.html">About</a></li>
+      <li><a href="index.html#segmente">Für wen</a></li>
+      <li><a href="produkt.html">Produkt</a></li>
+      <li><a href="preise.html">Preise</a></li>
+      <li><a href="demo/gaestemappe.html">Live-Beispiel</a></li>
       <li><a href="faq.html">FAQ</a></li>
-      <li><a href="kontakt.html">Kontakt</a></li>
+      <li><a href="kontakt.html">Loslegen</a></li>
     </ul>
   </div>
 </header>
 
 <main id="main">
-<!-- 01 · HERO ---------------------------------------------------------- -->
+<!-- 01 · HERO — was es ist, für wen, was es kostet ----------------------- -->
 <section class="hero hero--full hero--onDark">
-  <div class="hero__media">
-    <div class="plate" data-parallax="6" data-img="hero-home"></div>
-  </div>
+  <div class="hero__media"><div class="plate" data-parallax="5" data-img="hero-home"></div></div>
   <div class="hero__scrim"></div>
 
   <div class="wrap hero__inner">
-    <p class="label" style="margin-bottom:var(--s5)">Digital Experiences</p>
+    <p class="label" style="margin-bottom:var(--s5)">Die digitale Infomappe</p>
 
-    <h1 class="display-xl" style="max-width:16ch">
-      <span class="reveal-line"><span>Digital experiences,</span></span>
-      <span class="reveal-line"><span>beautifully made.</span></span>
+    <h1 class="display-xl" style="max-width:15ch">
+      <span class="reveal-line"><span>Einmal beantwortet.</span></span>
+      <span class="reveal-line"><span>Nie wieder erklärt.</span></span>
     </h1>
 
-    <p class="subhead" style="margin-top:var(--s5);max-width:46ch">
-      Durchdachte digitale Experiences für Hochzeiten, Gäste und
-      unvergessliche Momente.
+    <p class="subhead" style="margin-top:var(--s5);max-width:50ch">
+      Ihre Gäste scannen einen QR-Code und finden alles: WLAN, Check-in,
+      Hausregeln, Ablauf, Ihre Empfehlungen. Ohne App, ohne Konto,
+      ohne Anmeldung.
     </p>
 
     <div class="cluster" style="margin-top:var(--s7);gap:var(--s3)">
-      <a class="btn btn--primary" href="weddings.html">Explore Weddings</a>
-      <a class="btn btn--secondary" href="hospitality.html">Explore Hospitality</a>
+      <a class="btn btn--primary" href="demo/gaestemappe.html">Live-Beispiel öffnen</a>
+      <a class="btn btn--secondary" href="#segmente">Für wen ist das?</a>
     </div>
+
+    <p class="hero__anchor">
+      <b>ab 190 €</b> im Jahr
+      <span aria-hidden="true">·</span>
+      an einem Nachmittag eingerichtet
+      <span aria-hidden="true">·</span>
+      jährlich kündbar
+    </p>
   </div>
 </section>
 
-<!-- 02 · DIE KLAMMER --------------------------------------------------- -->
+<!-- 02 · DAS PROBLEM ---------------------------------------------------- -->
 <section class="section section--tight">
-  <div class="wrap" style="text-align:center">
-    <p class="label" data-reveal>Two worlds. One signature.</p>
-    <p class="display-m" data-reveal
-       style="margin:var(--s5) auto 0;max-width:24ch">
-      For everyone who&nbsp;welcomes someone.
-    </p>
-    <p data-reveal
-       style="margin:var(--s5) auto 0;max-width:52ch;color:var(--ink-700)">
-      Brautpaare, Gastgeber, Hoteliers — in beiden Welten empfängt jemand
-      jemanden. Wir gestalten die digitale Seite davon.
-    </p>
-  </div>
-</section>
-
-<!-- 03 · DIE ZWEI WELTEN ------------------------------------------------ -->
-<!-- Die wichtigste visuelle Entscheidung der Website (docs/04 §13). -->
-<section class="section--flush" aria-labelledby="worlds-heading">
-  <h2 id="worlds-heading" class="visually-hidden">Unsere zwei Welten</h2>
-
-  <div class="worlds">
-    <a class="world" href="weddings.html" data-world="weddings">
-      <div class="world__media">
-        <div class="plate" data-img="world-weddings"></div>
-      </div>
-      <div class="world__scrim"></div>
-      <div class="world__body">
-        <p class="label">Weddings</p>
-        <p class="display-l" style="margin:var(--s4) 0 var(--s4)">
-          Make every moment unforgettable.
-        </p>
-        <p style="margin:0 0 var(--s6);max-width:34ch">
-          Websites, Einladungen und Gäste-Experiences für euren Hochzeitstag.
-        </p>
-        <span class="arrow-link">
-          Explore Weddings
-          <svg width="16" height="9" viewBox="0 0 16 9" fill="none" aria-hidden="true">
-            <path d="M0 4.5h14M10.5 1 14 4.5 10.5 8" stroke="currentColor" stroke-width="1.2"/>
-          </svg>
-        </span>
-      </div>
-    </a>
-
-    <a class="world" href="hospitality.html" data-world="hospitality">
-      <div class="world__media">
-        <div class="plate" data-img="world-hospitality"></div>
-      </div>
-      <div class="world__scrim"></div>
-      <div class="world__body">
-        <p class="label">Hospitality</p>
-        <p class="display-l" style="margin:var(--s4) 0 var(--s4)">
-          Make every stay feel exceptional.
-        </p>
-        <p style="margin:0 0 var(--s6);max-width:34ch">
-          Digitale Gästemappen und Guest Portals, die Fragen beantworten,
-          bevor sie gestellt werden.
-        </p>
-        <span class="arrow-link">
-          Explore Hospitality
-          <svg width="16" height="9" viewBox="0 0 16 9" fill="none" aria-hidden="true">
-            <path d="M0 4.5h14M10.5 1 14 4.5 10.5 8" stroke="currentColor" stroke-width="1.2"/>
-          </svg>
-        </span>
-      </div>
-    </a>
-  </div>
-</section>
-
-<!-- 04 · WARUM WIR ------------------------------------------------------ -->
-<section class="section">
   <div class="wrap">
-    <ul class="facts" data-reveal-group>
-      <li data-reveal>
-        <h3>Designed, not templated</h3>
-        <p>
-          Jede Experience wird gestaltet, nicht aus Bausteinen zusammengesetzt.
-          Wenige Produkte, dafür jedes bis ins Detail.
-        </p>
-      </li>
-      <li data-reveal>
-        <h3>Built to be used</h3>
-        <p>
-          Ihre Gäste öffnen es auf dem Handy — ohne App, ohne Konto, ohne
-          Anmeldung. Ein Link oder ein QR-Code genügt.
-        </p>
-      </li>
-      <li data-reveal>
-        <h3>Hosted and maintained</h3>
-        <p>
-          Wir betreiben es: EU-Hosting, tägliche Backups, Support bis zum Tag
-          danach. Sie pflegen nur die Inhalte.
-        </p>
-      </li>
-    </ul>
-  </div>
-</section>
-
-<!-- 05 · LIVE-DEMO ------------------------------------------------------ -->
-<!-- Conversion-Hebel Nummer eins (docs/05 §18). Kein Formular davor. -->
-<section class="section is-dark">
-  <div class="wrap split">
-    <div>
-      <p class="label" data-reveal>Live-Demo</p>
-      <p class="display-m" data-reveal style="margin:var(--s4) 0 var(--s5)">
-        See it, don't imagine it.
+    <div class="sec-head" style="max-width:44rem">
+      <p class="label" data-reveal>Das Problem</p>
+      <p class="display-m" data-reveal style="margin-top:var(--s4)">
+        Es sind immer dieselben fünf Fragen.
       </p>
-      <div class="prose" data-reveal>
-        <p>
-          Digitale Produkte scheitern an der Vorstellungskraft. Deshalb zeigen
-          wir keine Screenshots, sondern öffnen das echte Produkt — ohne
-          Anmeldung, ohne Formular, ein Klick.
-        </p>
-      </div>
-      <div class="cluster" style="margin-top:var(--s6)" data-reveal>
-        <a class="btn btn--secondary" href="demo/hochzeit.html">Wedding Website ansehen</a>
-        <a class="btn btn--ghost" href="demo/gaestemappe.html">Gästemappe ansehen</a>
-      </div>
+      <p data-reveal>
+        Und sie kommen abends, am Wochenende, von jedem neuen Gast wieder.
+        Beantwortet werden sie in WhatsApp, per Mail, am Telefon — und
+        gefunden werden sie nie wieder.
+      </p>
     </div>
 
-    <div style="display:flex;justify-content:center" data-reveal="image">
+    <div class="compare" data-reveal>
+      <div class="compare__side">
+        <h3>Heute</h3>
+        <div class="chat">
+          <span>Hallo, wie lautet nochmal das WLAN-Passwort?</span>
+          <span>Wann müssen wir morgen raus?</span>
+          <span>Wo kann man hier abends essen gehen?</span>
+          <span>Der Geschirrspüler geht nicht an 🙈</span>
+          <span>Wo genau ist der Parkplatz?</span>
+        </div>
+      </div>
+      <div class="compare__side compare__side--now">
+        <h3>Mit ATRIA</h3>
+        <p class="small" style="margin:0 0 var(--s4)">
+          Ein QR-Code am Kühlschrank. Alles steht dort — und bleibt aktuell,
+          weil Sie es an einer Stelle pflegen.
+        </p>
+        <ul class="checklist" style="grid-template-columns:1fr">
+          <li>WLAN mit Netzwerk und Passwort</li>
+          <li>Check-in und Check-out mit Uhrzeiten</li>
+          <li>Geräte erklärt, mit Fotos</li>
+          <li>Ihre Empfehlungen für die Umgebung</li>
+          <li>Kontakt, wenn doch etwas ist</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- 03 · SO FUNKTIONIERT ES --------------------------------------------- -->
+<section class="section band">
+  <div class="wrap">
+    <div class="sec-head">
+      <p class="label" data-reveal>So funktioniert es</p>
+      <p class="display-m" data-reveal style="margin-top:var(--s4)">Drei Schritte, kein Techniker.</p>
+    </div>
+    <ol class="steps" data-reveal>
+      <li>
+        <h3>Inhalte eintragen</h3>
+        <p>Sie füllen fertige Bausteine aus — oder schicken uns die Angaben und wir bauen es auf.</p>
+      </li>
+      <li>
+        <h3>QR-Code aufstellen</h3>
+        <p>Druckvorlage kommt mit. Küche, Flur, Eingang, Empfang, Einladung.</p>
+      </li>
+      <li>
+        <h3>Fertig — und änderbar</h3>
+        <p>Neue Öffnungszeit? Zwei Minuten. Alle sehen sofort den aktuellen Stand.</p>
+      </li>
+    </ol>
+  </div>
+</section>
+
+<!-- 04 · SEGMENTE ------------------------------------------------------- -->
+<!-- Bewusst NACH der Erklärung: erst verstehen, dann einordnen. -->
+<section class="section" id="segmente" style="scroll-margin-top:90px">
+  <div class="wrap">
+    <div class="sec-head">
+      <p class="label" data-reveal>Für wen</p>
+      <p class="display-m" data-reveal style="margin-top:var(--s4)">
+        Überall dort, wo Menschen ankommen und Fragen haben.
+      </p>
+      <p data-reveal>
+        Dasselbe Produkt, andere Bausteine. Wählen Sie Ihren Bereich —
+        dort steht, was konkret drinsteckt und was es kostet.
+      </p>
+    </div>
+
+    <div class="segments" data-reveal-group>
+
+      <a class="seg-card" href="segmente/ferienunterkuenfte.html" data-seg="ferien" data-reveal>
+        <div class="seg-card__top">
+          <span class="seg-card__mark" aria-hidden="true">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.4"><path d="M3 11 12 4l9 7"/><path d="M5 10v10h14V10"/><path d="M10 20v-6h4v6"/></svg>
+          </span>
+          <h3 class="seg-card__title">Ferienunterkünfte</h3>
+        </div>
+        <p class="seg-card__pain">
+          Ferienwohnung, Ferienhaus, Airbnb. Jede Woche neue Gäste,
+          jede Woche dieselben Fragen.
+        </p>
+        <div class="seg-card__meta">
+          <span class="seg-card__price">ab 190 € / Jahr</span>
+          <span>1–15 Objekte</span>
+          <span class="seg-card__go">Ansehen →</span>
+        </div>
+      </a>
+
+      <a class="seg-card" href="segmente/hotels.html" data-seg="hotels" data-reveal>
+        <div class="seg-card__top">
+          <span class="seg-card__mark" aria-hidden="true">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.4"><path d="M4 21V4h16v17"/><path d="M8 8h2M14 8h2M8 12h2M14 12h2"/><path d="M10 21v-5h4v5"/></svg>
+          </span>
+          <h3 class="seg-card__title">Hotels &amp; Pensionen</h3>
+        </div>
+        <p class="seg-card__pain">
+          Zimmerinfos, Frühstückszeiten, Spa-Regeln, Empfehlungen —
+          statt Mappe im Zimmer, die niemand aktualisiert.
+        </p>
+        <div class="seg-card__meta">
+          <span class="seg-card__price">ab 790 € / Jahr</span>
+          <span>Eigene Domain</span>
+          <span class="seg-card__go">Ansehen →</span>
+        </div>
+      </a>
+
+      <a class="seg-card" href="segmente/campingplaetze.html" data-seg="camping" data-reveal>
+        <div class="seg-card__top">
+          <span class="seg-card__mark" aria-hidden="true">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.4"><path d="M12 4 3 20h18L12 4Z"/><path d="M12 4v16"/></svg>
+          </span>
+          <h3 class="seg-card__title">Campingplätze</h3>
+        </div>
+        <p class="seg-card__pain">
+          Sanitär, Strom, Schranke, Brötchendienst, Ruhezeiten.
+          Hunderte Gäste, eine Rezeption.
+        </p>
+        <div class="seg-card__meta">
+          <span class="seg-card__price">ab 790 € / Jahr</span>
+          <span>Mehrsprachig</span>
+          <span class="seg-card__go">Ansehen →</span>
+        </div>
+      </a>
+
+      <a class="seg-card" href="segmente/firmenevents.html" data-seg="events" data-reveal>
+        <div class="seg-card__top">
+          <span class="seg-card__mark" aria-hidden="true">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.4"><rect x="3" y="5" width="18" height="16" rx="2"/><path d="M8 3v4M16 3v4M3 10h18"/></svg>
+          </span>
+          <h3 class="seg-card__title">Firmenevents</h3>
+        </div>
+        <p class="seg-card__pain">
+          Sommerfest, Weihnachtsfeier, Tagung, Jubiläum. Ablauf, Anfahrt,
+          Shuttle, Anmeldung mit Essenswünschen.
+        </p>
+        <div class="seg-card__meta">
+          <span class="seg-card__price">ab 290 € / Event</span>
+          <span>Auch als Jahresvertrag</span>
+          <span class="seg-card__go">Ansehen →</span>
+        </div>
+      </a>
+
+      <a class="seg-card" href="segmente/hausverwaltungen.html" data-seg="verwaltung" data-reveal>
+        <div class="seg-card__top">
+          <span class="seg-card__mark" aria-hidden="true">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.4"><path d="M5 21V3h9v18"/><path d="M14 9h5v12"/><path d="M8 7h3M8 11h3M8 15h3"/></svg>
+          </span>
+          <h3 class="seg-card__title">Hausverwaltungen</h3>
+        </div>
+        <p class="seg-card__pain">
+          Müllabfuhr, Hausordnung, Handwerkertermine, Ansprechpartner.
+          Einmal pro Haus statt hundertmal per Aushang.
+        </p>
+        <div class="seg-card__meta">
+          <span class="seg-card__price">auf Anfrage</span>
+          <span>Pro Objekt</span>
+          <span class="seg-card__go">Ansehen →</span>
+        </div>
+      </a>
+
+      <a class="seg-card" href="segmente/seminarhaeuser.html" data-seg="seminar" data-reveal>
+        <div class="seg-card__top">
+          <span class="seg-card__mark" aria-hidden="true">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.4"><rect x="3" y="4" width="18" height="12" rx="1"/><path d="M12 16v4M8 20h8"/></svg>
+          </span>
+          <h3 class="seg-card__title">Seminarhäuser</h3>
+        </div>
+        <p class="seg-card__pain">
+          Jede Woche eine neue Gruppe: Raumplan, Zeiten, Verpflegung,
+          Technik, WLAN. Immer von vorn.
+        </p>
+        <div class="seg-card__meta">
+          <span class="seg-card__price">ab 790 € / Jahr</span>
+          <span>Pro Gruppe anpassbar</span>
+          <span class="seg-card__go">Ansehen →</span>
+        </div>
+      </a>
+
+    </div>
+
+    <p class="small" style="margin-top:var(--s6)" data-reveal>
+      Nicht dabei? Wohnmobil- und Bootsvermietung, Tagungshotels, Gutshöfe —
+      das Prinzip ist dasselbe.
+      <a class="link" href="kontakt.html">Fragen Sie einfach.</a>
+    </p>
+  </div>
+</section>
+
+<!-- 05 · WAS DRIN IST --------------------------------------------------- -->
+<section class="section band">
+  <div class="wrap sticky-split">
+    <div class="sticky-split__visual">
       <div class="phone">
         <div class="phone__screen">
-          <div class="phone__slide is-active">
-            <div class="plate plate--tall" data-img="demo-preview" style="flex:none;height:52%"></div>
+          <div class="phone__slide">
+            <div class="plate" data-img="app-welcome" style="flex:none;height:46%"></div>
             <div style="padding:var(--s4);display:flex;flex-direction:column;gap:var(--s2)">
-              <span class="label" style="font-size:.5rem">14. Juni 2026 · Gut Rosenau</span>
-              <span style="font-family:Fraunces,serif;font-size:1.25rem;line-height:1.2">Anna &amp; Lukas</span>
-              <span class="small" style="font-size:.75rem">Ablauf · Anfahrt · Hotels · RSVP</span>
+              <span class="label" style="font-size:.5rem">Willkommen</span>
+              <span style="font-family:Fraunces,serif;font-size:1.25rem;line-height:1.15">Ferienhaus Dünenweg</span>
+              <span class="tiny">Check-in ab 15:00 · WLAN · Hausregeln · Umgebung</span>
             </div>
+          </div>
+          <div class="phone__slide" style="padding:var(--s4);gap:var(--s3)">
+            <span class="label" style="font-size:.5rem">WLAN</span>
+            <div style="background:var(--surface);border-radius:4px;padding:var(--s3);display:flex;flex-direction:column;gap:var(--s2)">
+              <span class="tiny">Netzwerk</span>
+              <b style="font-size:.9375rem">Duenenweg-Gast</b>
+              <span class="tiny" style="margin-top:var(--s2)">Passwort</span>
+              <b style="font-size:.9375rem">nordsee2026</b>
+            </div>
+            <span class="tiny">Antippen zum Kopieren</span>
+          </div>
+          <div class="phone__slide" style="padding:var(--s4);gap:var(--s3)">
+            <span class="label" style="font-size:.5rem">Umgebung</span>
+            <ul style="list-style:none;margin:0;padding:0;display:flex;flex-direction:column;gap:var(--s3);font-size:.75rem">
+              <li style="border-bottom:1px solid var(--line);padding-bottom:var(--s2)"><b>Fischbude Selmer</b><br><span class="tiny">500 m · bestes Fischbrötchen</span></li>
+              <li style="border-bottom:1px solid var(--line);padding-bottom:var(--s2)"><b>Café Dünenrose</b><br><span class="tiny">Frühstück bis 14:00</span></li>
+              <li><b>Wattwanderung</b><br><span class="tiny">Täglich 10:00, nur mit Führung</span></li>
+            </ul>
+          </div>
+          <div class="phone__slide" style="padding:var(--s4);gap:var(--s3)">
+            <span class="label" style="font-size:.5rem">Etwas defekt?</span>
+            <span style="font-family:Fraunces,serif;font-size:1.0625rem">Sagen Sie uns Bescheid</span>
+            <div style="border:1px dashed var(--line);border-radius:4px;padding:var(--s4);text-align:center">
+              <span class="tiny">Foto aufnehmen</span>
+            </div>
+            <div style="border-bottom:1px solid var(--line);padding-bottom:var(--s2)"><span class="tiny">Was ist los?</span></div>
           </div>
         </div>
       </div>
     </div>
+
+    <div class="sticky-split__steps">
+      <div class="sticky-split__step">
+        <h3>Alles an einem Ort</h3>
+        <p>
+          Willkommen, Check-in, WLAN, Regeln, Geräte, Müll, Parken, Notfall,
+          Kontakt. Sie pflegen es einmal — jeder Gast sieht den aktuellen Stand.
+        </p>
+      </div>
+      <div class="sticky-split__step">
+        <h3>WLAN, das funktioniert</h3>
+        <p>
+          Netzwerk und Passwort zum Antippen statt abgetippt vom Zettel.
+          Die meistgestellte Frage überhaupt, in einer Sekunde erledigt.
+        </p>
+      </div>
+      <div class="sticky-split__step">
+        <h3>Ihre Empfehlungen</h3>
+        <p>
+          Ihre Lieblingsplätze, nicht die von einem Bewertungsportal.
+          Genau das unterscheidet einen Gastgeber von einer Buchungsnummer.
+        </p>
+      </div>
+      <div class="sticky-split__step">
+        <h3>Rückmeldung mit Foto</h3>
+        <p>
+          Defektes Rollo, leere Kaffeekapseln, verlorener Schlüssel: Der Gast
+          fotografiert, Sie sehen sofort worum es geht. Spart pro Fall zwanzig
+          Minuten Hin und Her.
+        </p>
+      </div>
+    </div>
   </div>
 </section>
 
-<!-- 06 · BEWEIS --------------------------------------------------------- -->
-<!-- Bis zur ersten echten Bewertung: nur harte, nachprüfbare Fakten.
-     Keine erfundenen Testimonials (docs/05 §18, docs/10 §5). -->
+<!-- 06 · RECHNER -------------------------------------------------------- -->
+<section class="section">
+  <div class="wrap">
+    <div class="sec-head">
+      <p class="label" data-reveal>Was es Ihnen bringt</p>
+      <p class="display-m" data-reveal style="margin-top:var(--s4)">Rechnen Sie mit Ihren Zahlen.</p>
+      <p data-reveal>
+        Wir behaupten keine Prozentwerte. Stellen Sie ein, wie es bei Ihnen
+        aussieht — auch den Anteil der Fragen, der tatsächlich wegfällt.
+      </p>
+    </div>
+
+    <div class="calc" data-calc data-reveal>
+      <div class="calc__grid">
+        <div class="calc__inputs">
+          <div class="calc__row">
+            <div class="calc__head"><label for="c-units">Einheiten oder Objekte</label><output data-calc-out="units">3</output></div>
+            <input id="c-units" type="range" min="1" max="15" value="3" step="1" data-calc-input="units">
+          </div>
+          <div class="calc__row">
+            <div class="calc__head"><label for="c-req">Gästefragen pro Einheit und Monat</label><output data-calc-out="requests">12</output></div>
+            <input id="c-req" type="range" min="1" max="60" value="12" step="1" data-calc-input="requests">
+          </div>
+          <div class="calc__row">
+            <div class="calc__head"><label for="c-min">Zeit pro Frage</label><output data-calc-out="minutes">5 Min.</output></div>
+            <input id="c-min" type="range" min="1" max="20" value="5" step="1" data-calc-input="minutes">
+          </div>
+          <div class="calc__row">
+            <div class="calc__head"><label for="c-rate">Ihre Stunde ist wert</label><output data-calc-out="rate">40 € / Std.</output></div>
+            <input id="c-rate" type="range" min="15" max="120" value="40" step="5" data-calc-input="rate">
+          </div>
+          <div class="calc__row">
+            <div class="calc__head"><label for="c-share">Anteil, der wegfällt</label><output data-calc-out="share">60 %</output></div>
+            <input id="c-share" type="range" min="10" max="90" value="60" step="5" data-calc-input="share">
+          </div>
+        </div>
+
+        <div class="calc__result">
+          <div>
+            <p class="label" style="margin-bottom:var(--s3)">Gesparte Zeit pro Jahr</p>
+            <p class="calc__big"><span data-calc-out="hours">22</span> <span class="calc__unit">Stunden</span></p>
+          </div>
+          <div class="calc__line"><span>Zeitwert</span><b data-calc-out="value">864 €</b></div>
+          <div class="calc__line"><span>Kosten ATRIA (<span data-calc-out="plan">Team</span>)</span><b data-calc-out="price">390 €</b></div>
+          <div class="calc__line" style="border-top-width:2px;border-top-color:var(--ink-900)">
+            <span><strong>Differenz pro Jahr</strong></span><b data-calc-out="net">+ 474 €</b>
+          </div>
+        </div>
+      </div>
+
+      <p class="calc__note">
+        Das ist eine Überschlagsrechnung mit Ihren eigenen Annahmen, keine
+        Garantie. Sie ignoriert bewusst weiche Effekte wie bessere Bewertungen
+        oder weniger Ärger — die lassen sich seriös nicht beziffern, bevor wir
+        echte Kundendaten haben.
+      </p>
+    </div>
+  </div>
+</section>
+
+<!-- 07 · PREISE --------------------------------------------------------- -->
+<section class="section band">
+  <div class="wrap">
+    <div class="sec-head">
+      <p class="label" data-reveal>Preise</p>
+      <p class="display-m" data-reveal style="margin-top:var(--s4)">Keine Staffelung im Verborgenen.</p>
+      <p data-reveal>Jahrespreise, netto zzgl. USt. Jährlich kündbar, Daten jederzeit exportierbar.</p>
+    </div>
+
+    <div class="tiers" data-reveal-group>
+      <div class="tier" data-reveal>
+        <p class="tier__name">Solo</p>
+        <p class="small" style="margin:0">Für ein Objekt.</p>
+        <p class="tier__price">190 €</p>
+        <p class="tier__per">pro Jahr · oder 19 € monatlich</p>
+        <ul class="feature-list">
+          <li><b>1 Einheit</b><span>Alle Inhaltsbausteine</span></li>
+          <li><b>QR-Code + Druckvorlage</b><span>Enthalten</span></li>
+          <li><b>Unbegrenzte Änderungen</b><span>Jederzeit selbst</span></li>
+          <li><b>E-Mail-Support</b><span>Werktags binnen 24 Std.</span></li>
+        </ul>
+        <a class="btn btn--secondary btn--block" href="kontakt.html">Starten</a>
+      </div>
+
+      <div class="tier tier--featured" data-reveal>
+        <p class="label label--seg" style="margin-bottom:var(--s2)">Am häufigsten gewählt</p>
+        <p class="tier__name">Team</p>
+        <p class="small" style="margin:0">Für mehrere Objekte.</p>
+        <p class="tier__price">390 €</p>
+        <p class="tier__per">pro Jahr · oder 39 € monatlich</p>
+        <ul class="feature-list">
+          <li><b>Bis 5 Einheiten</b><span>Je eigener Guide und QR-Code</span></li>
+          <li><b>Zweisprachig</b><span>Deutsch und Englisch</span></li>
+          <li><b>Vorlagen wiederverwenden</b><span>Einmal pflegen, mehrfach nutzen</span></li>
+          <li><b>Rückmeldung mit Foto</b><span>Schäden und Anliegen</span></li>
+        </ul>
+        <a class="btn btn--primary btn--block" href="kontakt.html">Starten</a>
+      </div>
+
+      <div class="tier" data-reveal>
+        <p class="tier__name">Pro</p>
+        <p class="small" style="margin:0">Für Betriebe und Verwaltungen.</p>
+        <p class="tier__price">790 €</p>
+        <p class="tier__per">pro Jahr · oder 79 € monatlich</p>
+        <ul class="feature-list">
+          <li><b>Bis 15 Einheiten</b><span>Zentral verwaltet</span></li>
+          <li><b>Eigene Domain</b><span>Ihr Name, nicht unserer</span></li>
+          <li><b>Ihr Branding</b><span>Ohne unseren Hinweis</span></li>
+          <li><b>Anfragen für Zusatzleistungen</b><span>Später auschecken, Frühstück, Verleih</span></li>
+        </ul>
+        <a class="btn btn--secondary btn--block" href="kontakt.html">Starten</a>
+      </div>
+    </div>
+
+    <p class="small" style="margin-top:var(--s6)" data-reveal>
+      Mehr als 15 Einheiten, Hotelgruppe oder Hausverwaltung?
+      <a class="link" href="preise.html">Preise im Detail</a> oder
+      <a class="link" href="kontakt.html">Angebot anfragen</a>.
+      Einrichtung durch uns: ab 190 € einmalig.
+    </p>
+  </div>
+</section>
+
+<!-- 08 · VERTRAUEN ------------------------------------------------------ -->
 <section class="section">
   <div class="wrap">
     <div class="sec-head" style="max-width:44rem">
       <p class="label" data-reveal>Wofür wir geradestehen</p>
       <p class="display-m" data-reveal style="margin-top:var(--s4)">
-        Was wir zusagen, können wir belegen.
+        Was Ihr Einkauf fragen wird.
       </p>
     </div>
 
     <ul class="feature-list" data-reveal>
-      <li><b>EU-Hosting</b><span>Alle Daten werden ausschließlich in der EU verarbeitet und gespeichert.</span></li>
-      <li><b>Kein Konto für Gäste</b><span>Ihre Gäste legen nichts an und geben nichts preis, was nicht nötig ist.</span></li>
-      <li><b>Kein Tracking in der Gästeansicht</b><span>Keine Analytics, keine Werbepixel, keine Drittanbieter-Skripte.</span></li>
-      <li><b>Tägliche Backups</b><span>Mit getesteter Wiederherstellung — nicht nur eingerichtet, sondern erprobt.</span></li>
-      <li><b>Export jederzeit</b><span>Ihre Inhalte und Rückmeldungen gehören Ihnen. Ein Klick, keine Anfrage.</span></li>
+      <li><b>EU-Hosting</b><span>Verarbeitung und Speicherung ausschließlich in der Europäischen Union.</span></li>
+      <li><b>AVV nach Art. 28 DSGVO</b><span>Auftragsverarbeitungsvertrag als Vertragsbestandteil, vorab als PDF.</span></li>
+      <li><b>Kein Konto für Gäste</b><span>Wer scannt, gibt nichts preis. Keine Registrierung, kein Passwort.</span></li>
+      <li><b>Kein Tracking in der Gastansicht</b><span>Keine Analysewerkzeuge, keine Werbepixel, keine Drittanbieter-Skripte.</span></li>
+      <li><b>Tägliche Backups</b><span>Mit erprobter Wiederherstellung — nicht nur eingerichtet.</span></li>
+      <li><b>Datenexport jederzeit</b><span>Ihre Inhalte gehören Ihnen, auch beim Wechsel zu einem anderen Anbieter.</span></li>
     </ul>
 
     <div class="note" style="margin-top:var(--s7)" data-reveal>
       <p class="label">Noch keine Kundenstimmen</p>
       <p>
-        Wir starten gerade. Sobald echte Paare und Gastgeber mit uns gearbeitet
-        haben, stehen ihre Worte hier — mit Namen und Datum. Erfundene
-        Bewertungen wird es hier nie geben.
+        Wir starten gerade. Sobald echte Gastgeber und Verwaltungen mit uns
+        gearbeitet haben, stehen ihre Worte hier — mit Namen, Objekt und Datum.
+        Erfundene Bewertungen wird es hier nie geben.
       </p>
     </div>
   </div>
 </section>
 
-<!-- 07 · E-MAIL --------------------------------------------------------- -->
-<section class="section section--tight">
-  <div class="wrap" style="border-top:1px solid var(--line);padding-top:var(--s8)">
-    <div class="split">
-      <div>
-        <p class="label">Newsletter</p>
-        <p class="display-m" style="margin:var(--s4) 0 var(--s4);max-width:18ch">
-          Neue Kollektionen und Ideen.
-        </p>
-        <p class="small" style="max-width:38ch">
-          Etwa einmal im Monat. Kein Rabatt-Spam, keine Verkaufsdruck-Mails.
-          Abmeldung jederzeit mit einem Klick.
-        </p>
-      </div>
+<!-- 09 · WAS WIR NICHT SIND --------------------------------------------- -->
+<section class="section is-dark">
+  <div class="wrap">
+    <div class="sec-head" style="max-width:46rem">
+      <p class="label" data-reveal>Ehrlich gesagt</p>
+      <p class="display-m" data-reveal style="margin-top:var(--s4)">Was wir nicht sind.</p>
+      <p data-reveal>
+        Sie haben vermutlich schon Anbieter erlebt, die alles versprochen haben.
+        Deshalb zuerst, was wir nicht liefern:
+      </p>
+    </div>
+    <ul class="limits" data-reveal>
+      <li>Kein PMS und keine Anbindung an Ihres</li>
+      <li>Keine Buchungsmaschine, kein Channel Manager</li>
+      <li>Keine Zahlungsabwicklung und keine Abrechnung</li>
+      <li>Keine digitalen Türschlösser oder Zugangskontrolle</li>
+      <li>Keine Live-Verfügbarkeiten, kein Housekeeping-Status</li>
+      <li>Kein Chatbot, der so tut, als säße jemand daneben</li>
+    </ul>
+    <p class="small" data-reveal style="margin-top:var(--s6);max-width:58ch">
+      Was wir liefern: die digitale Information für alle, die bei Ihnen
+      ankommen — schön, aktuell, sofort erreichbar, ohne App. Anliegen laufen
+      über ein klar benanntes Formular an Sie.
+    </p>
+  </div>
+</section>
 
-      <form class="stack stack--5" data-demo-form="Danke — im echten Betrieb erhalten Sie jetzt eine Bestätigungsmail (Double-Opt-in). Dieser Shop ist noch nicht mit einem Newsletter-Dienst verbunden.">
-        <div class="field">
-          <label for="nl-mail">E-Mail-Adresse</label>
-          <input type="email" id="nl-mail" name="email" required autocomplete="email" placeholder="name@beispiel.de">
+<!-- 10 · FAQ ------------------------------------------------------------ -->
+<section class="section">
+  <div class="wrap" style="max-width:52rem">
+    <div class="sec-head"><p class="display-m" data-reveal>Die Fragen, die wirklich kommen</p></div>
+    <div class="faq" data-faq-exclusive data-reveal>
+      <details>
+        <summary>Muss ich das selbst pflegen?</summary>
+        <div><p>Sie können, müssen aber nicht. Für 190 € einmalig bauen wir alles nach Ihren Angaben auf. Danach ändern Sie selbst — es ist bewusst so einfach gehalten, dass keine Schulung nötig ist.</p></div>
+      </details>
+      <details>
+        <summary>Brauchen meine Gäste eine App?</summary>
+        <div><p>Nein. QR-Code scannen oder Link öffnen, fertig. Kein Konto, kein Passwort, keine Installation. Das ist der Kern des Produkts.</p></div>
+      </details>
+      <details>
+        <summary>Was passiert, wenn ich kündige?</summary>
+        <div><p>Sie exportieren Ihre Inhalte, wir schalten ab und löschen. Kein Datenpfand, keine Hürden. Der QR-Code führt danach auf eine neutrale Hinweisseite.</p></div>
+      </details>
+      <details>
+        <summary>Funktioniert das ohne Handyempfang im Objekt?</summary>
+        <div><p>Die Seite lädt einmal und bleibt danach im Browser verfügbar. In Objekten mit schlechtem Mobilfunk empfehlen wir, den QR-Code direkt neben den WLAN-Hinweis zu stellen.</p></div>
+      </details>
+      <details>
+        <summary>Ist das nicht dasselbe wie ein PDF oder eine Mappe?</summary>
+        <div>
+          <p>Ein PDF ist veraltet, sobald sich etwas ändert — und der Gast muss es erst finden. Eine gedruckte Mappe altert im Schrank.</p>
+          <p>Der Unterschied ist die Aktualität: Sie ändern eine Uhrzeit, und in derselben Sekunde sehen alle Gäste die neue. Ohne Nachdruck, ohne Versand.</p>
         </div>
-        <label class="checkbox">
-          <input type="checkbox" name="consent" required>
-          <span>
-            Ich möchte den Newsletter erhalten und habe die
-            <a class="link" href="recht/datenschutz.html">Datenschutzerklärung</a>
-            zur Kenntnis genommen.
-          </span>
-        </label>
-        <button class="btn btn--primary" type="submit" style="align-self:flex-start">Eintragen</button>
-        <p class="small" role="status" tabindex="-1" data-form-status hidden></p>
-      </form>
+      </details>
+    </div>
+    <p style="margin-top:var(--s6)" data-reveal>
+      <a class="arrow-link" href="faq.html">
+        Alle Fragen
+        <svg width="16" height="9" viewBox="0 0 16 9" fill="none" aria-hidden="true"><path d="M0 4.5h14M10.5 1 14 4.5 10.5 8" stroke="currentColor" stroke-width="1.2"/></svg>
+      </a>
+    </p>
+  </div>
+</section>
+
+<!-- 11 · ABSCHLUSS ------------------------------------------------------ -->
+<section class="section band">
+  <div class="wrap" style="max-width:44rem;text-align:center">
+    <p class="display-m" data-reveal style="margin-bottom:var(--s5)">
+      Sehen Sie es zuerst an.
+    </p>
+    <p data-reveal style="margin:0 auto var(--s7);max-width:44ch">
+      Das echte Produkt, ohne Formular davor. Wenn es Sie überzeugt,
+      sind Sie an einem Nachmittag startklar.
+    </p>
+    <div class="cluster" style="justify-content:center" data-reveal>
+      <a class="btn btn--primary" href="demo/gaestemappe.html">Live-Beispiel öffnen</a>
+      <a class="btn btn--secondary" href="kontakt.html">20 Minuten sprechen</a>
     </div>
   </div>
 </section>
@@ -295,39 +612,40 @@
   <div class="wrap">
     <div class="site-footer__cols">
       <div>
-        <a class="wordmark" href="index.html">CONVIVIO</a>
-        <p class="small" style="margin:var(--s4) 0 0;max-width:26ch">
-          Digital experiences, beautifully made. For everyone who welcomes someone.
+        <a class="wordmark" href="index.html">ATRIA</a>
+        <p class="small" style="margin:var(--s4) 0 0;max-width:30ch">
+          Die digitale Infomappe für Orte, an denen Menschen ankommen.
+          Alles beantwortet, bevor gefragt wird.
         </p>
       </div>
 
       <div>
-        <h2>Weddings</h2>
+        <h2>Für wen</h2>
         <ul>
-          <li><a href="weddings.html">Übersicht</a></li>
-          <li><a href="produkte/wedding-website.html">Wedding Website</a></li>
-          <li><a href="produkte/digital-invitation.html">Digital Invitation</a></li>
-          <li><a href="produkte/photo-qr.html">Photo QR</a></li>
-          <li><a href="produkte/bundles.html">Bundles</a></li>
-          <li><a href="demo/hochzeit.html">Live-Demo</a></li>
+          <li><a href="segmente/ferienunterkuenfte.html">Ferienunterkünfte</a></li>
+          <li><a href="segmente/hotels.html">Hotels &amp; Pensionen</a></li>
+          <li><a href="segmente/campingplaetze.html">Campingplätze</a></li>
+          <li><a href="segmente/firmenevents.html">Firmenevents</a></li>
+          <li><a href="segmente/hausverwaltungen.html">Hausverwaltungen</a></li>
+          <li><a href="segmente/seminarhaeuser.html">Seminarhäuser</a></li>
         </ul>
       </div>
 
       <div>
-        <h2>Hospitality</h2>
+        <h2>Produkt</h2>
         <ul>
-          <li><a href="hospitality.html">Übersicht</a></li>
-          <li><a href="hospitality/ferienwohnungen.html">Ferienwohnungen</a></li>
-          <li><a href="hospitality/hotels.html">Hotels</a></li>
-          <li><a href="demo/gaestemappe.html">Live-Demo</a></li>
+          <li><a href="produkt.html">Funktionen</a></li>
+          <li><a href="preise.html">Preise</a></li>
+          <li><a href="demo/gaestemappe.html">Beispiel: Ferienhaus</a></li>
+          <li><a href="demo/firmenevent.html">Beispiel: Firmenevent</a></li>
+          <li><a href="demo/mieterinfo.html">Beispiel: Mieterinfo</a></li>
         </ul>
       </div>
 
       <div>
-        <h2>Haus</h2>
+        <h2>Unternehmen</h2>
         <ul>
           <li><a href="about.html">Über uns</a></li>
-          <li><a href="custom.html">Custom Experiences</a></li>
           <li><a href="faq.html">FAQ</a></li>
           <li><a href="kontakt.html">Kontakt</a></li>
         </ul>
@@ -339,11 +657,11 @@
         <a href="recht/impressum.html">Impressum</a>
         <a href="recht/datenschutz.html">Datenschutz</a>
         <a href="recht/agb.html">AGB</a>
-        <a href="recht/widerruf.html">Widerruf</a>
         <a href="recht/avv.html">AVV</a>
+        <a href="recht/widerruf.html">Widerruf</a>
         <a href="recht/barrierefreiheit.html">Barrierefreiheit</a>
       </nav>
-      <span>© <span id="year">2026</span> CONVIVIO</span>
+      <span>© <span id="year">2026</span> ATRIA · Alle Preise netto zzgl. USt.</span>
     </div>
   </div>
 </footer>

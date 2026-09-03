@@ -1,0 +1,193 @@
+<!doctype html>
+<html lang="de" class="no-js">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Lindenstraße 14 — Ihre Hausinformation</title>
+<meta name="description" content="Beispielhafte Mieterinformation: Ansprechpartner, Müllkalender, Hausordnung, Handwerkertermine, Schadensmeldung.">
+<meta name="theme-color" content="#F6F7F4">
+<meta name="robots" content="index, follow">
+<link rel="canonical" href="https://atria.example/demo/mieterinfo.html">
+<script>document.documentElement.className=document.documentElement.className.replace(/\bno-js\b/,'js')</script>
+<link rel="preload" href="../assets/fonts/fraunces-latin.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="preload" href="../assets/fonts/inter-latin.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="stylesheet" href="../assets/css/site.css">
+<link rel="icon" href="../assets/img/favicon.svg" type="image/svg+xml">
+
+</head>
+<body data-seg="verwaltung" class="is-demo">
+
+<a class="skip-link" href="#main">Zum Inhalt springen</a>
+
+<!-- Demo-Leiste: macht unmissverständlich klar, dass dies eine Vorschau ist -->
+<div class="demobar">
+  <div class="demobar__inner">
+    <span class="demobar__tag">Live-Demo</span>
+    <span class="demobar__text">So sieht eine Hausinformation für Ihre Mieter aus. Alle Inhalte sind Beispiele.</span>
+    <a class="demobar__cta" href="../segmente/hausverwaltungen.html">Für Hausverwaltungen</a>
+  </div>
+</div>
+
+<main id="main">
+<section class="cover" style="min-height:52vh">
+  <div class="cover__media"><div class="plate" data-parallax="4" data-img="demo-haus-cover"></div></div>
+  <div class="cover__scrim"></div>
+  <div class="cover__body wrap">
+    <p class="label">Hausinformation</p>
+    <h1 class="cover__title" style="font-size:clamp(2rem,6vw,3.5rem)">
+      <span class="reveal-line"><span>Lindenstraße 14</span></span>
+    </h1>
+    <p class="cover__meta">30171 Hannover · Verwaltet von Brandt Immobilien</p>
+  </div>
+</section>
+
+<section class="section section--tight">
+  <div class="wrap" style="max-width:44rem">
+    <p class="display-m" data-reveal style="margin-bottom:var(--s5)">Alles zum Haus, an einer Stelle.</p>
+    <div class="prose" data-reveal>
+      <p>
+        Müllkalender, Hausordnung, Ansprechpartner, angekündigte Termine.
+        Immer aktuell — auch dann, wenn der Aushang im Flur wieder verschwunden ist.
+      </p>
+      <p class="small">Speichern Sie sich die Seite als Lesezeichen. Der QR-Code hängt im Eingang.</p>
+    </div>
+  </div>
+</section>
+
+<section class="section section--tight" data-guide>
+  <div class="wrap">
+    <div class="guide-tabs" role="tablist" aria-label="Bereiche der Hausinformation">
+      <button type="button" role="tab" data-guide-tab="kontakt" aria-selected="true" aria-controls="h-kontakt" id="ht-kontakt">Ansprechpartner</button>
+      <button type="button" role="tab" data-guide-tab="muell" aria-selected="false" aria-controls="h-muell" id="ht-muell">Müll</button>
+      <button type="button" role="tab" data-guide-tab="ordnung" aria-selected="false" aria-controls="h-ordnung" id="ht-ordnung">Hausordnung</button>
+      <button type="button" role="tab" data-guide-tab="technik" aria-selected="false" aria-controls="h-technik" id="ht-technik">Technik &amp; Keller</button>
+      <button type="button" role="tab" data-guide-tab="termine" aria-selected="false" aria-controls="h-termine" id="ht-termine">Termine</button>
+    </div>
+
+    <div class="guide-panel" data-guide-panel="kontakt" role="tabpanel" id="h-kontakt" aria-labelledby="ht-kontakt">
+      <div>
+        <p class="label">Wer ist zuständig</p>
+        <p class="display-m" style="margin:var(--s4) 0 var(--s5)">Ihre Ansprechpartner</p>
+        <ul class="feature-list">
+          <li><b>Verwaltung</b><span>Brandt Immobilien, Frau Özdemir. Mo–Do 9–16 Uhr, Fr 9–12 Uhr.</span></li>
+          <li><b>Hausmeister</b><span>Herr Kowalski, wohnt in Nr. 12. Für Kleinigkeiten direkt ansprechbar.</span></li>
+          <li><b>Störungsdienst außerhalb der Zeiten</b><span>Nur bei Wasserschaden, Heizungsausfall im Winter, Aufzugsnotfall.</span></li>
+          <li><b>Aufzugsnotruf</b><span>Knopf in der Kabine, direkt zur Leitstelle. 24 Stunden besetzt.</span></li>
+        </ul>
+      </div>
+      <div><div class="plate plate--3x2" data-img="demo-haus-eingang"></div></div>
+    </div>
+
+    <div class="guide-panel" data-guide-panel="muell" role="tabpanel" id="h-muell" aria-labelledby="ht-muell" hidden>
+      <div>
+        <p class="label">Abfuhr</p>
+        <p class="display-m" style="margin:var(--s4) 0 var(--s5)">Müllkalender</p>
+        <ul class="feature-list">
+          <li><b>Restmüll</b><span>Jeden Dienstag. Tonne bitte Montagabend rausstellen.</span></li>
+          <li><b>Gelber Sack</b><span>Alle zwei Wochen, mittwochs in geraden Kalenderwochen.</span></li>
+          <li><b>Papier</b><span>Jeden ersten Donnerstag im Monat.</span></li>
+          <li><b>Biotonne</b><span>Freitags, im Sommer wöchentlich, im Winter alle zwei Wochen.</span></li>
+          <li><b>Sperrmüll</b><span>Auf Anmeldung bei der Stadt. Bitte nicht einfach in den Hof stellen.</span></li>
+          <li><b>Glas</b><span>Container an der Ecke Lindenstraße/Ahornweg, 200 m.</span></li>
+        </ul>
+      </div>
+      <div><div class="plate plate--3x2" data-img="demo-haus-hof"></div></div>
+    </div>
+
+    <div class="guide-panel" data-guide-panel="ordnung" role="tabpanel" id="h-ordnung" aria-labelledby="ht-ordnung" hidden>
+      <div>
+        <p class="label">Zusammenleben</p>
+        <p class="display-m" style="margin:var(--s4) 0 var(--s5)">Hausordnung</p>
+        <ul class="feature-list">
+          <li><b>Ruhezeiten</b><span>22:00 bis 7:00, sonntags ganztägig. Mittagsruhe 13:00 bis 15:00.</span></li>
+          <li><b>Treppenhausreinigung</b><span>Wöchentlich wechselnd, Plan hängt im Erdgeschoss.</span></li>
+          <li><b>Fahrräder</b><span>Nur im Fahrradkeller, nicht im Hausflur — Fluchtweg.</span></li>
+          <li><b>Grillen</b><span>Im Hof nur elektrisch, wegen der Nachbarn.</span></li>
+          <li><b>Haustiere</b><span>Katzen und kleine Hunde nach Absprache mit der Verwaltung.</span></li>
+        </ul>
+      </div>
+      <div><div class="plate plate--3x2" data-img="demo-haus-flur"></div></div>
+    </div>
+
+    <div class="guide-panel" data-guide-panel="technik" role="tabpanel" id="h-technik" aria-labelledby="ht-technik" hidden>
+      <div>
+        <p class="label">Im Haus</p>
+        <p class="display-m" style="margin:var(--s4) 0 var(--s5)">Technik &amp; Keller</p>
+        <ul class="feature-list">
+          <li><b>Waschküche</b><span>Untergeschoss links. Belegung über die Liste an der Tür.</span></li>
+          <li><b>Trockenraum</b><span>Daneben. Bitte nach zwei Tagen abräumen.</span></li>
+          <li><b>Wasserzähler</b><span>Im Kellerabteil Ihrer Wohnung, Ablesung jährlich im Dezember.</span></li>
+          <li><b>Heizung</b><span>Zentral, Heizperiode 1. Oktober bis 30. April.</span></li>
+          <li><b>Sicherungskasten</b><span>In der Wohnung, meist im Flur über der Tür.</span></li>
+          <li><b>Hauptabsperrhahn</b><span>Im Keller, links neben der Heizungstür. Bei Wasserschaden zuerst schließen.</span></li>
+        </ul>
+      </div>
+      <div><div class="plate plate--3x2" data-img="demo-haus-keller"></div></div>
+    </div>
+
+    <div class="guide-panel" data-guide-panel="termine" role="tabpanel" id="h-termine" aria-labelledby="ht-termine" hidden>
+      <div>
+        <p class="label">Angekündigt</p>
+        <p class="display-m" style="margin:var(--s4) 0 var(--s5)">Anstehende Termine</p>
+        <ul class="feature-list">
+          <li><b>12. März, 8–14 Uhr</b><span>Heizungswartung. Zugang zur Wohnung nötig, bitte anwesend sein oder Schlüssel hinterlegen.</span></li>
+          <li><b>3. April</b><span>Reinigung der Regenrinnen. Kein Zugang zur Wohnung nötig.</span></li>
+          <li><b>20. April, ganztägig</b><span>Aufzugsprüfung. Aufzug voraussichtlich 4 Stunden außer Betrieb.</span></li>
+          <li><b>Mai</b><span>Streichen des Treppenhauses. Genauer Termin folgt hier.</span></li>
+        </ul>
+        <p class="small" style="margin-top:var(--s5)">
+          Termine stehen hier, sobald sie feststehen — und werden aktualisiert,
+          wenn sich etwas verschiebt.
+        </p>
+      </div>
+      <div><div class="plate plate--3x2" data-img="demo-haus-technik"></div></div>
+    </div>
+  </div>
+</section>
+
+<section class="section band">
+  <div class="wrap" style="max-width:44rem">
+    <p class="label" data-reveal>Etwas defekt?</p>
+    <p class="display-m" data-reveal style="margin:var(--s4) 0 var(--s5)">Schaden melden</p>
+    <p data-reveal style="margin-bottom:var(--s6)">
+      Mit Foto geht es am schnellsten — dann sieht die Verwaltung sofort,
+      worum es geht.
+    </p>
+
+    <form class="stack stack--4" data-demo-form="Danke — im echten Produkt ginge die Meldung jetzt mit Foto an die Verwaltung. In dieser Demo bleibt sie in Ihrem Browser." data-reveal>
+      <div class="field">
+        <label for="s-ort">Wo ist es?</label>
+        <select id="s-ort">
+          <option>Meine Wohnung</option><option>Treppenhaus</option><option>Keller</option>
+          <option>Hof</option><option>Aufzug</option><option>Waschküche</option><option>Sonstiges</option>
+        </select>
+      </div>
+      <div class="field">
+        <label for="s-was">Was ist los?</label>
+        <textarea id="s-was" rows="3" required placeholder="Kurz beschreiben"></textarea>
+      </div>
+      <label class="uploader__drop" for="s-foto" style="display:flex;flex-direction:column;align-items:center;gap:var(--s2);padding:var(--s6);text-align:center;cursor:pointer;border:1px dashed var(--line);border-radius:var(--radius)">
+        <span class="label">Foto hinzufügen</span>
+        <span class="tiny">In dieser Demo bleibt es in Ihrem Browser</span>
+        <input id="s-foto" type="file" accept="image/*" hidden>
+      </label>
+      <button class="btn btn--primary" type="submit" style="align-self:flex-start">Meldung senden</button>
+      <p class="demo-result" role="status" tabindex="-1" data-form-status hidden></p>
+    </form>
+  </div>
+</section>
+</main>
+
+<footer class="demo-foot">
+  <div class="wrap">
+    <p class="small">
+      Eine Experience von <a class="link" href="../index.html">ATRIA</a> —
+      die digitale Infomappe.
+    </p>
+  </div>
+</footer>
+
+<script src="../assets/js/site.js" defer></script>
+<script src="../assets/js/demo.js" defer></script>
+</body>
+</html>

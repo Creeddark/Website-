@@ -1,94 +1,79 @@
 # Bild-Briefing
 
-Die Website läuft mit **gestalteten Platzhalterflächen** (`.plate`). Sie sehen absichtlich
-wie Kunst­richtung aus und nicht wie graue Kästen — aber sie sind kein Ersatz für echte
-Bilder. Dieses Dokument sagt, was wohin gehört.
+Die Website läuft mit **gestalteten Platzhalterflächen** (`.plate`). Sie sehen
+absichtlich nach Kunstrichtung aus und nicht nach grauem Kasten — aber sie sind
+kein Ersatz für echte Bilder.
 
 ## So ersetzt man einen Platzhalter
 
 Jede Fläche trägt ein `data-img`-Attribut mit ihrem Namen:
 
 ```html
-<div class="plate plate--4x5" data-img="product-website"></div>
+<div class="plate plate--3x2" data-img="hero-ferien"></div>
 ```
 
 wird zu
 
 ```html
-<img class="plate plate--4x5" src="assets/img/product-website.avif"
-     alt="Beschreibender Alternativtext" width="1200" height="1500" loading="lazy">
+<img class="plate plate--3x2" src="assets/img/hero-ferien.avif"
+     alt="Beschreibender Alternativtext" width="1600" height="1067" loading="lazy">
 ```
 
-Die Klasse bleibt — sie trägt Seitenverhältnis und Radius. Für Bilder oberhalb des Falzes
-(alle `hero-*`, `world-*`, `*-cover`) **kein** `loading="lazy"` setzen.
+Die Klasse bleibt — sie trägt Seitenverhältnis und Radius. Bei allen `hero-*`
+und `*-cover` **kein** `loading="lazy"`, die stehen oberhalb des Falzes.
 
-**Technisch:** AVIF mit WebP-Fallback, `srcset` in vier Größen, Hero-Bilder unter 180 KB.
-Jedes Bild braucht einen sinnvollen `alt`-Text — das ist SEO *und* Barrierefreiheitspflicht.
+**Technisch:** AVIF mit WebP-Fallback, `srcset` in vier Größen, Hero-Bilder
+unter 180 KB. Jedes Bild braucht einen sinnvollen `alt`-Text — das ist SEO
+*und* Barrierefreiheitspflicht.
 
----
-
-## Vor der ersten Veröffentlichung klären
-
-> **Model Release.** Für jedes Bild mit erkennbaren Personen ist eine schriftliche
-> Einwilligung nötig — auch bei Kundenfotos, auch „nur für Instagram".
->
-> **Lizenz dokumentieren.** Für jedes Element Herkunft und Lizenz schriftlich festhalten.
-> Details in `docs/10-legal-and-limits.md`, Abschnitt 6.
-
-Detailaufnahmen (Hände, Stoff, Tisch, Papier, Licht) sind für Weddings oft stärker als
-Gesichter — und rechtlich deutlich einfacher.
+> **Vor Veröffentlichung klären:** Model Release für jedes Bild mit erkennbaren
+> Personen, Lizenz für jedes Element schriftlich dokumentieren. Details in
+> `docs/10-legal-and-limits.md`.
 
 ---
 
-## WEDDINGS — warm, editorial, natürliches Licht
+## Bildsprache
 
-Warme Gradierung, Hautton, Naturmaterialien. Bewegungsunschärfe erlaubt. Keine posierten
-Gesichter in die Kamera, kein Konfetti, kein Glitzer.
+Kühl, architektonisch, real. Räume ohne Menschen oder mit Menschen als kleine
+Figur im Raum. Klare Linien, Materialtextur: Holz, Stein, Leinen, Metall.
+
+**Nicht:** gestellte Business-Fotografie, Handshakes, Menschen die auf Laptops
+zeigen, übersättigte Bearbeitung.
+
+**Wichtig:** Alle `hero-*` und `*-cover` tragen Text. Sie brauchen eine
+**ruhige, eher dunkle Bildhälfte** dort, wo die Typo steht — sonst greift der
+Scrim zu stark und das Bild verschwindet.
+
+---
+
+## Marke
 
 | Name | Format | Motiv |
 |---|---|---|
-| `hero-weddings` | füllend, quer | Weite Szene, spätes Licht. Paar klein im Bild oder nur angedeutet. **Dunkle untere Bildhälfte**, dort steht die Typo |
-| `world-weddings` | füllend, hoch | Emotionales Schlüsselbild für die Startseite. Nähe, Wärme |
-| `product-website` | 4:5 | Handy mit geöffneter Wedding Website, auf einem gedeckten Tisch |
-| `product-bundle` | 4:5 | Mehrere Elemente zusammen: Karte, Handy, QR-Aufsteller |
-| `product-photoqr` | 4:5 | QR-Aufsteller zwischen Gläsern und Kerzen |
-| `invitation`, `inv-main` | 4:5 | Gedruckte Karte mit QR, in der Hand gehalten |
-| `inv-paper-vs-digital` | 3:2 | Papierkarte neben Handy mit derselben Gestaltung |
-| `inv-thumb-1…4` | 1:1 | Detailaufnahmen: Papierkante, Siegel, QR, Schrift |
-| `photoqr-main` | 4:5 | Gast scannt den Code, Bewegung, Abendlicht |
-| `photoqr-table` | 3:2 | Aufsteller auf dem Tisch, aus Gastperspektive |
-| `photoqr-thumb-1…4` | 1:1 | Galerie-Ausschnitte, wie von Gästen fotografiert |
-| `guestbook`, `cross-guestbook` | 3:2 | Jemand tippt eine Nachricht ins Handy, Tisch im Hintergrund |
-| `cross-photoqr`, `cross-games` | 3:2 | Gäste in Interaktion mit dem Code |
-| `planner` | 3:2 | Aufgeschlagener Planer, Stift, Kaffee, ruhige Draufsicht |
-| `site-cover` | füllend | Coverbild wie es in der Wedding Website erscheint |
-| `site-map`, `demo-map` | 16:9 / 3:2 | Statische Karte im Markenstil. **Kartenlizenz prüfen** |
-| `pdp-guestview-1` | 4:5 | Echter Screenshot der Gästeansicht auf dem Handy |
-| `pdp-guestview-wide` | 16:9 | Echter Screenshot im Browserfenster |
-| `pdp-thumb-timeline/rsvp/editor/lang` | 1:1 | Echte Screenshots der jeweiligen Ansicht |
-| `demo-preview` | 3:4 | Coverbild für die Telefonvorschau auf der Startseite |
-| `demo-wedding-cover` | füllend | Coverbild der Demo-Hochzeit. **Untere Hälfte dunkel** |
-| `demo-hotel-1…3` | 3:2 | Drei Unterkünfte: Hotel, Landhaus, Ferienhaus |
-| `demo-photo-1…4` | 1:1 | Bewusst „von Gästen geknipst" wirkend, nicht perfekt |
+| `hero-home` | füllend | Das wichtigste Bild. Muss **alle Bereiche** tragen: eine Schwelle, ein Eingang, ein Ankommen. Weder klar Ferienhaus noch klar Büro. Licht auf einer Tür, ein gedeckter Tisch, ein Flur. Untere Hälfte ruhig |
+| `about-portrait` | 3:2 | **Echtes Foto der Gründerinnen und Gründer.** Bis dahin bleibt die Seite ehrlich unbesetzt |
+| `produkt-uebersicht` | 16:9 | Echter Screenshot: mehrere Ansichten nebeneinander, auf Gerät oder als Fläche |
+| `produkt-technik` | 4:5 | Detail des Editors oder der Gastansicht — **echter Screenshot**, kein Mockup |
+| `app-welcome` | füllend | Coverbild in der Telefonvorschau auf der Startseite |
 
----
+## Segment-Heros
 
-## HOSPITALITY — kühl, architektonisch, Material
+Alle füllend, quer, mit ruhiger unterer Bildhälfte.
 
-Räume ohne Menschen oder mit Menschen als kleine Figur im Raum. Klare Linien, kühle
-Gradierung, Materialtextur: Holz, Stein, Leinen. Lizenzierte Architekturaufnahmen sind hier
-unproblematischer als bei Weddings.
+| Name | Motiv |
+|---|---|
+| `hero-ferien` | Ferienhaus-Innenraum oder Eingang, Morgenlicht, aufgeräumt, keine Menschen |
+| `hero-hotels` | Boutique-Hotel: Empfang, Flur oder Zimmerdetail. Material und Licht |
+| `hero-camping` | Campingplatz früh am Morgen: Stellplätze, Bäume, Sanitärhaus. Nicht Werbe-Camping |
+| `hero-events` | Firmenevent: gedeckte Tische im Hof, Lichterkette, vor dem Eintreffen der Gäste |
+| `hero-verwaltung` | Mehrfamilienhaus: Eingang, Briefkästen, Treppenhaus. Nüchtern, gepflegt |
+| `hero-seminar` | Seminarraum: Stuhlkreis oder U-Form, Tageslicht, leer |
+
+## Demo: Ferienhaus
 
 | Name | Format | Motiv |
 |---|---|---|
-| `hero-hospitality` | füllend, quer | Ruhiger Innenraum, Morgenlicht, keine Menschen |
-| `world-hospitality` | füllend, hoch | Architektonisches Schlüsselbild für die Startseite |
-| `rental-hero` | füllend | Ferienhaus, Küche oder Wohnbereich, aufgeräumt |
-| `rental-interior` | 3:2 | Wohnraum mit Charakter, nicht steril |
-| `rental-before-after` | 3:2 | **Split:** links Nachrichtenverlauf mit denselben fünf Fragen, rechts der Guide auf dem Handy. Muss ohne Text funktionieren |
-| `hotel-hero` | füllend | Boutique-Hotel, Eingang oder Lobby, Abendlicht |
-| `hotel-lobby` | 3:2 | Detail mit Handschrift des Hauses: Material, Licht, Objekt |
-| `demo-guide-cover` | füllend | Ferienhaus an der Küste. **Untere Hälfte dunkel** |
+| `demo-guide-cover` | füllend | Ferienhaus an der Küste. Untere Hälfte ruhig |
 | `demo-guide-entrance` | 3:2 | Eingang mit Schlüsseltresor |
 | `demo-guide-kitchen` | 3:2 | Küche mit Induktionsfeld und Geschirrspüler |
 | `demo-guide-living` | 3:2 | Wohnbereich mit Kamin |
@@ -96,26 +81,35 @@ unproblematischer als bei Weddings.
 | `demo-guide-exit` | 3:2 | Aufgeräumter Raum, Abreisesituation |
 | `demo-guide-host` | 3:2 | Gastgeberin im Türrahmen — **Model Release erforderlich** |
 
----
-
-## MARKE
+## Demo: Firmenevent
 
 | Name | Format | Motiv |
 |---|---|---|
-| `hero-home` | füllend | Das wichtigste Bild der Marke. Muss **beide Welten** tragen: ein Moment des Empfangens, weder klar Hochzeit noch klar Hotel. Gedeckter Tisch, offene Tür, Licht auf einer Schwelle. **Untere Hälfte dunkel** |
-| `custom-hero` | 16:9 | Werkstattcharakter: Entwürfe, Skizzen, Bildschirm |
-| `about-portrait` | 3:2 | **Echtes Foto der Gründerinnen und Gründer.** Bis dahin bleibt die About-Seite ehrlich unbesetzt |
+| `demo-event-cover` | füllend | Gutshof mit gedeckten Tischen, später Nachmittag |
+| `demo-event-map` | 3:2 | Statische Karte im Markenstil. **Kartenlizenz prüfen** |
+
+## Demo: Hausinformation
+
+| Name | Format | Motiv |
+|---|---|---|
+| `demo-haus-cover` | füllend | Mehrfamilienhaus von außen, sachlich |
+| `demo-haus-eingang` | 3:2 | Hauseingang mit Klingelschildern und Briefkästen |
+| `demo-haus-hof` | 3:2 | Innenhof mit Mülltonnen-Standplatz |
+| `demo-haus-flur` | 3:2 | Treppenhaus, Tageslicht |
+| `demo-haus-keller` | 3:2 | Waschküche oder Kellergang |
+| `demo-haus-technik` | 3:2 | Heizungsraum oder Zählerschrank |
 
 ---
 
-## Reihenfolge, falls das Budget begrenzt ist
+## Reihenfolge bei begrenztem Budget
 
-1. `hero-home`, `world-weddings`, `world-hospitality` — die Startseite entscheidet
-2. `pdp-guestview-*` und alle `*-thumb-*` — **echte Screenshots**, kosten nur Zeit und wirken stärker als jedes Stockfoto
-3. `demo-wedding-cover`, `demo-guide-cover` — die Demos sind der wichtigste Conversion-Hebel
-4. `product-*` — Produktkarten
-5. `about-portrait` — sobald es die Personen zu zeigen gibt
-6. Alles Übrige
+1. **`hero-home`** — die Startseite entscheidet über alles Weitere
+2. **`produkt-uebersicht`, `produkt-technik`** — echte Screenshots, kosten nur
+   Zeit und wirken stärker als jedes gekaufte Bild
+3. **`demo-*-cover`** — die Live-Beispiele sind der wichtigste Conversion-Hebel
+4. **`hero-ferien`, `hero-verwaltung`** — die beiden Segmente mit dem größten Potenzial
+5. Restliche Segment-Heros
+6. **`about-portrait`** — sobald es die Personen zu zeigen gibt
 
-**Wichtig:** Die Screenshots unter Punkt 2 sind kostenlos und wirken besser als gekaufte
-Bilder. Sie sollten zuerst entstehen, nicht zuletzt.
+Die Screenshots unter Punkt 2 sind kostenlos und wirken besser als Stockmaterial.
+Sie sollten zuerst entstehen, nicht zuletzt.

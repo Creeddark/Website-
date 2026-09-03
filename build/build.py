@@ -1,17 +1,15 @@
 #!/usr/bin/env python3
 """
-CONVIVIO — statischer Seitengenerator.
+ATRIA — statischer Seitengenerator.
 
-Setzt die Seiten aus build/pages/*.html in das gemeinsame Gerüst
-(build/layout.html) und schreibt fertiges, abhängigkeitsfreies HTML nach site/.
-
-Das Ergebnis in site/ ist eingecheckt — die Website funktioniert also auch
-ohne diesen Schritt. Der Generator existiert nur, damit Header, Footer und
-Navigation nicht 18-mal dupliziert werden.
+Setzt die Seiten aus build/pages/*.html in das gemeinsame Gerüst und schreibt
+fertiges, abhängigkeitsfreies HTML nach site/. Das Ergebnis ist eingecheckt —
+die Website funktioniert also auch ohne diesen Schritt. Der Generator existiert
+nur, damit Header, Navigation und Footer nicht in jeder Seite dupliziert werden.
 
     python3 build/build.py
 
-Markenname austauschen: BRAND unten ändern und neu bauen.
+Markennamen austauschen: BRAND unten ändern und neu bauen.
 """
 
 from __future__ import annotations
@@ -27,16 +25,9 @@ LAYOUT = ROOT / "build" / "layout.html"
 LAYOUT_BARE = ROOT / "build" / "layout-bare.html"
 OUT = ROOT / "site"
 
-BRAND = "CONVIVIO"  # Arbeitstitel — siehe docs/11-open-decisions.md
+BRAND = "ATRIA"  # Arbeitstitel — Markenrecherche steht aus, siehe docs/11
 
-# Themenfarbe je Welt (Browser-UI auf Mobilgeräten)
-THEME_COLOR = {
-    "": "#F7F5F1",
-    "weddings": "#FBF8F3",
-    "hospitality": "#F7F7F5",
-}
-
-NAV_KEYS = ["weddings", "hospitality", "shop", "custom", "about", "faq"]
+NAV_KEYS = ["segmente", "produkt", "preise", "demo", "faq"]
 
 
 def parse_front_matter(text: str) -> tuple[dict, str]:
@@ -53,11 +44,8 @@ def render(page_path: pathlib.Path, layout: str, layout_bare: str) -> tuple[path
     depth = len(rel.parts) - 1
     base = "../" * depth
 
-    world = meta.get("world", "")
-    world_attr = f' data-world="{world}"' if world else ""
-    wordmark_desc = (
-        f'<span class="wordmark__desc">{world.upper()}</span>' if world else ""
-    )
+    seg = meta.get("seg", "")
+    seg_attr = f' data-seg="{seg}"' if seg else ""
 
     out = layout_bare if meta.get("bare") else layout
     for key in NAV_KEYS:
@@ -73,19 +61,17 @@ def render(page_path: pathlib.Path, layout: str, layout_bare: str) -> tuple[path
         "{{description}}": meta["description"],
         "{{path}}": str(rel).replace("\\", "/"),
         "{{base}}": base,
-        "{{world}}": world,
-        "{{worldattr}}": world_attr,
-        "{{wordmarkdesc}}": wordmark_desc,
-        "{{themecolor}}": THEME_COLOR.get(world, THEME_COLOR[""]),
+        "{{seg}}": seg,
+        "{{segattr}}": seg_attr,
         "{{head}}": meta.get("head", ""),
         "{{demonote}}": meta.get("demonote", ""),
         "{{democta}}": meta.get("democta", "index.html"),
-        "{{democtalabel}}": meta.get("democtalabel", "Zur Marke"),
+        "{{democtalabel}}": meta.get("democtalabel", "Zur Website"),
     }
     for needle, value in replacements.items():
         out = out.replace(needle, value)
 
-    out = out.replace("CONVIVIO", BRAND)
+    out = out.replace("ATRIA", BRAND)
     return OUT / rel, out
 
 
@@ -106,7 +92,8 @@ def main() -> int:
 
     leftovers = set()
     for target, _ in written:
-        for token in re.findall(r"\{\{[a-z_]+\}\}", (ROOT / target).read_text(encoding="utf-8")):
+        text = (ROOT / target).read_text(encoding="utf-8")
+        for token in re.findall(r"\{\{[a-z_]+\}\}", text):
             leftovers.add((str(target), token))
     if leftovers:
         for t, token in sorted(leftovers):
@@ -115,7 +102,7 @@ def main() -> int:
 
     total = sum(size for _, size in written)
     for target, size in written:
-        print(f"  {str(target):48} {size / 1024:6.1f} KB")
+        print(f"  {str(target):46} {size / 1024:6.1f} KB")
     print(f"\n{len(written)} Seiten, {total / 1024:.0f} KB HTML gesamt.")
     return 0
 
