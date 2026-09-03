@@ -1372,8 +1372,21 @@ table.data tr.is-hero td, table.data tr.is-hero th { background: var(--surface);
   color: var(--deep); background: var(--gold); border-radius: 999px;
 }
 .eli__link:hover { background: color-mix(in srgb, var(--gold) 84%, var(--deep)); }
-.eli__link + .eli__link { background: transparent; color: var(--gold-ink); border: 1px solid var(--line); }
-.eli__link + .eli__link:hover { background: var(--gold-soft); border-color: var(--gold); }
+/* Zweitrangige Aktion: gleiche Größe, weniger Gewicht. Vorher hing das an
+   der Reihenfolge (.eli__link + .eli__link) — das brach, sobald eine Aktion
+   fehlte, weil ein Gastgeber sie nicht hinterlegt hat. */
+.eli__link--alt { background: transparent; color: var(--gold-ink); border: 1px solid var(--line); }
+.eli__link--alt:hover { background: var(--gold-soft); border-color: var(--gold); }
+button.eli__link { font: inherit; font-size: var(--t-tiny); font-weight: 600; cursor: pointer; border: 1px solid transparent; }
+button.eli__link--alt { border-color: var(--line); }
+
+/* Der WLAN-Code: groß genug, dass ihn eine Handykamera aus 20 cm liest. */
+.eli__qr {
+  align-self: stretch; padding: var(--s4); text-align: center;
+  background: var(--chat-in); border: 1px solid var(--line); border-radius: var(--radius-lg);
+}
+.eli__qr img { margin: 0 auto var(--s3); display: block; }
+.eli__qr p { margin: 0; font-size: var(--t-tiny); line-height: 1.5; color: var(--ink-500); }
 
 .eli__typing {
   display: inline-flex; gap: var(--s1); padding: 13px var(--s4);
@@ -1432,7 +1445,10 @@ table.data tr.is-hero td, table.data tr.is-hero th { background: var(--surface);
   .js .eli.is-open .eli__panel { transform-origin: bottom center; }
   .eli.is-open .eli__launcher, .eli.is-open .eli__teaser { display: none; }
   .eli__bar { padding-block: var(--s4); }
-  .eli__chip { min-height: 40px; }
+  /* Auf dem Telefon wird mit dem Daumen getippt, oft im Gehen und mit
+     nassen Händen nach dem Strand. 44 px ist hier das Minimum, nicht Luxus. */
+  .eli__chip, .eli__link { min-height: 44px; }
+  .eli__link { padding-inline: var(--s5); }
 }
 
 @media print { .eli { display: none !important; } }

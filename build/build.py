@@ -30,6 +30,14 @@ BRAND = "VELORA"  # Markenrecherche (DPMA/EUIPO) steht aus, siehe docs/11
 NAV_KEYS = ["segmente", "produkt", "preise", "demo", "faq"]
 
 
+def slugify(text: str) -> str:
+    """Dateiname aus einem Namen — muss zu build/art/wifi.py passen."""
+    t = text.lower()
+    for a, b in [("ä", "ae"), ("ö", "oe"), ("ü", "ue"), ("ß", "ss")]:
+        t = t.replace(a, b)
+    return re.sub(r"[^a-z0-9]+", "-", t).strip("-")
+
+
 def parse_front_matter(text: str) -> tuple[dict, str]:
     """Front matter steht als JSON im ersten HTML-Kommentar der Datei."""
     m = re.match(r"\s*<!--\s*(\{.*?\})\s*-->\s*", text, re.S)
@@ -56,6 +64,20 @@ def render(page_path: pathlib.Path, layout: str, layout_bare: str) -> tuple[path
 
     out = out.replace("{{content}}", content.strip())
 
+    # Fakten der Seite als JSON — Eli liest sie von dort, statt eine Kopie
+    # im Skript zu tragen. Eine Kopie läuft irgendwann auseinander, und dann
+    # nennt der Assistent ein WLAN-Passwort, das nicht mehr gilt.
+    facts = meta.get("facts")
+    if facts:
+        wlan = facts.get("wlan")
+        if wlan and wlan.get("ssid"):
+            facts = dict(facts)
+            facts["wlanqr"] = base + "assets/img/wifi-" + slugify(wlan["ssid"]) + ".svg"
+        facts_block = ('\n<script type="application/json" id="velora-facts">'
+                       + json.dumps(facts, ensure_ascii=False) + "</script>")
+    else:
+        facts_block = ""
+
     # Eli richtet seine Vorschläge nach der Seite, auf der er steht.
     rel_str = str(rel).replace("\\", "/")
     if rel_str.startswith("demo/"):
@@ -69,6 +91,7 @@ def render(page_path: pathlib.Path, layout: str, layout_bare: str) -> tuple[path
 
     replacements = {
         "{{elictx}}": elictx,
+        "{{facts}}": facts_block,
         "{{title}}": meta["title"],
         "{{description}}": meta["description"],
         "{{path}}": str(rel).replace("\\", "/"),

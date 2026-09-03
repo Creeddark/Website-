@@ -42,6 +42,7 @@ die Überschrift.
 | `demo-guide-*` | Vignetten: Eingang, Küche, Wohnraum, Strand, Abreise, Gastgeberin |
 | `demo-haus-*` | Vignetten: Eingang, Hof, Treppenhaus, Waschküche, Technik |
 | `demo-event-map` | Schematische Anfahrtskarte |
+| `wifi-*` | WLAN-QR-Codes, erzeugt aus den Fakten der Gästeseiten (`build/art/wifi.py`) |
 
 ## Ein Motiv ändern
 

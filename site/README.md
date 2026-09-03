@@ -132,6 +132,27 @@ Die Reihenfolge ist bewusst gewählt: **erst verstehen, dann einordnen.**
   ehrlich, wenn das günstigere Angebot reicht. Vollständig tastaturbedienbar,
   Esc schließt.
 
+  **Auf den Gästeseiten ist er kein Menü mehr, sondern ein Werkzeug.** Er
+  liest die Fakten des Objekts aus der Seite (`<script id="velora-facts">`,
+  gespeist aus dem Front-Matter) und handelt damit:
+
+  | Frage | Was Eli tut |
+  |---|---|
+  | WLAN | Netzwerk und Passwort, **ein Tipp kopiert es** — oder ein QR-Code, mit dem sich das Telefon selbst verbindet |
+  | Anreise, Check-out | Zeiten und Schlüssel, dazu der Sprung in den richtigen Abschnitt |
+  | Adresse, Parken | Adresse kopieren oder auf der Karte zeigen |
+  | Kontakt | Anrufen oder schreiben, mit einem Tipp |
+  | **Alles andere** | **Die Frage wird fertig vorbereitet an den Gastgeber geschickt** |
+
+  Die letzte Zeile ist die wichtigste: Eli ist nie eine Sackgasse. Was nicht
+  hinterlegt ist, geht mit Betreff und Objektnamen an den Gastgeber — und der
+  sieht damit selbst, welche Angabe in seiner Mappe fehlt.
+
+  Die Fakten stehen **nicht** im Skript. Eine Kopie im Code läuft irgendwann
+  auseinander, und dann nennt der Assistent ein Passwort, das nicht mehr gilt.
+  Was der Gastgeber nicht hinterlegt hat, taucht gar nicht erst als Vorschlag
+  auf — Eli erfindet nichts.
+
   **Eli ist kein Sprachmodell**, und die Seite sagt das an drei Stellen offen.
   Es gibt kein Backend, an das er fragen könnte. Er führt durch feste Themen
   und gibt wieder, was ohnehin auf der Website steht. Auf freie Fragen sucht er
@@ -151,6 +172,7 @@ Die Reihenfolge ist bewusst gewählt: **erst verstehen, dann einordnen.**
 | **Markenrecht** | Der Name VELORA steht, die Recherche nicht | DPMA/EUIPO prüfen, bevor die Seite live geht |
 | **Elis Porträt** | Aus dem gelieferten Markenbild freigestellt | Für die Veröffentlichung eine saubere Freistellung mit Alphakanal, idealerweise in mehreren Blickrichtungen |
 | **Eli als KI** | Er führt durch feste Themen, er versteht keine freien Fragen | Für echte Antworten braucht es ein Backend und ein Sprachmodell — und dann auch einen Absatz im Datenschutz |
+| **Der Lückenbericht** | Der Gastgeber sieht unbeantwortete Fragen nur einzeln per Mail, nicht gesammelt | Braucht ein Backend. Bis dahin ist die vorbereitete Mail der ehrliche Ersatz — sie kommt wirklich an |
 | **Fotos** | Alle Flächen tragen eigene Strichzeichnungen — Fotos erst, wenn es echte Kundenobjekte zu zeigen gibt | [`IMAGE-BRIEF.md`](IMAGE-BRIEF.md) |
 | **Formular-Empfänger** | Formulare validieren, senden aber nichts | Endpunkt eintragen, Bestätigungsmail |
 | **Zahlung** | Preise und Abrechnung stehen auf der Seite, gezahlt wird per Rechnung. Der „Starten"-Knopf führt ins Formular, nicht in einen Checkout — und die Seite sagt das dort auch | Zahlungsanbieter anbinden, dann wird aus der Auswahl ein Kauf |

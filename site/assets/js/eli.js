@@ -30,6 +30,17 @@
   var input = root.querySelector("[data-eli-input]");
   var teaser = root.querySelector("[data-eli-teaser]");
 
+  /* ---- Die Fakten der Seite ---------------------------------------------
+     Auf einer Gästeseite liest Eli, was der Gastgeber hinterlegt hat. Aus
+     der Seite, nicht aus einer Kopie hier im Skript: eine Kopie läuft
+     auseinander, und dann nennt der Assistent ein Passwort, das nicht mehr
+     gilt. Steht nichts da, sagt Eli das — er erfindet nichts. */
+  var FACTS = null;
+  try {
+    var raw = document.getElementById("velora-facts");
+    if (raw) FACTS = JSON.parse(raw.textContent);
+  } catch (err) { FACTS = null; }
+
   /* ---- Inhalte ---------------------------------------------------------
      Jede Antwort ist eine Aussage, die so auch auf der Website steht.
      Wo eine Zahl vorkommt, ist es dieselbe wie auf der Preisseite. */
@@ -104,34 +115,227 @@
       ],
       link: { label: "Kontakt aufnehmen", href: "kontakt.html" },
       next: ["was", "kosten"]
-    },
+    }
+  };
 
-    /* ---- Gästethemen (auf den Live-Beispielen) ---- */
+  /* ---- Gästethemen: gebaut aus dem, was der Gastgeber hinterlegt hat ----
+     Hier liegt der eigentliche Nutzen. Eli erzählt nicht nur, er handelt:
+     Passwort kopieren, QR zum Verbinden, Karte öffnen, anrufen, schreiben.
+     Was nicht hinterlegt ist, taucht gar nicht erst als Vorschlag auf. */
+
+  function hatFakt(pfad) {
+    if (!FACTS) return false;
+    var teile = pfad.split("."), v = FACTS;
+    for (var i = 0; i < teile.length; i++) {
+      if (!v || typeof v !== "object" || !v[teile[i]]) return false;
+      v = v[teile[i]];
+    }
+    return true;
+  }
+
+  /* Zum passenden Abschnitt der Gästeseite springen: der vorhandene Reiter
+     wird geklickt, damit die Seite ihre eigene Logik behält. */
+  function springeZu(abschnitt) {
+    var tab = document.querySelector('[data-guide-tab="' + abschnitt.tab + '"]');
+    if (tab) tab.click();
+    var ziel = document.getElementById(abschnitt.id);
+    if (ziel) {
+      if (window.innerWidth <= 640) close();
+      ziel.scrollIntoView({ behavior: reduced ? "auto" : "smooth", block: "start" });
+    }
+  }
+
+  function abschnittMit(tab) {
+    var liste = (FACTS && FACTS.abschnitte) || [];
+    for (var i = 0; i < liste.length; i++) if (liste[i].tab === tab) return liste[i];
+    return null;
+  }
+
+  /* Aktionsknopf im Gespräch. `run` statt href: eine Aktion, kein Link. */
+  function aktion(label, run, zweitrangig) {
+    var b = el("button", "eli__link" + (zweitrangig ? " eli__link--alt" : ""), label);
+    b.type = "button";
+    b.addEventListener("click", run);
+    return b;
+  }
+
+  function kopieren(text, knopf, erfolg) {
+    var fertig = function () {
+      var alt = knopf.textContent;
+      knopf.textContent = erfolg;
+      window.setTimeout(function () { knopf.textContent = alt; }, 2200);
+    };
+    if (navigator.clipboard && navigator.clipboard.writeText) {
+      navigator.clipboard.writeText(text).then(fertig, function () { markiere(text); });
+    } else { markiere(text); }
+  }
+
+  /* Wo die Zwischenablage nicht darf (älteres Safari, kein sicherer Kontext),
+     wird der Wert wenigstens markiert — dann genügt ein langer Fingerdruck. */
+  function markiere(text) {
+    var f = document.createElement("input");
+    f.value = text; f.readOnly = true;
+    f.style.cssText = "position:absolute;left:-9999px";
+    document.body.appendChild(f); f.select();
+    try { document.execCommand("copy"); } catch (err) { /* dann eben nicht */ }
+    document.body.removeChild(f);
+  }
+
+  var GAST = {
     g_wlan: {
+      wenn: function () { return hatFakt("wlan.ssid") && hatFakt("wlan.pass"); },
       label: "WLAN & Technik",
-      say: ["In diesem Beispiel: Netzwerk „Duenenweg-Gast“, Passwort „nordsee2026“. Dazu Heizung, Herd, Geschirrspüler und Kamin — jedes Gerät mit einem Satz erklärt.",
-            "Auf einer echten Gästeseite stehen hier die Angaben Ihres Gastgebers."],
-      next: ["g_checkin", "g_umgebung", "was"]
+      bauen: function () {
+        var w = FACTS.wlan;
+        var box = el("div", "eli__actions");
+        var kopf = aktion("Passwort kopieren", function () {
+          kopieren(w.pass, kopf, "Kopiert ✓");
+        });
+        box.appendChild(kopf);
+        if (FACTS.wlanqr) {
+          box.appendChild(aktion("Mit QR verbinden", function () { zeigeQR(w); }, true));
+        }
+        var abschnitt = abschnittMit("technik");
+        if (abschnitt) box.appendChild(aktion("Zum Abschnitt", function () { springeZu(abschnitt); }, true));
+        return {
+          say: ["Netzwerk: **" + w.ssid + "**\nPasswort: **" + w.pass + "**"],
+          extra: box
+        };
+      },
+      next: ["g_checkin", "g_kontakt"]
     },
     g_checkin: {
+      wenn: function () { return hatFakt("checkin") || hatFakt("checkout"); },
       label: "Anreise & Check-in",
-      say: ["In diesem Beispiel: ab 15:00 Uhr, Schlüssel im Tresor rechts neben der Haustür, ein Stellplatz direkt vor dem Haus.",
-            "Check-out bis 10:00 Uhr: Geschirrspüler laufen lassen, Müll raus, Fenster schließen, Schlüssel zurück in den Tresor."],
-      next: ["g_wlan", "g_umgebung", "was"]
+      bauen: function () {
+        var zeilen = [];
+        if (FACTS.checkin) zeilen.push("**Check-in** — " + FACTS.checkin);
+        if (FACTS.checkout) zeilen.push("**Check-out** — " + FACTS.checkout);
+        var box = el("div", "eli__actions");
+        var a = abschnittMit("ankommen") || abschnittMit("abreise");
+        if (a) box.appendChild(aktion("Zum Abschnitt", function () { springeZu(a); }, true));
+        return { say: zeilen, extra: box };
+      },
+      next: ["g_weg", "g_wlan"]
     },
-    g_umgebung: {
-      label: "Empfehlungen in der Umgebung",
-      say: ["In diesem Beispiel: Fischbude Käpt'n Selmer (500 m), Café Dünenrose, Restaurant Nordlicht zum Reservieren, Wattwanderung ab Hafen täglich 10:00.",
-            "Das sind die Empfehlungen des Gastgebers — keine Anzeigen, keine Provision."],
-      next: ["g_checkin", "was"]
+    g_weg: {
+      wenn: function () { return hatFakt("adresse"); },
+      label: "Adresse & Parken",
+      bauen: function () {
+        var box = el("div", "eli__actions");
+        var adr = FACTS.adresse;
+        /* OpenStreetMap statt eines Kartendienstes, der mitschreibt — es
+           öffnet sich auf jedem Gerät und passt zu dem, was diese Seite
+           über Tracking verspricht. */
+        var a = el("a", "eli__link", "Auf der Karte zeigen");
+        a.href = "https://www.openstreetmap.org/search?query=" + encodeURIComponent(adr);
+        a.target = "_blank"; a.rel = "noopener noreferrer";
+        box.appendChild(a);
+        var kopf = aktion("Adresse kopieren", function () {
+          kopieren(adr, kopf, "Kopiert ✓");
+        }, true);
+        box.appendChild(kopf);
+        var zeilen = ["**" + ((FACTS && FACTS.objekt) || "Adresse") + "**\n" + adr];
+        if (FACTS.parken) zeilen.push("**Parken** — " + FACTS.parken);
+        return { say: zeilen, extra: box };
+      },
+      next: ["g_checkin", "g_kontakt"]
     },
     g_kontakt: {
+      wenn: function () { return hatFakt("kontakt.name"); },
       label: "Wen frage ich, wenn etwas ist?",
-      say: ["Auf jeder Gästeseite steht ein benannter Ansprechpartner mit Erreichbarkeit — in diesem Beispiel die Gastgeberin von 08:00 bis 20:00, bei Notfällen jederzeit.",
-            "Ich erfinde nichts dazu. Was der Gastgeber nicht hinterlegt hat, kann ich auch nicht beantworten."],
+      bauen: function () {
+        var k = FACTS.kontakt;
+        var zeilen = ["**" + k.name + "**" + (k.rolle ? " · " + k.rolle : "")];
+        if (k.zeiten) zeilen.push("Erreichbar " + k.zeiten + ".");
+        if (FACTS.notruf) zeilen.push(FACTS.notruf);
+        var box = el("div", "eli__actions");
+        if (k.tel) {
+          var t = el("a", "eli__link", "Anrufen");
+          t.href = "tel:" + k.tel.replace(/[^+0-9]/g, "");
+          box.appendChild(t);
+        }
+        if (k.mail) box.appendChild(mailKnopf(k, "", true));
+        return { say: zeilen, extra: box };
+      },
       next: ["g_wlan", "g_checkin"]
     }
   };
+
+  /* Der wichtigste Knopf überhaupt: keine Sackgasse. Was Eli nicht weiß,
+     geht mit einem Tipp an den Gastgeber — Frage und Objekt schon drin. */
+  function mailKnopf(k, frage, zweitrangig) {
+    var betreff = "Frage zu " + ((FACTS && FACTS.objekt) || "Ihrem Objekt");
+    var text = frage
+      ? frage + "\n\n(Gesendet über die Infoseite von " + ((FACTS && FACTS.objekt) || "VELORA") + ")"
+      : "";
+    var a = el("a", "eli__link" + (zweitrangig ? " eli__link--alt" : ""),
+               frage ? "Diese Frage an " + kurz(k.name) + " senden" : "Schreiben");
+    a.href = "mailto:" + k.mail + "?subject=" + encodeURIComponent(betreff)
+           + (text ? "&body=" + encodeURIComponent(text) : "");
+    return a;
+  }
+  function kurz(name) { return name.split(" ")[0]; }
+
+  function zeigeQR(w) {
+    var li = el("li", "eli__row");
+    var karte = el("div", "eli__qr");
+    var img = document.createElement("img");
+    img.src = FACTS.wlanqr; img.width = 168; img.height = 168;
+    img.alt = "QR-Code, der das Telefon mit dem Netzwerk " + w.ssid + " verbindet";
+    karte.appendChild(img);
+    karte.appendChild(el("p", null, "Kamera öffnen, Code scannen — das Telefon verbindet sich selbst."));
+    li.appendChild(karte);
+    log.appendChild(li);
+    scrollDown();
+  }
+
+  function gastThemen() {
+    var ids = [];
+    for (var k in GAST) if (GAST.hasOwnProperty(k) && GAST[k].wenn()) ids.push(k);
+    return ids;
+  }
+
+  function runGast(id) {
+    var t = GAST[id];
+    if (!t) return;
+    addUser(t.label);
+    speak(function () {
+      var r = t.bauen();
+      addEli(r.say, r.extra && r.extra.childNodes.length ? r.extra : null);
+      /* Alle übrigen Themen bleiben stehen. Es sind wenige, und ein Gast,
+         der gerade das WLAN gesucht hat, sucht als Nächstes oft die
+         Check-out-Zeit — nicht das, was ich ihm vorgebe. */
+      setChips(gastChips(gastThemen().filter(function (n) { return n !== id; })));
+    });
+  }
+
+  function gastChips(ids) {
+    var out = ids.map(function (id) {
+      return { label: GAST[id].label, run: function () { runGast(id); } };
+    });
+    if (hatFakt("kontakt.mail") || hatFakt("kontakt.tel")) {
+      out.push({ label: "Etwas anderes fragen", run: andereFrage });
+    }
+    return out;
+  }
+
+  function andereFrage() {
+    addUser("Etwas anderes fragen");
+    speak(function () {
+      var k = FACTS.kontakt;
+      var box = el("div", "eli__actions");
+      if (k.mail) box.appendChild(mailKnopf(k, "", false));
+      if (k.tel) {
+        var t = el("a", "eli__link eli__link--alt", "Anrufen");
+        t.href = "tel:" + k.tel.replace(/[^+0-9]/g, "");
+        box.appendChild(t);
+      }
+      addEli(["Alles, was hier nicht hinterlegt ist, weiß " + kurz(k.name) + " am besten." +
+              (k.zeiten ? " Erreichbar " + k.zeiten + "." : "")], box);
+      setChips(gastChips(gastThemen()));
+    });
+  }
 
   /* ---- Bedarfsanalyse ---------------------------------------------------
      Ein kurzer, ehrlicher Weg zur passenden Empfehlung. Zwei Fragen,
@@ -216,7 +420,7 @@
 
   /* ---- Startvorschläge je Seite ---------------------------------------- */
   function startChips() {
-    if (ctx === "demo") return ["g_checkin", "g_wlan", "g_umgebung", "g_kontakt"];
+    if (ctx === "demo") return null;      // Gästeseiten laufen über gastChips
     if (ctx === "preise") return ["berater", "abrechnung", "kuendigen", "kosten"];
     if (ctx === "segment" && SEGMENTS[seg]) return ["berater", "kosten", "funktionen", "was"];
     if (ctx === "produkt") return ["funktionen", "grenzen", "kosten", "berater"];
@@ -225,8 +429,9 @@
 
   function startGruss() {
     if (ctx === "demo") {
-      return ["Hallo 👋 Ich bin Eli, der digitale Assistent von Velora.",
-              "Das hier ist ein Beispiel für eine Gästeseite. Ich zeige Ihnen, was darauf steht — fragen Sie einfach."];
+      var ort = (FACTS && FACTS.objekt) ? " für " + FACTS.objekt : "";
+      return ["Hallo 👋 Ich bin Eli, Ihr digitaler Assistent" + ort + ".",
+              "WLAN, Check-in, Anfahrt — fragen Sie mich, ich habe alles griffbereit."];
     }
     if (ctx === "segment" && SEGMENTS[seg]) {
       return ["Hallo 👋 Ich bin Eli, der digitale Assistent von Velora.",
@@ -401,11 +606,12 @@
      hier nicht weiterkommt. */
 
   var STICHWORTE = [
-    { hit: ["wlan", "wifi", "internet", "passwort"], id: "g_wlan" },
-    { hit: ["check-in", "checkin", "anreise", "schlüssel", "schluessel", "ankunft"], id: "g_checkin" },
-    { hit: ["check-out", "checkout", "abreise", "raus"], id: "g_checkin" },
-    { hit: ["essen", "restaurant", "umgebung", "empfehlung", "ausflug", "unternehmen kann"], id: "g_umgebung" },
-    { hit: ["kontakt", "ansprechpartner", "notfall", "hilfe brauche"], id: "g_kontakt" },
+    { hit: ["wlan", "wifi", "w-lan", "internet", "passwort"], id: "g_wlan", gast: true },
+    { hit: ["check-in", "checkin", "anreise", "schlüssel", "schluessel", "ankunft", "ankommen"], id: "g_checkin", gast: true },
+    { hit: ["check-out", "checkout", "abreise", "wann müssen wir raus", "auschecken"], id: "g_checkin", gast: true },
+    { hit: ["parken", "parkplatz", "stellplatz", "auto"], id: "g_weg", gast: true },
+    { hit: ["adresse", "anfahrt", "wo ist", "wie komme ich", "navi", "karte", "wo liegt"], id: "g_weg", gast: true },
+    { hit: ["kontakt", "ansprechpartner", "notfall", "hilfe", "erreiche ich", "anrufen"], id: "g_kontakt", gast: true },
     { hit: ["preis", "kosten", "teuer", "tarif", "euro", "€"], id: "kosten" },
     { hit: ["monatlich", "jährlich", "jaehrlich", "einmalig", "abrechnung", "zahlung", "rechnung"], id: "abrechnung" },
     { hit: ["kündig", "kuendig", "laufzeit", "vertrag", "wechseln"], id: "kuendigen" },
@@ -419,16 +625,43 @@
   function beantworte(text) {
     var q = text.toLowerCase();
     for (var i = 0; i < STICHWORTE.length; i++) {
-      for (var j = 0; j < STICHWORTE[i].hit.length; j++) {
-        if (q.indexOf(STICHWORTE[i].hit[j]) > -1) {
-          var id = STICHWORTE[i].id;
+      var eintrag = STICHWORTE[i];
+      /* Gästethemen greifen nur, wenn der Gastgeber sie auch hinterlegt hat. */
+      if (eintrag.gast && !(GAST[eintrag.id] && GAST[eintrag.id].wenn())) continue;
+      for (var j = 0; j < eintrag.hit.length; j++) {
+        if (q.indexOf(eintrag.hit[j]) > -1) {
+          var id = eintrag.id;
+          var istGast = !!eintrag.gast;
           speak(function () {
             addEli(["Freie Fragen kann ich nicht deuten — aber das hier passt vermutlich:"]);
-            if (id === "berater") { startBerater(); } else { runTopic(id); }
+            if (id === "berater") { startBerater(); }
+            else if (istGast) { runGast(id); }
+            else { runTopic(id); }
           });
           return;
         }
       }
+    }
+
+    /* Auf einer Gästeseite ist die ehrliche Antwort nicht „weiß ich nicht",
+       sondern der kürzeste Weg zu jemandem, der es weiß. */
+    if (ctx === "demo" && FACTS && FACTS.kontakt && (FACTS.kontakt.mail || FACTS.kontakt.tel)) {
+      var frage = text;
+      speak(function () {
+        var k = FACTS.kontakt;
+        var box = el("div", "eli__actions");
+        if (k.mail) box.appendChild(mailKnopf(k, frage, false));
+        if (k.tel) {
+          var t = el("a", "eli__link eli__link--alt", "Anrufen");
+          t.href = "tel:" + k.tel.replace(/[^+0-9]/g, "");
+          box.appendChild(t);
+        }
+        addEli(["Dazu hat " + kurz(k.name) + " nichts hinterlegt — ich rate hier nicht.",
+                "Ich habe Ihre Frage fertig vorbereitet. Ein Tipp, und sie ist unterwegs." +
+                (k.zeiten ? " Erreichbar " + k.zeiten + "." : "")], box);
+        setChips(gastChips(gastThemen()));
+      });
+      return;
     }
     speak(function () {
       var extra = el("div", "eli__actions");
@@ -437,7 +670,7 @@
         "Dazu habe ich leider nichts hinterlegt.",
         "Ich bin kein Sprachmodell — ich führe durch feste Themen und gebe wieder, was auf dieser Website steht. Für alles darüber hinaus schreiben Sie am besten direkt; Sie bekommen werktags binnen 24 Stunden Antwort."
       ], extra);
-      setChips(topicChips(startChips()));
+      setChips(topicChips(startChips() || ["was", "fuerwen", "berater", "kosten"]));
     });
   }
 
@@ -450,7 +683,8 @@
     if (started) return;
     started = true;
     addEli(startGruss());
-    setChips(topicChips(startChips()));
+    if (ctx === "demo" && FACTS) { setChips(gastChips(gastThemen())); }
+    else { setChips(topicChips(startChips() || ["was", "fuerwen", "berater", "kosten"])); }
   }
 
   function open() {
