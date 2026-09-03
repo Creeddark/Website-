@@ -495,6 +495,18 @@ img.plate[src$="produkt-technik.svg"] { object-fit: contain; background: var(--s
   content: ""; width: 8px; height: 8px; margin-top: 7px; border-radius: 50%;
   background: var(--seg); flex: none;
 }
+/* Die zwei Haelften der Ehrlichkeitssektion. Bewusst ungleich geteilt statt
+   50/50: die linke Spalte traegt zwei Zeilen je Eintrag, die rechte eine. */
+.honesty { display: grid; gap: var(--s7); align-items: start; }
+@media (min-width: 1024px) { .honesty { grid-template-columns: 1.15fr 0.85fr; gap: var(--s9); } }
+.honesty__title {
+  font-family: Montserrat, sans-serif; font-size: var(--t-label); font-weight: 600;
+  letter-spacing: 0.2em; text-transform: uppercase; color: var(--ink-500);
+  margin: 0 0 var(--s4);
+}
+/* In der Spalte ist eine zweite Spalte zu viel. */
+.limits--stack { grid-template-columns: minmax(0, 1fr) !important; }
+
 .limits { list-style: none; margin: 0; padding: 0; display: grid; gap: var(--s3); }
 @media (min-width: 700px) { .limits { grid-template-columns: 1fr 1fr; gap: var(--s3) var(--s6); } }
 .limits li {
@@ -700,6 +712,10 @@ table.data tr.is-hero td, table.data tr.is-hero th { background: var(--surface);
 .billing__note { margin: var(--s4) 0 0; font-size: var(--t-small); color: var(--ink-500); max-width: 52ch; }
 
 .tier__prices { margin: var(--s5) 0; }
+/* Ersetzt auf der Startseite die fuenfzeilige Merkmalliste je Tarif. Die
+   vollstaendige Aufstellung steht auf der Preisseite; hier reicht der Satz,
+   der den Tarif von den anderen unterscheidet. */
+.tier__sum { margin: 0 0 var(--s5); font-size: var(--t-small); color: var(--ink-700); }
 .tier__p { margin: 0 0 var(--s4); display: flex; flex-direction: column; gap: 2px; }
 .tier__p:last-child { margin-bottom: 0; }
 .tier__cmp { font-size: var(--t-tiny); color: var(--ink-500); }
@@ -1047,6 +1063,10 @@ table.data tr.is-hero td, table.data tr.is-hero th { background: var(--surface);
 }
 
 .sticky-split { display: grid; gap: var(--s7); align-items: start; }
+/* Zweiter Teil derselben Sektion. Auf schmalen Schirmen reicht der kleinere
+   Abstand, sonst kostet die Zusammenlegung mehr, als sie spart. */
+.sticky-split--after { margin-top: var(--s7); }
+@media (min-width: 1024px) { .sticky-split--after { margin-top: var(--s9); } }
 @media (min-width: 900px) { .sticky-split { grid-template-columns: 1fr 1fr; gap: var(--s9); } }
 .sticky-split__visual { display: flex; justify-content: center; }
 @media (min-width: 900px) { .sticky-split__visual { position: sticky; top: 110px; } }
