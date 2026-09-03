@@ -1388,6 +1388,49 @@ button.eli__link--alt { border-color: var(--line); }
 .eli__qr img { margin: 0 auto var(--s3); display: block; }
 .eli__qr p { margin: 0; font-size: var(--t-tiny); line-height: 1.5; color: var(--ink-500); }
 
+/* ---------------------------------------------------------------------- */
+/* Orientierungskarte: Nummern im Bild, Namen daneben                      */
+/* ---------------------------------------------------------------------- */
+/* Die Karte ist eine SVG im <img>. Sie lädt darum die Schriften dieser
+   Seite nicht und schrumpft auf dem Telefon auf ein Drittel — deshalb
+   stehen dort nur Ziffern. Die Namen sind echter Text: markierbar,
+   übersetzbar, vorlesbar und so groß, wie der Gast sie eingestellt hat. */
+.karte {
+  margin: 0; padding: var(--s5);
+  background: var(--cream); border: 1px solid var(--line); border-radius: var(--radius-lg);
+}
+.karte__bild {
+  display: block; width: 100%; max-width: 22rem; height: auto;
+  margin: 0 auto; aspect-ratio: 1;
+}
+.karte__liste {
+  margin: var(--s4) 0 0; padding: 0; list-style: none;
+  display: grid; gap: 1px; background: var(--line-soft);
+  border-top: 1px solid var(--line-soft);
+}
+.karte__liste li {
+  display: grid; grid-template-columns: 1.75rem minmax(0, 1fr) auto;
+  gap: var(--s2) var(--s3); align-items: baseline;
+  padding: var(--s3) 0; background: var(--cream);
+}
+.karte__nr {
+  grid-row: span 2; align-self: center;
+  width: 1.75rem; height: 1.75rem; border-radius: 50%;
+  border: 1.5px solid var(--ink-700); color: var(--ink-900);
+  display: grid; place-items: center;
+  font-size: var(--t-tiny); font-weight: 600; font-variant-numeric: tabular-nums;
+}
+.karte__name { font-weight: 600; color: var(--ink-900); font-size: var(--t-small); }
+.karte__weit { color: var(--ink-500); font-size: var(--t-tiny); white-space: nowrap; }
+.karte__hin { grid-column: 2 / -1; color: var(--ink-500); font-size: var(--t-tiny); margin: 0; }
+.karte__fuss { margin: var(--s4) 0 0; font-size: var(--t-tiny); line-height: 1.5; color: var(--ink-500); }
+
+/* Im Chat sitzt dieselbe Karte in einer Blase — enger und auf dem
+   helleren Blasengrund, damit sie nicht wie ein Fremdkörper wirkt. */
+.eli__karte { align-self: stretch; padding: var(--s4); background: var(--chat-in); }
+.eli__karte .karte__bild { max-width: 18rem; }
+.eli__karte .karte__liste li { background: var(--chat-in); }
+
 .eli__typing {
   display: inline-flex; gap: var(--s1); padding: 13px var(--s4);
   background: var(--chat-in); border-radius: 12px 12px 12px 3px;

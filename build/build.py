@@ -20,6 +20,8 @@ import re
 import sys
 
 ROOT = pathlib.Path(__file__).resolve().parent.parent
+sys.path.insert(0, str(ROOT / "build" / "art"))
+from karte import legende as karten_legende  # noqa: E402
 PAGES = ROOT / "build" / "pages"
 LAYOUT = ROOT / "build" / "layout.html"
 LAYOUT_BARE = ROOT / "build" / "layout-bare.html"
@@ -77,6 +79,32 @@ def render(page_path: pathlib.Path, layout: str, layout_bare: str) -> tuple[path
                        + json.dumps(facts, ensure_ascii=False) + "</script>")
     else:
         facts_block = ""
+
+    # Die Orientierungskarte. Die Nummern im Bild und die Namen daneben
+    # kommen aus derselben Funktion wie die SVG selbst — sonst zeigt die
+    # Karte irgendwann auf die 4 und die Liste nennt dazu den falschen Ort.
+    orte = (meta.get("facts") or {}).get("umgebung") or []
+    if orte and "{{karte}}" in out:
+        objekt = meta["facts"].get("objekt", "")
+        zeilen = "".join(
+            '<li><span class="karte__nr" aria-hidden="true">{nr}</span>'
+            '<span class="karte__name">{nr}. {name}</span>'
+            '<span class="karte__weit">{weit}</span>'
+            '<p class="karte__hin">{richtung}</p></li>'.format(**e)
+            for e in karten_legende(orte)
+        )
+        out = out.replace("{{karte}}", (
+            '<figure class="karte">'
+            '<img class="karte__bild" src="' + base + 'assets/img/karte-'
+            + slugify(objekt) + '.svg" width="360" height="360" loading="lazy" decoding="async"'
+            ' alt="Orientierungskarte: ' + objekt + ' in der Mitte, die nummerierten Orte'
+            ' ringsum in der Richtung, in der sie liegen. Alle Namen stehen in der Liste darunter.">'
+            '<ol class="karte__liste">' + zeilen + '</ol>'
+            '<figcaption class="karte__fuss">Luftlinie ab ' + objekt
+            + ', gerundet. Norden ist oben.</figcaption>'
+            '</figure>'))
+    else:
+        out = out.replace("{{karte}}", "")
 
     # Eli richtet seine Vorschläge nach der Seite, auf der er steht.
     rel_str = str(rel).replace("\\", "/")
