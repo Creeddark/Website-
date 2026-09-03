@@ -89,9 +89,14 @@
   /* Fallback für Seiten ohne data-seg — sonst verlieren Häkchen und
      Kartenrahmen ihre Farbe und verschwinden. */
   --seg: var(--gold-ink);
+  --seg-ink: var(--gold-ink);
   --seg-tint: var(--gold-soft);
   --seg-deep: var(--gold);
-  --ok: #4E7A4A;
+  /* Gemessen gegen alle drei Untergruende, auf denen dieser Ton landen
+     kann, nicht nur gegen Creme: Elfenbein 5,13:1, Creme 5,53:1, Beige
+     4,69:1. Der Vorgaenger #4E7A4A lag auf Elfenbein bei 4,37:1 und damit
+     unter der Schwelle; genau dort steht die Ersparnis im Rechner. */
+  --ok: #476E43;
   --err: #A2503F;
 
   /* Typo */
@@ -144,12 +149,18 @@
 
 /* Segmentakzente — warm und entsättigt, jeder Ton gegen beide Gründe
    gemessen. --seg trägt Text auf Creme, --seg-deep Text auf Charcoal. */
-[data-seg="ferien"]      { --seg: #A55E3E; --seg-tint: #F1ECE9; --seg-deep: #B67354; }
-[data-seg="hotels"]      { --seg: #49637F; --seg-tint: #EBEDEF; --seg-deep: #6A86A3; }
-[data-seg="camping"]     { --seg: #5A7147; --seg-tint: #EDEFEB; --seg-deep: #728B5D; }
-[data-seg="events"]      { --seg: #895367; --seg-tint: #EFEBED; --seg-deep: #A67688; }
-[data-seg="verwaltung"]  { --seg: #796954; --seg-tint: #EFEDEC; --seg-deep: #92816B; }
-[data-seg="seminar"]     { --seg: #8D6B23; --seg-tint: #F2EFE8; --seg-deep: #A27E32; }
+/* --seg ist die Akzentfarbe: Flaechen, Raender, Marken. --seg-ink ist
+   dieselbe Farbe als SCHRIFT, gegen alle vier Untergruende gemessen, auf
+   denen sie landen kann (Creme, Elfenbein, Beige, eigener Tint). Vier der
+   sechs Akzente lagen als Schrift unter 4,5:1, ferien und seminar sogar bei
+   3,9. Dieselbe Trennung, die beim Gold schon besteht: --gold traegt Flaechen,
+   --gold-ink traegt Schrift. */
+[data-seg="ferien"]      { --seg: #A55E3E; --seg-tint: #F1ECE9; --seg-deep: #B67354; --seg-ink: #985639; }
+[data-seg="hotels"]      { --seg: #49637F; --seg-tint: #EBEDEF; --seg-deep: #6A86A3; --seg-ink: #49637F; }
+[data-seg="camping"]     { --seg: #5A7147; --seg-tint: #EDEFEB; --seg-deep: #728B5D; --seg-ink: #566C44; }
+[data-seg="events"]      { --seg: #895367; --seg-tint: #EFEBED; --seg-deep: #A67688; --seg-ink: #895367; }
+[data-seg="verwaltung"]  { --seg: #796954; --seg-tint: #EFEDEC; --seg-deep: #92816B; --seg-ink: #746551; }
+[data-seg="seminar"]     { --seg: #8D6B23; --seg-tint: #F2EFE8; --seg-deep: #A27E32; --seg-ink: #826220; }
 
 .is-dark {
   --bg: var(--deep);
@@ -164,6 +175,9 @@
   --accent: var(--gold);
   --accent-soft: var(--gold);
   --seg: var(--gold);
+  /* Auf dunklem Grund traegt das helle Gold die Schrift (8,3:1); der
+     abgedunkelte Textton --gold-ink waere dort mit 2,75:1 unlesbar. */
+  --seg-ink: var(--gold);
   background: var(--bg);
   color: var(--ink-900);
 }
@@ -220,7 +234,7 @@ button, input, select, textarea { font: inherit; color: inherit; }
   font-size: var(--t-label); font-weight: 600; letter-spacing: 0.2em;
   text-transform: uppercase; color: var(--ink-500); margin: 0; display: block;
 }
-.label--seg { color: var(--seg); }
+.label--seg { color: var(--seg-ink); }
 .lede { font-size: var(--t-subhead); line-height: 1.55; color: var(--ink-700); }
 .small { font-size: var(--t-small); color: var(--ink-500); max-width: var(--measure); }
 .tiny { font-size: var(--t-tiny); color: var(--ink-500); }
@@ -542,7 +556,7 @@ img.plate[src$="produkt-technik.svg"] { object-fit: contain; background: var(--s
 .note { border-left: 2px solid var(--seg); background: var(--surface); padding: var(--s5); border-radius: var(--radius); }
 .note p { margin: 0 0 var(--s3); font-size: var(--t-small); color: var(--ink-700); max-width: 62ch; }
 .note p:last-child { margin: 0; }
-.note .label { margin-bottom: var(--s3); color: var(--seg); }
+.note .label { margin-bottom: var(--s3); color: var(--seg-ink); }
 .note--flag { border-left-color: var(--err); }
 .note--flag .label { color: var(--err); }
 
@@ -551,7 +565,7 @@ img.plate[src$="produkt-technik.svg"] { object-fit: contain; background: var(--s
   text-transform: uppercase; padding: 4px var(--s3); border: 1px solid var(--line);
   border-radius: var(--radius); color: var(--ink-500); font-weight: 600;
 }
-.badge--seg { border-color: var(--seg); color: var(--seg); background: var(--seg-tint); }
+.badge--seg { border-color: var(--seg); color: var(--seg-ink); background: var(--seg-tint); }
 
 .table-scroll { overflow-x: auto; }
 table.data { width: 100%; border-collapse: collapse; font-size: var(--t-small); min-width: 520px; }
@@ -746,7 +760,7 @@ table.data tr.is-hero td, table.data tr.is-hero th { background: var(--surface);
 .calc__row { display: grid; gap: var(--s2); }
 .calc__row label { font-size: var(--t-small); font-weight: 500; }
 .calc__row output {
-  font-size: var(--t-small); color: var(--seg); font-weight: 600;
+  font-size: var(--t-small); color: var(--seg-ink); font-weight: 600;
   font-variant-numeric: tabular-nums;
 }
 .calc__head { display: flex; justify-content: space-between; align-items: baseline; gap: var(--s3); }
@@ -810,7 +824,8 @@ table.data tr.is-hero td, table.data tr.is-hero th { background: var(--surface);
 }
 .qr__label {
   font-size: var(--t-label); letter-spacing: 0.2em; text-transform: uppercase; font-weight: 600;
-  color: color-mix(in srgb, var(--ink-fixed) 58%, var(--paper-fixed));
+  /* 58% ergaben 4,2:1 auf Creme. 70% traegt mit Reserve. */
+  color: color-mix(in srgb, var(--ink-fixed) 70%, var(--paper-fixed));
 }
 
 
@@ -1088,7 +1103,7 @@ table.data tr.is-hero td, table.data tr.is-hero th { background: var(--surface);
 .compare__side { border: 1px solid var(--line); border-radius: var(--radius-lg); padding: var(--s5); background: var(--bg); }
 .compare__side--now { background: var(--surface); border-color: var(--seg); }
 .compare__side h3 { font-size: var(--t-label); letter-spacing: 0.2em; text-transform: uppercase; margin: 0 0 var(--s4); color: var(--ink-500); font-family: Montserrat, sans-serif; font-weight: 600; }
-.compare__side--now h3 { color: var(--seg); }
+.compare__side--now h3 { color: var(--seg-ink); }
 /* ---------- Nachrichtenfenster ------------------------------------------ */
 /* Bewusst NICHT die Farben und Zeichen eines bestimmten Messengers: das ist
    fremde Marke. Die eigenen Töne genügen — als Chat liest es sich sofort. */
