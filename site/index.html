@@ -447,39 +447,24 @@
     <div class="sticky-split__visual">
       <div class="phone">
         <div class="phone__screen">
-          <div class="phone__slide">
-            <img class="plate" src="assets/img/app-welcome.svg" alt="Gastansicht auf dem Telefon" style="flex:none;height:46%" loading="lazy" decoding="async">
-            <div style="padding:var(--s4);display:flex;flex-direction:column;gap:var(--s2)">
-              <span class="label" style="font-size:.5rem">Willkommen</span>
-              <span style="font-family:'Playfair Display',Georgia,serif;font-size:1.25rem;line-height:1.15">Ferienhaus Dünenweg</span>
-              <span class="tiny">Check-in ab 15:00 Uhr</span>
-            </div>
+          <!-- Genau drei Folien, weil es genau drei Schritte gibt. Die
+               Reihenfolge muss zu .sticky-split__step passen: das Skript
+               schaltet stur ueber den Index. Echte Aufnahmen der Live-Demo,
+               erzeugt mit build/schirme.mjs — nichts nachgebaut. -->
+          <div class="phone__slide phone__slide--bild">
+            <img src="assets/img/schirm-wlan.webp" width="540" height="1184"
+                 alt="Bildschirm der Gästemappe: WLAN-Netzwerk und Passwort, darunter Hinweise zu Heizung, Herd, Geschirrspüler und Kamin."
+                 loading="lazy" decoding="async">
           </div>
-          <div class="phone__slide" style="padding:var(--s4);gap:var(--s3)">
-            <span class="label" style="font-size:.5rem">WLAN</span>
-            <div style="background:var(--surface);border-radius:4px;padding:var(--s3);display:flex;flex-direction:column;gap:var(--s2)">
-              <span class="tiny">Netzwerk</span>
-              <b style="font-size:.9375rem">Duenenweg-Gast</b>
-              <span class="tiny" style="margin-top:var(--s2)">Passwort</span>
-              <b style="font-size:.9375rem">nordsee2026</b>
-            </div>
-            <span class="tiny">Antippen zum Kopieren</span>
+          <div class="phone__slide phone__slide--bild">
+            <img src="assets/img/schirm-umgebung.webp" width="540" height="1184"
+                 alt="Bildschirm mit den Empfehlungen der Gastgeber: Fischbude, Café, Restaurant, Wattwanderung und ein Tipp für Regentage."
+                 loading="lazy" decoding="async">
           </div>
-          <div class="phone__slide" style="padding:var(--s4);gap:var(--s3)">
-            <span class="label" style="font-size:.5rem">Umgebung</span>
-            <ul style="list-style:none;margin:0;padding:0;display:flex;flex-direction:column;gap:var(--s3);font-size:.75rem">
-              <li style="border-bottom:1px solid var(--line);padding-bottom:var(--s2)"><b>Fischbude Selmer</b><br><span class="tiny">500 m · bestes Fischbrötchen</span></li>
-              <li style="border-bottom:1px solid var(--line);padding-bottom:var(--s2)"><b>Café Dünenrose</b><br><span class="tiny">Frühstück bis 14:00</span></li>
-              <li><b>Wattwanderung</b><br><span class="tiny">Täglich 10:00, nur mit Führung</span></li>
-            </ul>
-          </div>
-          <div class="phone__slide" style="padding:var(--s4);gap:var(--s3)">
-            <span class="label" style="font-size:.5rem">Etwas defekt?</span>
-            <span style="font-family:'Playfair Display',Georgia,serif;font-size:1.0625rem">Sagen Sie uns Bescheid</span>
-            <div style="border:1px dashed var(--line);border-radius:4px;padding:var(--s4);text-align:center">
-              <span class="tiny">Foto aufnehmen</span>
-            </div>
-            <div style="border-bottom:1px solid var(--line);padding-bottom:var(--s2)"><span class="tiny">Was ist los?</span></div>
+          <div class="phone__slide phone__slide--bild">
+            <img src="assets/img/schirm-kontakt.webp" width="540" height="1184"
+                 alt="Kontaktbildschirm: Gastgeberin, Hausmeister, ärztlicher Notdienst und Apotheke, darunter ein Feld für eine Nachricht."
+                 loading="lazy" decoding="async">
           </div>
         </div>
       </div>
@@ -887,14 +872,14 @@
   </div>
 
   <button class="eli__launcher" type="button" data-eli-open aria-expanded="false" aria-controls="eli-panel">
-    <img class="eli__face" src="assets/img/eli.png" alt="" width="56" height="56" decoding="async">
+    <img class="eli__face" src="assets/img/eli.webp" alt="" width="56" height="56" decoding="async">
     <span class="eli__pip" aria-hidden="true"></span>
     <span class="visually-hidden">Eli fragen, digitaler Assistent von VELORA</span>
   </button>
 
   <div class="eli__panel" id="eli-panel" data-eli-panel role="dialog" aria-labelledby="eli-title" hidden>
     <header class="eli__bar">
-      <img class="eli__face eli__face--sm" src="assets/img/eli-sm.png" alt="" width="38" height="38" decoding="async">
+      <img class="eli__face eli__face--sm" src="assets/img/eli-sm.webp" alt="" width="38" height="38" decoding="async">
       <div class="eli__who">
         <p class="eli__name" id="eli-title">Eli <span class="eli__pip eli__pip--inline" aria-hidden="true"></span></p>
         <p class="eli__role">Ihr Assistent von VELORA</p>

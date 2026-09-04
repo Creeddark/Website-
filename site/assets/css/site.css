@@ -859,6 +859,11 @@ table.data tr.is-hero td, table.data tr.is-hero th { background: var(--surface);
 .phone__slide.is-active { opacity: 1; transform: none; }
 .no-js .phone__slide:first-child { opacity: 1; transform: none; }
 
+/* Aufnahme-Folien: das Bild fuellt den Schirm randlos. Es ist im
+   Seitenverhaeltnis des Schirms aufgenommen, cover deckt Rundungsreste ab. */
+.phone__slide--bild { padding: 0; }
+.phone__slide--bild img { width: 100%; height: 100%; object-fit: cover; display: block; }
+
 .browser { border: 1px solid var(--line); border-radius: var(--radius); overflow: hidden; background: var(--bg); }
 .browser__bar { display: flex; align-items: center; gap: var(--s2); padding: var(--s3) var(--s4); border-bottom: 1px solid var(--line); background: var(--surface); }
 .browser__dots { display: flex; gap: 5px; }
