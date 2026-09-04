@@ -1,0 +1,313 @@
+<!-- {
+  "title": "Ferienhaus Dünenweg: Druckvorlage für den QR-Code",
+  "description": "Die Druckvorlage, die zu jeder Gästemappe gehört: Tischkarte, kleine Karte, Aushang, Aufkleber und ein Block für Einladungen. Zum Ausdrucken auf A4.",
+  "seg": "ferien",
+  "bare": true,
+  "demonote": "Die Druckvorlage, die zu jeder Gästemappe gehört. Beispiel für ein Haus.",
+  "democta": "segmente/ferienunterkuenfte.html",
+  "democtalabel": "Preise ansehen, ab 190 € / Jahr"
+} -->
+
+<!-- Eigenes Stylesheet in der Seite, weil hier in Millimetern gerechnet
+     wird und nicht im Raster der Website. Das gehört nicht in site.css:
+     dort würde es 21 Seiten belasten, die es nie brauchen. -->
+<style>
+@page { size: A4 portrait; margin: 0; }
+
+.vorl { max-width: 62rem; margin: 0 auto; padding: var(--s8) var(--s5) var(--s10); }
+.vorl__lede { max-width: 52ch; color: var(--ink-700); }
+.vorl__hinweis {
+  margin: var(--s6) 0 var(--s8); padding: var(--s5);
+  border: 1px solid var(--line); border-radius: var(--radius);
+  background: var(--surface); max-width: 52ch;
+}
+.vorl__hinweis p { margin: 0 0 var(--s3); }
+.vorl__hinweis p:last-child { margin: 0; }
+
+/* Ein Bogen ist eine A4-Seite. Am Bildschirm liegt er als Blatt auf
+   getöntem Grund, im Druck ist er das Papier selbst. */
+.bogen {
+  width: 210mm; height: 297mm; margin: 0 auto var(--s7);
+  background: #fff; color: #1A1A1A;
+  box-shadow: 0 18px 44px -26px rgba(26,26,26,.5);
+  display: flex; flex-wrap: wrap; align-content: center;
+  justify-content: center; align-items: center; gap: 0;
+  overflow: hidden;
+}
+.bogen__name {
+  font-size: var(--t-small); color: var(--ink-500);
+  text-align: center; margin: 0 0 var(--s3);
+}
+
+/* Jedes Stück bekommt eine feine Schnittlinie. Bewusst gestrichelt und
+   nicht als Passermarke: gedruckt wird das hier zu Hause und mit der
+   Schere geschnitten, nicht in einer Druckerei. */
+.stueck {
+  box-sizing: border-box; position: relative;
+  outline: 0.2mm dashed #C9C2B4; outline-offset: -0.1mm;
+  display: flex; flex-direction: column; align-items: center;
+  text-align: center; background: #fff;
+  font-family: Montserrat, system-ui, sans-serif;
+}
+.stueck__label {
+  font-size: 6.5pt; letter-spacing: .16em; text-transform: uppercase;
+  color: #7B641A; margin: 0;
+}
+.stueck__label::after {
+  content: ""; display: block; width: 9mm; height: 0.3mm;
+  background: #D4AF37; margin: 1.6mm auto 0;
+}
+.stueck__haus {
+  font-family: "Playfair Display", Georgia, serif; font-weight: 500;
+  line-height: 1.1; margin: 0; text-wrap: balance;
+}
+.stueck__qr { display: block; }
+.stueck__qr img { display: block; width: 100%; height: 100%; }
+.stueck__tun { margin: 0; color: #3A352E; }
+/* Anweisung und Adresse gehoeren zusammen; als getrennte
+   Flex-Kinder zoege space-between sie ueber die halbe Karte. */
+.stueck__block { display: flex; flex-direction: column; gap: 3mm; }
+.stueck__fuss { margin: 0; color: #6C6559; }
+.stueck__marke {
+  margin: 0; font-size: 5.5pt; letter-spacing: .18em;
+  text-transform: uppercase; color: #A29B8E;
+}
+
+/* --- Tischkarte A6, zwei je Bogen ------------------------------------ */
+.stueck--a6 { width: 105mm; height: 148mm; padding: 11mm 9mm 8mm; justify-content: space-between; }
+.stueck--a6 .stueck__haus { font-size: 17pt; }
+.stueck--a6 .stueck__qr { width: 44mm; height: 44mm; }
+.stueck--a6 .stueck__tun { font-size: 8pt; }
+.stueck--a6 .stueck__fuss { font-size: 6.5pt; }
+
+/* --- Kleine Karte A7, vier je Bogen ---------------------------------- */
+.stueck--a7 { width: 74mm; height: 105mm; padding: 7mm 6mm 5mm; justify-content: space-between; }
+.stueck--a7 .stueck__haus { font-size: 11.5pt; }
+.stueck--a7 .stueck__qr { width: 31mm; height: 31mm; }
+.stueck--a7 .stueck__tun { font-size: 6.5pt; }
+
+/* --- Aushang A5, einer je Bogen -------------------------------------- */
+.stueck--a5 { width: 148mm; height: 210mm; padding: 18mm 14mm 12mm; justify-content: space-between; }
+.stueck--a5 .stueck__haus { font-size: 24pt; }
+.stueck--a5 .stueck__was { font-size: 9.5pt; color: #565046; margin: 3mm 0 0; max-width: 88mm; }
+.stueck--a5 .stueck__qr { width: 62mm; height: 62mm; }
+.stueck--a5 .stueck__tun { font-size: 9.5pt; }
+.stueck--a5 .stueck__fuss { font-size: 7.5pt; margin-top: 2.5mm; }
+
+/* --- Aufkleber 70 mm, sechs je Bogen --------------------------------- */
+/* Der Aufkleber haengt an der Schranke und wird aus ein bis zwei Metern
+   gescannt, nicht aus zwanzig Zentimetern. Deshalb bekommt er den
+   groessten Code im Verhaeltnis zum Stueck: 52 mm ergeben bei diesem
+   Code 1,16 mm je Modul statt 0,76 mm. */
+.stueck--kleber { width: 70mm; height: 70mm; padding: 4mm 3mm; justify-content: center; gap: 2.5mm; }
+.stueck--kleber .stueck__qr { width: 52mm; height: 52mm; }
+.stueck--kleber .stueck__haus { font-size: 7pt; }
+
+/* --- Einladungsblock 90x40 mm, vier je Bogen ------------------------- */
+.stueck--einladung {
+  width: 90mm; height: 40mm; padding: 5mm; gap: 5mm;
+  flex-direction: row; align-items: center; text-align: left;
+}
+.stueck--einladung .stueck__qr { width: 30mm; height: 30mm; flex: none; }
+.stueck--einladung .stueck__text { display: flex; flex-direction: column; gap: 1.6mm; }
+.stueck--einladung .stueck__label::after { margin-left: 0; }
+.stueck--einladung .stueck__haus { font-size: 11pt; }
+.stueck--einladung .stueck__tun { font-size: 6.5pt; }
+
+/* Ein A4-Bogen ist 794 px breit und laesst sich nicht schrumpfen, ohne
+   die Masse zu zerstoeren — die sind hier der ganze Zweck. Auf schmalen
+   Fenstern scrollt deshalb der Rahmen, nicht die Seite. */
+.bogen-rahmen { max-width: 100%; overflow-x: auto; margin-bottom: var(--s7); }
+.bogen-rahmen .bogen { margin-bottom: 0; }
+
+@media print {
+  .demobar, .demo-foot, .eli, .vorl__kopf, .vorl__hinweis, .bogen__name { display: none !important; }
+  .bogen-rahmen { overflow: visible; margin: 0; }
+  .vorl { padding: 0; max-width: none; }
+  .bogen { margin: 0; box-shadow: none; break-after: page; }
+  .bogen:last-child { break-after: auto; }
+}
+</style>
+
+<section class="section vorl">
+  <div class="vorl__kopf">
+    <p class="label">Druckvorlage</p>
+    <h1 class="display-l">Was Sie ausdrucken und hinstellen.</h1>
+    <p class="vorl__lede">
+      Zu jeder Gästemappe gehört dieser Satz. Fünf Stücke, jedes für einen
+      Ort, an dem ein Gast tatsächlich steht: Küche, Nachttisch, Hausflur,
+      Schranke, Einladung. Der Hausname steht auf jedem Stück.
+    </p>
+
+    <div class="vorl__hinweis">
+      <p><b>Zum Drucken:</b> auf A4, ohne Anpassung der Größe — im
+        Druckdialog „100 %" oder „Originalgröße" wählen, nicht
+        „an Seite anpassen". Sonst stimmen die Maße nicht mehr.</p>
+      <p>Die Bögen nutzen das Blatt bis zum Rand, weil sich A6 und A7 genau so in A4 teilen. Ihr Drucker lässt außen zwei bis fünf Millimeter frei — das trifft nur weißen Rand, nie Text oder Code.</p>
+      <p>Die gestrichelte Linie ist die Schnittkante. 160 g Papier steht
+        von allein, 80 g braucht einen Aufsteller oder einen Rahmen.</p>
+    </div>
+  </div></div>
+
+  <!-- BOGEN 1 · Tischkarte A6 ---------------------------------------- -->
+  <p class="bogen__name">Bogen 1 · Tischkarte A6, vier Stück — für Küche, Flur und Nachttisch</p>
+  <div class="bogen-rahmen"><div class="bogen">
+    <article class="stueck stueck--a6">
+      <div class="stueck__block">
+        <p class="stueck__label">Gästemappe</p>
+        <h2 class="stueck__haus">Ferienhaus Dünenweg</h2>
+      </div>
+      <div class="stueck__qr"><img src="{{base}}assets/img/vorlage-qr-ferienhaus-duenenweg.svg" alt="QR-Code zur Gästemappe" width="166" height="166"></div>
+      <div class="stueck__block">
+        <p class="stueck__tun">Kamera öffnen und den Code scannen.<br>Keine App nötig.</p>
+        <p class="stueck__fuss">Dünenweg 12 · 25980 Westerland auf Sylt</p>
+      </div>
+    </article>
+    <article class="stueck stueck--a6">
+      <div class="stueck__block">
+        <p class="stueck__label">Gästemappe</p>
+        <h2 class="stueck__haus">Ferienhaus Dünenweg</h2>
+      </div>
+      <div class="stueck__qr"><img src="{{base}}assets/img/vorlage-qr-ferienhaus-duenenweg.svg" alt="" width="166" height="166"></div>
+      <div class="stueck__block">
+        <p class="stueck__tun">Kamera öffnen und den Code scannen.<br>Keine App nötig.</p>
+        <p class="stueck__fuss">Dünenweg 12 · 25980 Westerland auf Sylt</p>
+      </div>
+    </article>
+    <article class="stueck stueck--a6">
+      <div class="stueck__block">
+        <p class="stueck__label">Gästemappe</p>
+        <h2 class="stueck__haus">Ferienhaus Dünenweg</h2>
+      </div>
+      <div class="stueck__qr"><img src="{{base}}assets/img/vorlage-qr-ferienhaus-duenenweg.svg" alt="" width="166" height="166"></div>
+      <div class="stueck__block">
+        <p class="stueck__tun">Kamera öffnen und den Code scannen.<br>Keine App nötig.</p>
+        <p class="stueck__fuss">Dünenweg 12 · 25980 Westerland auf Sylt</p>
+      </div>
+    </article>
+    <article class="stueck stueck--a6">
+      <div class="stueck__block">
+        <p class="stueck__label">Gästemappe</p>
+        <h2 class="stueck__haus">Ferienhaus Dünenweg</h2>
+      </div>
+      <div class="stueck__qr"><img src="{{base}}assets/img/vorlage-qr-ferienhaus-duenenweg.svg" alt="" width="166" height="166"></div>
+      <div class="stueck__block">
+        <p class="stueck__tun">Kamera öffnen und den Code scannen.<br>Keine App nötig.</p>
+        <p class="stueck__fuss">Dünenweg 12 · 25980 Westerland auf Sylt</p>
+      </div>
+    </article>
+  </div></div>
+
+  <!-- BOGEN 2 · Karte A7 --------------------------------------------- -->
+  <p class="bogen__name">Bogen 2 · Kleine Karte A7, vier Stück — für Kühlschrank, Nachttisch und Schlüsselbund</p>
+  <div class="bogen-rahmen"><div class="bogen">
+    <article class="stueck stueck--a7">
+      <p class="stueck__label">Gästemappe</p>
+      <h2 class="stueck__haus">Ferienhaus Dünenweg</h2>
+      <div class="stueck__qr"><img src="{{base}}assets/img/vorlage-qr-ferienhaus-duenenweg.svg" alt="" width="117" height="117"></div>
+      <p class="stueck__tun">Scannen, alles steht drin.</p>
+    </article>
+    <article class="stueck stueck--a7">
+      <p class="stueck__label">Gästemappe</p>
+      <h2 class="stueck__haus">Ferienhaus Dünenweg</h2>
+      <div class="stueck__qr"><img src="{{base}}assets/img/vorlage-qr-ferienhaus-duenenweg.svg" alt="" width="117" height="117"></div>
+      <p class="stueck__tun">Scannen, alles steht drin.</p>
+    </article>
+    <article class="stueck stueck--a7">
+      <p class="stueck__label">Gästemappe</p>
+      <h2 class="stueck__haus">Ferienhaus Dünenweg</h2>
+      <div class="stueck__qr"><img src="{{base}}assets/img/vorlage-qr-ferienhaus-duenenweg.svg" alt="" width="117" height="117"></div>
+      <p class="stueck__tun">Scannen, alles steht drin.</p>
+    </article>
+    <article class="stueck stueck--a7">
+      <p class="stueck__label">Gästemappe</p>
+      <h2 class="stueck__haus">Ferienhaus Dünenweg</h2>
+      <div class="stueck__qr"><img src="{{base}}assets/img/vorlage-qr-ferienhaus-duenenweg.svg" alt="" width="117" height="117"></div>
+      <p class="stueck__tun">Scannen, alles steht drin.</p>
+    </article>
+  </div></div>
+
+  <!-- BOGEN 3 · Aushang A5 ------------------------------------------- -->
+  <p class="bogen__name">Bogen 3 · Aushang A5 — für Hausflur, Eingang und Sanitärgebäude</p>
+  <div class="bogen-rahmen"><div class="bogen">
+    <article class="stueck stueck--a5">
+      <div>
+        <p class="stueck__label">Gästemappe</p>
+        <h2 class="stueck__haus">Ferienhaus Dünenweg</h2>
+        <p class="stueck__was">Hausordnung, Müllplan, Technik, Ansprechpartner und
+          unsere Empfehlungen für die Insel. Immer der aktuelle Stand.</p>
+      </div>
+      <div class="stueck__qr"><img src="{{base}}assets/img/vorlage-qr-ferienhaus-duenenweg.svg" alt="" width="234" height="234"></div>
+      <div class="stueck__block">
+        <p class="stueck__tun">Kamera öffnen und den Code scannen. Keine App nötig.</p>
+        <p class="stueck__fuss">Dünenweg 12 · 25980 Westerland auf Sylt</p>
+      </div>
+    </article>
+  </div></div>
+
+  <!-- BOGEN 4 · Aufkleber -------------------------------------------- -->
+  <p class="bogen__name">Bogen 4 · Aufkleber 70 mm, sechs Stück — für Tür, Schranke und Sanitärhaus</p>
+  <div class="bogen-rahmen"><div class="bogen">
+    <article class="stueck stueck--kleber">
+      <div class="stueck__qr"><img src="{{base}}assets/img/vorlage-qr-ferienhaus-duenenweg.svg" alt="" width="197" height="197"></div>
+      <h2 class="stueck__haus">Ferienhaus Dünenweg</h2>
+    </article>
+    <article class="stueck stueck--kleber">
+      <div class="stueck__qr"><img src="{{base}}assets/img/vorlage-qr-ferienhaus-duenenweg.svg" alt="" width="197" height="197"></div>
+      <h2 class="stueck__haus">Ferienhaus Dünenweg</h2>
+    </article>
+    <article class="stueck stueck--kleber">
+      <div class="stueck__qr"><img src="{{base}}assets/img/vorlage-qr-ferienhaus-duenenweg.svg" alt="" width="197" height="197"></div>
+      <h2 class="stueck__haus">Ferienhaus Dünenweg</h2>
+    </article>
+    <article class="stueck stueck--kleber">
+      <div class="stueck__qr"><img src="{{base}}assets/img/vorlage-qr-ferienhaus-duenenweg.svg" alt="" width="197" height="197"></div>
+      <h2 class="stueck__haus">Ferienhaus Dünenweg</h2>
+    </article>
+    <article class="stueck stueck--kleber">
+      <div class="stueck__qr"><img src="{{base}}assets/img/vorlage-qr-ferienhaus-duenenweg.svg" alt="" width="197" height="197"></div>
+      <h2 class="stueck__haus">Ferienhaus Dünenweg</h2>
+    </article>
+    <article class="stueck stueck--kleber">
+      <div class="stueck__qr"><img src="{{base}}assets/img/vorlage-qr-ferienhaus-duenenweg.svg" alt="" width="197" height="197"></div>
+      <h2 class="stueck__haus">Ferienhaus Dünenweg</h2>
+    </article>
+  </div></div>
+
+  <!-- BOGEN 5 · Einladungsblock -------------------------------------- -->
+  <p class="bogen__name">Bogen 5 · Block 90 × 40 mm, vier Stück — zum Einkleben in Einladung, Mappe oder Bestätigung</p>
+  <div class="bogen-rahmen"><div class="bogen">
+    <article class="stueck stueck--einladung">
+      <div class="stueck__qr"><img src="{{base}}assets/img/vorlage-qr-ferienhaus-duenenweg.svg" alt="" width="113" height="113"></div>
+      <div class="stueck__text">
+        <p class="stueck__label">Gästemappe</p>
+        <h2 class="stueck__haus">Ferienhaus Dünenweg</h2>
+        <p class="stueck__tun">Anreise, WLAN, Schlüssel und Empfehlungen — scannen.</p>
+      </div>
+    </article>
+    <article class="stueck stueck--einladung">
+      <div class="stueck__qr"><img src="{{base}}assets/img/vorlage-qr-ferienhaus-duenenweg.svg" alt="" width="113" height="113"></div>
+      <div class="stueck__text">
+        <p class="stueck__label">Gästemappe</p>
+        <h2 class="stueck__haus">Ferienhaus Dünenweg</h2>
+        <p class="stueck__tun">Anreise, WLAN, Schlüssel und Empfehlungen — scannen.</p>
+      </div>
+    </article>
+    <article class="stueck stueck--einladung">
+      <div class="stueck__qr"><img src="{{base}}assets/img/vorlage-qr-ferienhaus-duenenweg.svg" alt="" width="113" height="113"></div>
+      <div class="stueck__text">
+        <p class="stueck__label">Gästemappe</p>
+        <h2 class="stueck__haus">Ferienhaus Dünenweg</h2>
+        <p class="stueck__tun">Anreise, WLAN, Schlüssel und Empfehlungen — scannen.</p>
+      </div>
+    </article>
+    <article class="stueck stueck--einladung">
+      <div class="stueck__qr"><img src="{{base}}assets/img/vorlage-qr-ferienhaus-duenenweg.svg" alt="" width="113" height="113"></div>
+      <div class="stueck__text">
+        <p class="stueck__label">Gästemappe</p>
+        <h2 class="stueck__haus">Ferienhaus Dünenweg</h2>
+        <p class="stueck__tun">Anreise, WLAN, Schlüssel und Empfehlungen — scannen.</p>
+      </div>
+    </article>
+  </div></div>
+</section>

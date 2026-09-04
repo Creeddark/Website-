@@ -1834,8 +1834,11 @@ button.eli__link--alt { border-color: var(--line); }
   }
 }
 .stand {
-  --b: 250px;                       /* Breite  */
-  --h: 320px;                       /* Hoehe   */
+  /* Echtes A6-Verhaeltnis (105 x 148 mm = 1 : 1,41). Vorher war der
+     Aufsteller 1 : 1,28 und damit eine erfundene Form — er zeigt
+     jetzt die Karte, die in build/pages/demo/vorlage.html steht. */
+  --b: 227px;                       /* Breite  — A6 */
+  --h: 320px;                       /* Hoehe   — A6 */
   --d: 18px;                        /* Staerke */
   width: var(--b); height: var(--h);
   perspective: 1500px;
@@ -1868,6 +1871,10 @@ button.eli__link--alt { border-color: var(--line); }
   position: absolute; backface-visibility: hidden;
   background: var(--cream);
 }
+/* Die Vorderseite ist weiss, nicht creme: die Karte ist auf Papier
+   gedruckt, und der QR-Code bringt seine weisse Ruhezone mit. Auf creme
+   sass er sonst als heller Fleck auf. */
+.stand__face--vorn { background: #FFFFFF; }
 /* Vorder- und Rueckseite */
 .stand__face--vorn, .stand__face--hinten {
   inset: 0; border-radius: 4px;
@@ -1896,7 +1903,16 @@ button.eli__link--alt { border-color: var(--line); }
 .stand__face--unten { transform: rotateX(-90deg) translateZ(calc(var(--h) / 2)); }
 
 /* Inhalt der Vorderseite */
-.stand__qr { width: 132px; height: 132px; display: block; }
+/* Dasselbe Signal wie auf der gedruckten Karte: Label, Goldstrich, Code. */
+.stand__label {
+  margin: 0 0 var(--s4); font-size: .5rem; letter-spacing: .16em;
+  text-transform: uppercase; color: var(--gold-ink);
+}
+.stand__label::after {
+  content: ""; display: block; width: 22px; height: 1px;
+  background: var(--gold); margin: 6px auto 0;
+}
+.stand__qr { width: 122px; height: 122px; display: block; }
 .stand__wo {
   font-family: "Playfair Display", Georgia, serif; font-size: 1.0625rem;
   color: var(--ink-900); margin: 0; text-align: center; line-height: 1.2;
@@ -1916,7 +1932,7 @@ button.eli__link--alt { border-color: var(--line); }
   filter: blur(5px);
 }
 
-@media (max-width: 1023px) { .stand { --b: 190px; --h: 244px; --d: 14px; } .stand__qr { width: 104px; height: 104px; } }
+@media (max-width: 1023px) { .stand { --b: 173px; --h: 244px; --d: 14px; } .stand__qr { width: 94px; height: 94px; } }
 
 /* ---------- SCHLÜSSELTRESOR, DREIDIMENSIONAL --------------------------- */
 /* Die angespannteste Frage, die ein Gast auf dieser Seite hat, ist "wie
