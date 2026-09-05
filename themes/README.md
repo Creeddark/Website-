@@ -285,9 +285,10 @@ Einzelheiten in `docs/10-legal-and-limits.md` und `docs/07-mvp-and-tech.md`.
 - [ ] Musik ersetzen, **mit Lizenz** (siehe oben)
 - [ ] `python3 build/einladung.py <paar>`
 - [ ] `python3 build/art/ambra_og.py` für die Vorschaukarte
-- [ ] `og:image` auf die **absolute** Adresse setzen. Ein relativer Pfad wird
-      von keinem Vorschaudienst aufgelöst, und dann zeigt die geteilte
-      Nachricht eine leere Fläche.
+- [ ] `adresse` in `daten.json` eintragen, dann `build/einladung.py`. Daraus
+      werden `og:url` und `og:image` absolut. Ein relativer Pfad wird von
+      keinem Vorschaudienst aufgelöst, und dann zeigt die geteilte Nachricht
+      eine leere Fläche.
 - [ ] Ordner hochladen, Subdomain `<paar>.marke.de` daraufzeigen
 - [ ] **Einmal selbst antworten** und in `/uebersicht` nachsehen, dass es ankam
 - [ ] Dem Paar die Adresse von `/uebersicht` und sein Token geben

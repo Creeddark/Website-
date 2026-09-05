@@ -171,13 +171,20 @@ def vorschau(d: dict) -> str:
 def felder(d: dict) -> dict[str, str]:
     paar = d["paar"]
     t, o, k = d["termin"], d["ort"], d["kalender"]
+    # Vorschaudienste loesen relative Pfade nicht auf. Solange keine Adresse
+    # eingetragen ist, bleibt es relativ — die Vorschau ist dann eben leer,
+    # das ist ehrlicher als ein Pfad, der ins Leere zeigt.
+    adresse = d.get("adresse", "")
+    if adresse and not adresse.endswith("/"):
+        adresse += "/"
     namen = f'{paar["a"]} & {paar["b"]}'
     return {
         "titel": f'{e(namen)} — {de(t["kurz"])}',
         "beschreibung": (f'Wir heiraten. Am {de(t["kurz"])} auf {e(o["name"])}, '
                          f'{e(o["stadt"])}. Alle Angaben zum Tag und zur Rückmeldung.'),
         "og_text": f'Wir heiraten. {de(o["kurz"])}.',
-        "og_bild": e(d.get("og_bild", "assets/img/og.png")),
+        "og_bild": e(adresse + d.get("og_bild", "assets/img/og.png")),
+        "og_url": e(adresse or "index.html"),
 
         "umschlag_de": de(d["umschlag"]["zeile"]), "umschlag_en": en(d["umschlag"]["zeile"]),
         "siegel_datum": e(t["siegel"]),

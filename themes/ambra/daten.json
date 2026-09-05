@@ -346,5 +346,7 @@
     },
     "betreiber": "VELORA",
     "_": "betreiber = wer den Dienst technisch betreibt und damit Auftragsverarbeiter nach Art. 28 DSGVO ist."
-  }
+  },
+  "_adresse": "Vollstaendige Adresse, unter der die Einladung liegt, mit abschliessendem Schraegstrich. Leer lassen bis zum Hochladen. Sobald sie steht, werden og:image und og:url absolut — ein relativer Pfad wird von keinem Vorschaudienst aufgeloest, und dann zeigt die geteilte Nachricht eine leere Flaeche.",
+  "adresse": ""
 }
