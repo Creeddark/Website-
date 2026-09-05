@@ -48,12 +48,6 @@ Dunkeln, dort wo die Antwort abgegeben wird.
 
 ### Was noch fehlt
 
-**Die Auflösung der Galerie.** Die vier Kacheln und das Siegel sind mit 384 px
-breiten Vorlagen gebaut, weil der Weg über den Chat Bilder verkleinert. Der
-Hero ist davon nicht mehr betroffen: sein Standbild wird aus dem Film
-geschnitten und hat volle 1080 × 1920. Für die Kacheln siehe „Bilder in voller
-Auflösung nachreichen".
-
 **Die Anbindung.** Das RSVP-Formular behält alles im Browser. Für einen echten
 Kunden muss es an die Engine senden, siehe unten.
 
@@ -92,12 +86,18 @@ Kommen weitere Kacheln dazu, in `index.html` ein `<li>` ergänzen. Die
 `alt`-Texte sind Pflicht, nicht Zierde, und jedes Bild trägt zusätzlich ein
 `data-alt-en` für die englische Fassung.
 
-### Bilder in voller Auflösung nachreichen
+### Vorlagen hereinreichen
 
-Der Weg über den Chat verkleinert Bilder auf 384 px Breite. Wer die Originale
-einspielen will, lädt sie direkt in den Branch: auf GitHub **Add file →
-Upload files** in `themes/ambra/assets/img/`, oder lokal committen und pushen.
-Danach `build/art/ambra_fotos.py` erneut laufen lassen.
+**Der Weg über den Chat verkleinert Bilder auf 384 px Breite.** Was dort
+angezeigt wird, ist eine Vorschau; wer sie sichert, sichert die Vorschau. Die
+Originale gibt es nur über den Download-Knopf beim Generator selbst.
+
+Der zuverlässige Weg: die Dateien direkt in den Branch laden, auf GitHub
+**Add file → Upload files** in `themes/ambra/assets/img/`, dann
+`build/art/ambra_fotos.py` laufen lassen und die Vorlagen wieder löschen.
+Sie gehören nicht in einen Ordner, der als fertiges Theme ausgeliefert wird.
+
+Video verkleinert der Chat nicht, das kommt unangetastet durch.
 
 Die gezeichneten Blätter (`g-ringe.svg` und die vier anderen) bleiben im
 Ordner. Sie sind der Stand für ein Paar, das noch keine Fotos hochgeladen hat.
@@ -112,6 +112,18 @@ Für ein durchgehend gleiches Paar über alle Bilder hinweg: **ein** Porträt
 erzeugen, dann dessen `job_id` bei allen weiteren Aufnahmen als
 `medias: [{role: "image", value: "<job_id>"}]` mitgeben. Ohne diese Referenz
 sieht das Paar auf jedem Bild anders aus, und das fällt sofort auf.
+
+Zwei Fallstricke, beide selbst erlebt:
+
+- **Sobald ein Referenzbild anhängt, schreibt Higgsfield den Prompt um**
+  (`enhance_prompt`). Aus „Eröffnungstanz unter dem Kronleuchter" wurde
+  dreimal dieselbe Nahaufnahme wie im Referenzbild. Szenen also ohne Referenz
+  erzeugen, Wiedererkennbarkeit über Aufnahmen ohne Gesichter lösen.
+- **`nano_banana` stempelt auf dem Free-Plan ein Wasserzeichen unten rechts
+  hinein**, `soul_2` nicht. `ambra_fotos.py` fängt das ab: beim Papier wird
+  nur die Mitte des Bogens genommen, beim Siegel bleibt nach dem Freistellen
+  nur der größte zusammenhängende Fleck stehen und der Stempel fällt heraus.
+  Verlassen sollte man sich darauf trotzdem nicht.
 
 ---
 

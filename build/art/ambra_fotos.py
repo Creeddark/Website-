@@ -9,10 +9,22 @@ ein Skript und keine Handarbeit.
 
     python3 build/art/ambra_fotos.py <hero> <siegel> <papier> <kachel> [<kachel> ...]
 
+Ein Bindestrich statt eines Pfades laesst die Stelle unveraendert. Der Hero
+etwa kommt aus dem Film und darf hier nicht ueberschrieben werden:
+
+    python3 build/art/ambra_fotos.py - siegel.png papier.png g1.png g2.png
+
 Das Siegel wird freigestellt: der weisse Grund wird von den Ecken her
 weggenommen, damit es auf dem dunklen Umschlag liegen kann. Nur zusammen-
 haengendes Weiss vom Rand her faellt weg, die hellen Glanzstellen im Wachs
 bleiben stehen.
+
+Wasserzeichen: manche Generatoren stempeln unten rechts ihren Namen hinein.
+Beim Papier wird ohnehin nur die Mitte des Bogens gebraucht, damit ist der
+Stempel weg und die Buettenkante gleich mit. Beim Siegel ginge das nicht,
+ohne die Unterkante abzuschneiden — dort bleibt darum nur der groesste
+zusammenhaengende Fleck stehen, und der Stempel faellt als kleinerer Rest
+heraus.
 """
 from __future__ import annotations
 
@@ -32,7 +44,12 @@ ZIELE = {
     "hero":   (1080, 1920, 80),  # bildschirmfuellend, 9:16
     "kachel": (900, 1200, 78),   # Galerie, 3:4
     "papier": (700, 700, 82),    # Faserung des Umschlags, quadratisch
+    "siegel": (512, 0, 82),      # nur die Breite; die Hoehe folgt dem Zuschnitt
 }
+
+# Das Siegel wird mit rund 135 CSS-Pixeln angezeigt, waehrend der Oeffnung
+# kurz 1,12-fach vergroessert. Auf einem Dreifach-Bildschirm sind das etwa
+# 450 echte Pixel — 512 reichen, 640 kosten nur Platz.
 
 
 def passend(im: Image.Image, breite: int, hoehe: int) -> Image.Image:
@@ -50,6 +67,42 @@ def passend(im: Image.Image, breite: int, hoehe: int) -> Image.Image:
     if im.width > breite:
         im = im.resize((breite, hoehe), Image.LANCZOS)
     return im
+
+
+def groesster_fleck(alpha: Image.Image) -> Image.Image:
+    """Nur den groessten zusammenhaengenden undurchsichtigen Bereich behalten.
+    Alles andere — Wasserzeichen, Staub, abgesprengte Ecken — faellt weg."""
+    b, h = alpha.size
+    px = alpha.load()
+    marke = bytearray(b * h)          # 0 = ungeprueft, sonst Nummer des Flecks
+    groessen = [0]
+    nummer = 0
+
+    for y0 in range(h):
+        for x0 in range(b):
+            if marke[y0 * b + x0] or px[x0, y0] < 128:
+                continue
+            nummer += 1
+            zahl = 0
+            stapel = [(x0, y0)]
+            marke[y0 * b + x0] = nummer
+            while stapel:
+                x, y = stapel.pop()
+                zahl += 1
+                for dx, dy in ((1, 0), (-1, 0), (0, 1), (0, -1)):
+                    nx, ny = x + dx, y + dy
+                    if (0 <= nx < b and 0 <= ny < h
+                            and not marke[ny * b + nx] and px[nx, ny] >= 128):
+                        marke[ny * b + nx] = nummer
+                        stapel.append((nx, ny))
+            groessen.append(zahl)
+
+    if nummer <= 1:
+        return alpha
+    behalten = groessen.index(max(groessen))
+    return Image.frombytes(
+        "L", (b, h),
+        bytes(px[i % b, i // b] if marke[i] == behalten else 0 for i in range(b * h)))
 
 
 def freistellen(im: Image.Image, schwelle: int = 232, weich: float = 0.9) -> Image.Image:
@@ -86,6 +139,7 @@ def freistellen(im: Image.Image, schwelle: int = 232, weich: float = 0.9) -> Ima
                 q.append((nx, ny))
 
     alpha = Image.frombytes("L", (b, h), bytes(255 - v * 255 for v in weiss))
+    alpha = groesster_fleck(alpha)                          # Wasserzeichen raus
     alpha = alpha.filter(ImageFilter.GaussianBlur(weich))   # Kante entschaerfen
     aus = im.convert("RGBA")
     aus.putalpha(alpha)
@@ -101,27 +155,46 @@ def freistellen(im: Image.Image, schwelle: int = 232, weich: float = 0.9) -> Ima
 
 
 def main(argv: list[str]) -> int:
-    if len(argv) < 4:
+    if len(argv) < 3:
         print(__doc__.strip())
         return 2
-    hero, siegel, papier, *kacheln = (pathlib.Path(a) for a in argv)
+    hero, siegel, papier, *kacheln = argv
+    namen = []
 
-    b, h, q = ZIELE["hero"]
-    passend(Image.open(hero).convert("RGB"), b, h).save(
-        IMG / "hero.webp", "WEBP", quality=q, method=6)
+    if hero != "-":
+        b, h, q = ZIELE["hero"]
+        passend(Image.open(hero).convert("RGB"), b, h).save(
+            IMG / "hero.webp", "WEBP", quality=q, method=6)
+        namen.append("hero.webp")
 
-    b, h, q = ZIELE["papier"]
-    passend(Image.open(papier).convert("RGB"), b, h).save(
-        IMG / "papier.webp", "WEBP", quality=q, method=6)
+    if papier != "-":
+        b, h, q = ZIELE["papier"]
+        im = Image.open(papier).convert("RGB")
+        # Nur die Mitte des Bogens. Der Rand traegt die Buettenkante, die als
+        # heller Streifen ueber jede Flaeche des Umschlags liefe, und die Ecke
+        # unten rechts das Wasserzeichen. In der Mitte ist die Faser
+        # gleichmaessig, und nur die wird gebraucht.
+        w0, h0 = im.size
+        im = im.crop((int(w0 * 0.19), int(h0 * 0.19),
+                      int(w0 * 0.81), int(h0 * 0.81)))
+        passend(im, b, h).save(IMG / "papier.webp", "WEBP", quality=q, method=6)
+        namen.append("papier.webp")
 
-    s = freistellen(Image.open(siegel))
-    if s.width > 640:
-        s = s.resize((640, round(640 * s.height / s.width)), Image.LANCZOS)
-    s.save(IMG / "siegel.webp", "WEBP", quality=88, method=6, exact=True)
+    if siegel != "-":
+        im = Image.open(siegel)
+        if im.width > 1024:                       # sonst dauert der Fleck ewig
+            im = im.resize((1024, round(1024 * im.height / im.width)), Image.LANCZOS)
+        s = freistellen(im)
+        breite, _, q = ZIELE["siegel"]
+        if s.width > breite:
+            s = s.resize((breite, round(breite * s.height / s.width)), Image.LANCZOS)
+        s.save(IMG / "siegel.webp", "WEBP", quality=q, method=6, exact=True)
+        namen.append("siegel.webp")
 
     b, h, q = ZIELE["kachel"]
-    namen = ["hero.webp", "siegel.webp", "papier.webp"]
     for i, k in enumerate(kacheln, start=1):
+        if k == "-":
+            continue
         passend(Image.open(k).convert("RGB"), b, h).save(
             IMG / f"g-{i}.webp", "WEBP", quality=q, method=6)
         namen.append(f"g-{i}.webp")
