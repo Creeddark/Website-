@@ -108,9 +108,16 @@
 
   <!-- ============================================================ Hero == -->
   <header class="hero" data-grund="dunkel">
+    <!-- Zwei Lagen. Das Standbild ist sofort da und traegt die Seite allein,
+         wenn es kein Video gibt, wenn es nicht laedt oder wenn jemand weniger
+         Bewegung eingestellt hat. Der Film legt sich erst darueber, wenn er
+         wirklich spielen kann. -->
     <div class="hero__media" aria-hidden="true">
       <img src="assets/img/hero.webp" alt="" width="384" height="682"
            fetchpriority="high" data-optional>
+      <video class="hero__video" data-hero-video
+             muted loop playsinline disablepictureinpicture
+             preload="none" data-quelle="assets/video/hero.mp4"></video>
     </div>
 
     <p class="hero__kicker rise" data-en="We are getting married">Wir heiraten</p>

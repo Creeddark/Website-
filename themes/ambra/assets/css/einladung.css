@@ -489,6 +489,24 @@ body[data-state="open"] .veil { display: none; }
       rgba(20, 16, 12, 0.72) 78%,
       var(--night) 100%);
 }
+/* Der Film. Er liegt ueber dem Standbild und wird erst sichtbar, wenn er
+   laeuft — ein schwarzer Kasten waehrend des Ladens waere schlimmer als gar
+   kein Film. */
+.hero__video {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  opacity: 0;
+  transition: opacity 1200ms var(--ease-out);
+}
+.hero__video.is-da { opacity: 1; }
+
+/* Sobald der Film laeuft, haelt die Kamerafahrt des Standbilds an. Zwei
+   Bewegungen uebereinander sehen aus wie ein Fehler. */
+.hero__media.hat-film img { animation: none; transform: scale(1.02); }
+
 /* Faellt das Foto aus, bleibt Kerzenlicht im Dunkeln. */
 .hero__media--leer {
   background:

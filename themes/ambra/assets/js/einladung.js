@@ -378,6 +378,40 @@
     }
   })();
 
+  /* ----------------------------------------------------------------- Film -- */
+  /* Der Hero-Film wird erst nach dem Oeffnen geladen. Vorher waeren es ein
+     paar Megabyte fuer etwas, das noch niemand sieht — und eine Einladung
+     wird unterwegs geoeffnet, oft mit schlechtem Empfang. */
+  (function film() {
+    var v = $("[data-hero-video]");
+    if (!v || sanft.matches) return;          // weniger Bewegung: Standbild
+
+    function starten() {
+      if (v.src) return;
+      v.src = v.dataset.quelle;
+      v.addEventListener("canplay", function () {
+        var lauf = v.play();
+        if (!lauf || !lauf.then) { zeigen(); return; }
+        lauf.then(zeigen).catch(function () { v.remove(); });
+      }, { once: true });
+      // Fehlt die Datei, bleibt das Standbild stehen. Lautlos.
+      v.addEventListener("error", function () { v.remove(); }, { once: true });
+      v.load();
+    }
+
+    function zeigen() {
+      v.classList.add("is-da");
+      var media = v.closest(".hero__media");
+      if (media) media.classList.add("hat-film");
+    }
+
+    if (body.dataset.state === "open") { starten(); return; }
+    // Auf das Oeffnen des Umschlags warten.
+    new MutationObserver(function (m, beo) {
+      if (body.dataset.state !== "sealed") { starten(); beo.disconnect(); }
+    }).observe(body, { attributes: true, attributeFilter: ["data-state"] });
+  })();
+
   /* ---------------------------------------------------------- Bildausfall -- */
   /* Fehlt ein optionales Foto, verschwindet es lautlos und der gezeichnete
      Grund bleibt stehen. Ein zerbrochenes Bildsymbol wäre schlimmer. */
