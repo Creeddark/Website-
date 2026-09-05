@@ -1,0 +1,945 @@
+/* =========================================================================
+   AMBRA — Hochzeitseinladung
+   Ein Theme der Experience Engine. Eine Seite, keine Abhaengigkeiten,
+   keine Laufzeitanfragen an Dritte.
+
+   Die Idee: der Umschlag liegt im Dunkeln, im Inneren ist Licht. Die Seite
+   beginnt nachtdunkel, wird beim Lesen zu Papier und endet wieder im Dunkeln,
+   dort wo die Antwort abgegeben wird.
+
+   Reihenfolge: Tokens, Grundlagen, Bewegung, Umschlag, Abschnitte, Formular.
+   ========================================================================= */
+
+/* --------------------------------------------------------------- Tokens -- */
+:root {
+  /* Nacht. Kein Neutralschwarz, sondern warmes Nussbaum bei Kerzenlicht. */
+  --night:      #14100C;
+  --night-2:    #1E1811;
+  --night-line: #3A3026;
+  --on-night:   #F2E7D3;
+  --on-night-2: #A2957E;               /* gedaempft, gegen --night geprueft */
+
+  /* Papier */
+  --paper:      #FBF6EE;
+  --paper-2:    #F3EADB;
+  --line:       #E2D7C4;
+  --ink:        #241F18;
+  --ink-2:      #565042;
+
+  /* Messing. Nicht das Reflex-Gold #D4AF37, sondern angelaufenes Blattgold. */
+  --brass:      #82632E;               /* auf Papier, traegt Text (5,2:1 / 4,7:1) */
+  --brass-lit:  #D8B677;               /* auf Nacht, traegt Text */
+
+  --ff-display: "Playfair Display", "Iowan Old Style", Georgia, serif;
+  --ff-text:    "Montserrat", "Helvetica Neue", Arial, sans-serif;
+
+  /* Eine Kurve fuer alles, was hereinkommt. Die eingebauten CSS-Kurven sind
+     zu schwach; diese hier bremst spuerbar aus. */
+  --ease-out:   cubic-bezier(0.23, 1, 0.32, 1);
+  --ease-soft:  cubic-bezier(0.32, 0.72, 0, 1);
+
+  --wrap:       33rem;                 /* Lesebreite, ~62 Zeichen */
+  --gap:        clamp(1.25rem, 5vw, 2rem);
+
+  color-scheme: dark;
+}
+/* ----------------------------------------------------------- Schriften -- */
+@font-face {
+  font-family: "Playfair Display";
+  src: url("../fonts/playfair-latin.woff2") format("woff2");
+  font-weight: 400 700; font-style: normal; font-display: swap;
+  unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA,
+    U+02DC, U+0304, U+0308, U+0329, U+2000-206F, U+20AC, U+2122, U+2212, U+FEFF;
+}
+@font-face {
+  font-family: "Playfair Display";
+  src: url("../fonts/playfair-latin-ext.woff2") format("woff2");
+  font-weight: 400 700; font-style: normal; font-display: swap;
+  unicode-range: U+0100-02BA, U+02BD-02C5, U+02C7-02CC, U+02CE-02D7, U+02DD-02FF,
+    U+1E00-1E9F, U+2020, U+20A0-20AB, U+2113, U+2C60-2C7F, U+A720-A7FF;
+}
+@font-face {
+  font-family: "Montserrat";
+  src: url("../fonts/montserrat-latin.woff2") format("woff2");
+  font-weight: 300 700; font-style: normal; font-display: swap;
+  unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA,
+    U+02DC, U+0304, U+0308, U+0329, U+2000-206F, U+20AC, U+2122, U+2212, U+FEFF;
+}
+@font-face {
+  font-family: "Montserrat";
+  src: url("../fonts/montserrat-latin-ext.woff2") format("woff2");
+  font-weight: 300 700; font-style: normal; font-display: swap;
+  unicode-range: U+0100-02BA, U+02BD-02C5, U+02C7-02CC, U+02CE-02D7, U+02DD-02FF,
+    U+1E00-1E9F, U+2020, U+20A0-20AB, U+2113, U+2C60-2C7F, U+A720-A7FF;
+}
+
+/* ----------------------------------------------------------- Grundlagen -- */
+*, *::before, *::after { box-sizing: border-box; }
+
+/* .feld setzt display:grid und wuerde das UA-Stylesheet ueberstimmen —
+   ohne diese Zeile bleiben ausgeblendete Felder sichtbar. */
+[hidden] { display: none !important; }
+
+html { -webkit-text-size-adjust: 100%; }
+
+body {
+  margin: 0;
+  background: var(--night);
+  color: var(--ink);
+  font: 400 1rem/1.68 var(--ff-text);
+  text-rendering: optimizeLegibility;
+  -webkit-font-smoothing: antialiased;
+  overflow-x: hidden;
+}
+
+/* Solange der Umschlag zu ist, wird nicht gescrollt. */
+body[data-state="sealed"] { overflow: hidden; }
+
+img { max-width: 100%; display: block; }
+
+h1, h2, h3 {
+  font-family: var(--ff-display);
+  font-weight: 400;
+  line-height: 1.08;
+  letter-spacing: -0.015em;
+  margin: 0;
+  text-wrap: balance;
+}
+
+p { margin: 0 0 1em; text-wrap: pretty; }
+p:last-child { margin-bottom: 0; }
+
+:where(a) { color: inherit; }
+
+/* Ein Fokusring, der auf beiden Gruenden sichtbar ist. */
+:focus-visible {
+  outline: 2px solid var(--brass-lit);
+  outline-offset: 3px;
+  border-radius: 2px;
+}
+
+/* Nach dem Oeffnen wandert der Fokus hierher, damit er nicht auf dem
+   verschwundenen Umschlag stehen bleibt. Ein Ring um die ganze Seite waere
+   sinnlos, also bekommt nur dieses eine Ziel keinen. */
+main:focus { outline: none; }
+
+.vh {
+  position: absolute; width: 1px; height: 1px;
+  margin: -1px; padding: 0; overflow: hidden;
+  clip-path: inset(50%); white-space: nowrap;
+}
+
+.wrap {
+  width: min(100% - 2.5rem, var(--wrap));
+  margin-inline: auto;
+}
+
+/* Auszeichnung ueber jedem Abschnitt. Klein, weit gesperrt, nie fett. */
+.eyebrow {
+  font-size: 0.6875rem;
+  font-weight: 500;
+  letter-spacing: 0.3em;
+  text-transform: uppercase;
+  color: var(--brass);
+  margin: 0 0 1.25rem;
+}
+.on-night .eyebrow { color: var(--brass-lit); }
+
+.section {
+  padding-block: clamp(4.5rem, 16vw, 7.5rem);
+  position: relative;
+}
+.section__title {
+  font-size: clamp(2.125rem, 9vw, 3.25rem);
+  margin-bottom: 1.5rem;
+}
+.lede { color: var(--ink-2); }
+.on-night .lede { color: var(--on-night-2); }
+
+/* Feines Trennornament. Inline-SVG, damit es die Textfarbe erbt. */
+.orn {
+  display: block;
+  width: 8.5rem;
+  margin: 2.5rem auto;
+  color: var(--line);
+}
+.on-night .orn { color: var(--night-line); }
+
+/* ------------------------------------------------------------ Bewegung -- */
+/* Alles, was hereinkommt, bewegt nur transform und opacity. */
+.rise {
+  opacity: 0;
+  transform: translate3d(0, 18px, 0);
+  transition:
+    opacity 760ms var(--ease-out) var(--d, 0ms),
+    transform 760ms var(--ease-out) var(--d, 0ms);
+}
+.rise.is-in { opacity: 1; transform: none; }
+
+/* Ohne JavaScript darf nichts unsichtbar bleiben. */
+.no-js .rise { opacity: 1; transform: none; }
+
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+  .rise { opacity: 1; transform: none; }
+}
+
+/* ------------------------------------------------------------- Bedienung -- */
+/* Sprache und Ton. Oben rechts, klein, immer erreichbar. */
+.chrome {
+  position: fixed;
+  inset-block-start: max(0.75rem, env(safe-area-inset-top));
+  inset-inline-end: 0.75rem;
+  z-index: 40;
+  display: flex;
+  gap: 0.5rem;
+  opacity: 0;
+  transform: translateY(-8px);
+  transition: opacity 600ms var(--ease-out), transform 600ms var(--ease-out);
+  pointer-events: none;
+}
+body[data-state="open"] .chrome { opacity: 1; transform: none; pointer-events: auto; }
+
+/* Beim Weiterlesen tritt die Leiste zurueck, damit sie keine Zeile verdeckt.
+   Sie kommt zurueck, sobald jemand nach oben scrollt. */
+body[data-state="open"].chrome-weg .chrome {
+  opacity: 0;
+  transform: translateY(-10px);
+  pointer-events: none;
+}
+
+.chip {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.25rem;
+  min-height: 2.25rem;
+  padding: 0 0.5rem;
+  border: 1px solid color-mix(in oklab, currentColor 22%, transparent);
+  border-radius: 999px;
+  background: color-mix(in oklab, var(--night) 62%, transparent);
+  backdrop-filter: blur(10px);
+  color: var(--on-night);
+  font: 500 0.75rem/1 var(--ff-text);
+  letter-spacing: 0.06em;
+}
+.chip button {
+  all: unset;
+  min-width: 2rem;
+  min-height: 2.25rem;
+  display: grid;
+  place-items: center;
+  border-radius: 999px;
+  cursor: pointer;
+  color: var(--on-night-2);
+  transition: color 180ms var(--ease-out);
+}
+.chip button:hover { color: var(--on-night); }
+.chip button[aria-pressed="true"] { color: var(--brass-lit); }
+.chip button svg { width: 1rem; height: 1rem; fill: none; stroke: currentColor;
+  stroke-width: 1.5; stroke-linecap: round; stroke-linejoin: round; }
+.chip button:active { transform: scale(0.94); }
+
+/* Steht gerade ein heller Abschnitt hinter der Leiste, dreht sie sich um. */
+body.chrome-hell .chip {
+  background: color-mix(in oklab, var(--paper) 76%, transparent);
+  color: var(--ink);
+  border-color: color-mix(in oklab, var(--ink) 16%, transparent);
+}
+body.chrome-hell .chip button { color: var(--ink-2); }
+body.chrome-hell .chip button:hover { color: var(--ink); }
+body.chrome-hell .chip button[aria-pressed="true"] { color: var(--brass); }
+
+/* ================================================================ Umschlag = */
+.veil {
+  position: fixed;
+  inset: 0;
+  z-index: 60;
+  display: grid;
+  place-items: center;
+  background: var(--night);
+  perspective: 1400px;
+  perspective-origin: 50% 42%;
+}
+.veil__glow {
+  position: absolute;
+  inset: 0;
+  background:
+    radial-gradient(58% 42% at 50% 44%,
+      rgba(216, 182, 119, 0.20), rgba(216, 182, 119, 0) 70%);
+  animation: flicker 7s ease-in-out infinite;
+}
+@keyframes flicker {
+  0%, 100% { opacity: 1; }
+  40%      { opacity: 0.82; }
+  70%      { opacity: 0.93; }
+}
+
+.env {
+  position: relative;
+  width: min(78vw, 21rem);
+  aspect-ratio: 1.42;
+  transform-style: preserve-3d;
+  transform: translateY(-1.5rem);
+}
+
+/* Papierflaechen.
+
+   Im 3D-Kontext sortiert der Browser nach Z-Lage, nicht nach z-index — ohne
+   echte Tiefe schlaegt der Kartentext durch die Vorderseite durch. Jede
+   Flaeche bekommt darum ihre eigene Ebene, und jede Verwandlung traegt sie
+   weiter mit.
+
+   Die Faserung ist ein winziges Rauschen als Daten-URL. Sie kostet nichts,
+   laedt nichts nach, und ohne sie sieht das Papier aus wie eine Farbflaeche. */
+:root {
+  --faser: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='140' height='140'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='3'/%3E%3CfeColorMatrix type='saturate' values='0'/%3E%3C/filter%3E%3Crect width='140' height='140' filter='url(%23n)' opacity='0.052'/%3E%3C/svg%3E");
+}
+
+.env__back, .env__front, .env__flap, .env__card {
+  position: absolute;
+  inset: 0;
+  background-image: var(--faser),
+    linear-gradient(160deg, #FDFAF4 0%, #F1E7D6 58%, #E6D9C3 100%);
+  background-size: 140px 140px, cover;
+}
+.env__back {
+  border-radius: 3px;
+  box-shadow: 0 30px 64px rgba(0, 0, 0, 0.6);
+  transform: translateZ(-3px);
+}
+.env__front {
+  clip-path: polygon(0 0, 50% 46%, 100% 0, 100% 100%, 0 100%);
+  border-radius: 3px;
+  background-image: var(--faser),
+    linear-gradient(168deg, #FCF7EE 0%, #EFE4D1 58%, #DFCFB5 100%);
+  box-shadow: 0 -1px 0 rgba(0, 0, 0, 0.07) inset;
+  transform: translateZ(0);
+}
+.env__flap {
+  clip-path: polygon(0 0, 100% 0, 50% 92%);
+  transform-origin: 50% 0;
+  transform: translateZ(1px) rotateX(0deg);
+  background-image: var(--faser),
+    linear-gradient(184deg, #FAF2E5 0%, #E9DCC4 68%, #D4C1A0 100%);
+  filter: drop-shadow(0 4px 6px rgba(56, 38, 16, 0.28));
+}
+/* Keine eigene Rueckseite: der Filter oben flacht das Element ab, damit
+   greift backface-visibility nicht mehr wie gedacht und die aufgeklappte
+   Lasche verschwaende. Papier sieht von hinten ohnehin aus wie von vorn. */
+/* Die Karte, die aus dem Umschlag steigt. */
+.env__card {
+  inset: 6% 7% auto;
+  height: 86%;
+  transform: translateZ(-1px);
+  border-radius: 2px;
+  display: grid;
+  place-content: center;
+  gap: 0.5rem;
+  text-align: center;
+  color: var(--ink);
+  box-shadow: 0 12px 30px rgba(0, 0, 0, 0.35);
+}
+/* Durch einen geschlossenen Umschlag liest niemand die Karte. Der Inhalt
+   erscheint erst, wenn die Lasche offen ist — das ist zugleich die einzige
+   verlaessliche Art, ihn aus der Vorderseite herauszuhalten: im 3D-Kontext
+   ist die Zeichenreihenfolge nicht ueber z-index steuerbar. */
+.env__card > * { opacity: 0; transition: opacity 320ms var(--ease-out); }
+body[data-state="opening"] .env__card > * { opacity: 1; transition-delay: 780ms; }
+
+.env__card b {
+  font: 400 1.5rem/1.1 var(--ff-display);
+  letter-spacing: 0.01em;
+}
+.env__card span {
+  font-size: 0.625rem;
+  letter-spacing: 0.28em;
+  text-transform: uppercase;
+  color: var(--brass);
+}
+
+/* Das Siegel. Es ist der Knopf. */
+.seal {
+  all: unset;
+  position: absolute;
+  inset-block-start: 46%;
+  inset-inline-start: 50%;
+  width: 38%;
+  aspect-ratio: 1;
+  translate: -50% -50%;
+  transform: translateZ(2px);
+  cursor: pointer;
+  filter: drop-shadow(0 6px 14px rgba(0, 0, 0, 0.5));
+  transition: transform 220ms var(--ease-out), filter 220ms var(--ease-out);
+}
+.seal img { width: 100%; height: auto; }
+.seal:hover { transform: translateZ(2px) scale(1.04); }
+.seal:active { transform: translateZ(2px) scale(0.97); }
+.seal::after {                       /* vergroesserte Trefferflaeche */
+  content: "";
+  position: absolute;
+  inset: -0.75rem;
+}
+
+.veil__hint {
+  position: absolute;
+  inset-block-end: clamp(3rem, 14vh, 7rem);
+  margin: 0;
+  color: var(--on-night-2);
+  font-size: 0.6875rem;
+  letter-spacing: 0.3em;
+  text-transform: uppercase;
+  animation: breathe 3.6s ease-in-out infinite;
+}
+@keyframes breathe {
+  0%, 100% { opacity: 0.5; }
+  50%      { opacity: 1; }
+}
+
+/* ---- die Sequenz ---- */
+body[data-state="opening"] .seal {
+  transform: translateZ(2px) translate(0.25rem, -3.5rem) rotate(11deg) scale(1.12);
+  opacity: 0;
+  transition: transform 760ms var(--ease-out),
+              opacity 460ms var(--ease-out) 240ms;
+}
+body[data-state="opening"] .env__flap {
+  transform: translateZ(1px) rotateX(-172deg);
+  transition: transform 1000ms var(--ease-soft) 170ms;
+}
+body[data-state="opening"] .env__card {
+  transform: translateZ(-1px) translateY(-46%) scale(1.03);
+  transition: transform 900ms var(--ease-soft) 640ms;
+}
+body[data-state="opening"] .veil__hint { opacity: 0; transition: opacity 300ms; }
+body[data-state="opening"] .veil {
+  opacity: 0;
+  transform: scale(1.12);
+  transition: opacity 760ms var(--ease-out) 1320ms,
+              transform 900ms var(--ease-out) 1320ms;
+}
+body[data-state="open"] .veil { display: none; }
+
+@media (prefers-reduced-motion: reduce) {
+  body[data-state="opening"] .veil { opacity: 0; }
+}
+
+/* =================================================================== Hero = */
+.hero {
+  position: relative;
+  min-height: 100svh;
+  display: grid;
+  align-content: center;
+  justify-items: center;
+  text-align: center;
+  padding: 6rem 1.5rem 7rem;
+  background: var(--night);
+  overflow: clip;
+  color: var(--on-night);
+}
+.hero__media {
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+}
+.hero__media img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  /* Das Paar laeuft herein: eine sehr langsame Fahrt nach vorn. */
+  animation: einlauf 26s var(--ease-soft) forwards;
+  will-change: transform;
+}
+@keyframes einlauf {
+  from { transform: scale(1.16) translateY(1.5%); }
+  to   { transform: scale(1.02) translateY(0); }
+}
+/* Der Schleier, der die Schrift traegt. Ohne ihn ist kein Kontrast sicher. */
+.hero__media::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background:
+    linear-gradient(180deg,
+      rgba(20, 16, 12, 0.62) 0%,
+      rgba(20, 16, 12, 0.34) 34%,
+      rgba(20, 16, 12, 0.72) 78%,
+      var(--night) 100%);
+}
+/* Faellt das Foto aus, bleibt Kerzenlicht im Dunkeln. */
+.hero__media--leer {
+  background:
+    radial-gradient(70% 46% at 50% 38%, rgba(216, 182, 119, 0.22), transparent 72%),
+    var(--night);
+}
+
+.hero > * { position: relative; z-index: 1; }
+
+.hero__kicker {
+  font-size: 0.6875rem;
+  letter-spacing: 0.34em;
+  text-transform: uppercase;
+  color: var(--brass-lit);
+  margin: 0 0 1.75rem;
+}
+.hero__namen {
+  font-size: clamp(3rem, 17vw, 5.5rem);
+  line-height: 0.94;
+  letter-spacing: -0.025em;
+  margin: 0;
+}
+.hero__amp {
+  display: block;
+  font-size: 0.42em;
+  line-height: 1.6;
+  color: var(--brass-lit);
+  letter-spacing: 0;
+}
+.hero__datum {
+  margin: 2rem 0 0;
+  font-size: 0.8125rem;
+  letter-spacing: 0.22em;
+  text-transform: uppercase;
+  color: var(--on-night);
+}
+.hero__ort {
+  margin: 0.5rem 0 0;
+  font-size: 0.8125rem;
+  color: var(--on-night-2);
+  letter-spacing: 0.06em;
+}
+
+/* Der Hinweis nach unten. Verschwindet, sobald gescrollt wurde. */
+.hero__scroll {
+  position: absolute;
+  inset-block-end: 2.25rem;
+  inset-inline: 0;
+  z-index: 1;
+  display: grid;
+  justify-items: center;
+  gap: 0.6rem;
+  color: var(--on-night-2);
+  font-size: 0.625rem;
+  letter-spacing: 0.28em;
+  text-transform: uppercase;
+  transition: opacity 400ms var(--ease-out);
+}
+.hero__scroll i {
+  display: block;
+  width: 1px;
+  height: 2.5rem;
+  background: linear-gradient(var(--brass-lit), transparent);
+  animation: tropfen 2.8s var(--ease-soft) infinite;
+  transform-origin: top;
+}
+@keyframes tropfen {
+  0%        { transform: scaleY(0); opacity: 0; }
+  30%       { opacity: 1; }
+  100%      { transform: scaleY(1); opacity: 0; }
+}
+body.is-scrolled .hero__scroll { opacity: 0; }
+
+/* ============================================================== Countdown = */
+.countdown {
+  background: var(--night);
+  color: var(--on-night);
+  text-align: center;
+  padding-block: clamp(4rem, 14vw, 6.5rem);
+}
+
+/* Der Uebergang von Nacht zu Papier bekommt eine eigene Flaeche. Solange er
+   im Countdown lag, stand die Schrift zur Haelfte auf der falschen Helligkeit. */
+.daemmerung {
+  position: relative;
+  height: clamp(10rem, 34vw, 17rem);
+  /* Viele Stufen statt zweier Endpunkte: ein Verlauf ueber diesen
+     Helligkeitsabstand streift sonst sichtbar. */
+  background: linear-gradient(180deg,
+    #14100C 0%, #1A150F 16%, #241D14 30%, #382C1D 44%,
+    #57462E 58%, #857053 70%, #B4A183 81%, #DCD1BC 91%, #FBF6EE 100%);
+}
+.daemmerung::after {           /* das Licht, das aufgeht */
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: radial-gradient(64% 58% at 50% 72%,
+    rgba(232, 205, 155, 0.30), rgba(232, 205, 155, 0) 72%);
+}
+
+.uhr {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: clamp(0.5rem, 3vw, 1.5rem);
+  max-width: 27rem;
+  margin: 2rem auto 0;
+}
+.uhr div { display: grid; gap: 0.4rem; }
+.uhr b {
+  font: 400 clamp(1.75rem, 9vw, 2.75rem)/1 var(--ff-display);
+  font-variant-numeric: tabular-nums;
+  color: var(--on-night);
+  transition: opacity 260ms var(--ease-out);
+}
+.uhr b.tick { opacity: 0.35; }
+.uhr span {
+  font-size: 0.5625rem;
+  letter-spacing: 0.24em;
+  text-transform: uppercase;
+  color: var(--on-night-2);
+}
+.countdown__nachher {
+  font: 400 clamp(1.5rem, 7vw, 2rem)/1.2 var(--ff-display);
+  margin: 1.5rem 0 0;
+}
+
+/* ================================================================ Papier = */
+.on-paper { background: var(--paper); color: var(--ink); }
+.on-night { background: var(--night); color: var(--on-night); }
+
+/* ---- Geschichte: eine Linie, die sich beim Lesen zeichnet ---- */
+.spur {
+  position: relative;
+  padding-inline-start: 2.5rem;
+  margin-top: 2.5rem;
+}
+.spur::before {                         /* die ungezeichnete Linie */
+  content: "";
+  position: absolute;
+  inset-block: 0.6rem 1.5rem;
+  inset-inline-start: 0.3125rem;
+  width: 1px;
+  background: var(--line);
+}
+.spur__linie {                          /* die gezeichnete daruber */
+  position: absolute;
+  inset-block: 0.6rem 1.5rem;
+  inset-inline-start: 0.3125rem;
+  width: 1px;
+  background: var(--brass);
+  transform-origin: top;
+  transform: scaleY(0);
+  transition: transform 1400ms var(--ease-soft);
+}
+.spur.is-in .spur__linie { transform: scaleY(1); }
+
+.spur li { list-style: none; position: relative; padding-bottom: 2.5rem; }
+.spur li:last-child { padding-bottom: 0; }
+.spur li::before {
+  content: "";
+  position: absolute;
+  inset-block-start: 0.5rem;
+  inset-inline-start: -2.5rem;
+  width: 0.6875rem;
+  height: 0.6875rem;
+  border: 1px solid var(--brass);
+  border-radius: 50%;
+  background: var(--paper);
+  transform: scale(0);
+  transition: transform 420ms var(--ease-out) var(--d, 0ms);
+}
+.spur.is-in li::before { transform: scale(1); }
+.spur h3 {
+  font-size: 1.375rem;
+  margin-bottom: 0.35rem;
+}
+.spur time {
+  display: block;
+  font-size: 0.625rem;
+  letter-spacing: 0.26em;
+  text-transform: uppercase;
+  color: var(--brass);
+  margin-bottom: 0.5rem;
+}
+.spur p { color: var(--ink-2); font-size: 0.9375rem; }
+
+/* ---- Galerie ---- */
+.galerie {
+  display: grid;
+  grid-auto-flow: column;
+  grid-auto-columns: 68%;
+  gap: 0.75rem;
+  overflow-x: auto;
+  scroll-snap-type: x mandatory;
+  scroll-padding-inline: 1.25rem;
+  padding-inline: 1.25rem;
+  padding-block: 0.5rem 1.5rem;
+  margin-inline: calc(50% - 50vw);
+  scrollbar-width: none;
+}
+.galerie::-webkit-scrollbar { display: none; }
+.galerie li { list-style: none; scroll-snap-align: center; }
+.galerie button {
+  all: unset;
+  display: block;
+  cursor: zoom-in;
+  width: 100%;
+  aspect-ratio: 3 / 4;
+  overflow: hidden;
+  border-radius: 2px;
+  background: var(--night-2);
+}
+.galerie img {
+  width: 100%; height: 100%;
+  object-fit: cover;
+  transition: transform 700ms var(--ease-out);
+}
+.galerie button:hover img { transform: scale(1.03); }
+.galerie button:active { transform: scale(0.99); }
+
+/* Ab Tabletbreite wird aus dem Wischstreifen ein Raster. Es ist breiter als
+   die Lesespalte, aber nicht randlos — randlos sieht auf dem Rechner nach
+   Versehen aus. */
+@media (min-width: 46rem) {
+  .galerie {
+    grid-auto-flow: row;
+    grid-template-columns: repeat(3, 1fr);
+    width: min(100% - 3rem, 52rem);
+    margin-inline: auto;
+    padding-inline: 0;
+    overflow: visible;
+    gap: 1rem;
+  }
+}
+
+/* Lichtkasten. Nativer Dialog, damit Escape und Fokus ohne eigenen Code
+   funktionieren. */
+dialog.lupe {
+  border: 0;
+  padding: 0;
+  max-width: min(92vw, 34rem);
+  max-height: 92svh;
+  background: transparent;
+  overflow: visible;
+}
+dialog.lupe::backdrop { background: rgba(14, 11, 8, 0.92); }
+dialog.lupe img { border-radius: 2px; max-height: 88svh; width: auto; margin-inline: auto; }
+dialog.lupe form { position: absolute; inset-block-start: -2.75rem; inset-inline-end: 0; }
+dialog.lupe button {
+  all: unset;
+  width: 2.25rem; height: 2.25rem;
+  display: grid; place-items: center;
+  border-radius: 999px;
+  color: var(--on-night-2);
+  cursor: pointer;
+}
+dialog.lupe button:hover { color: var(--on-night); }
+dialog.lupe svg { width: 1rem; height: 1rem; stroke: currentColor; stroke-width: 1.5;
+  fill: none; stroke-linecap: round; }
+
+/* ---- Ablauf ---- */
+.ablauf { margin: 2.5rem 0 0; padding: 0; }
+.ablauf li {
+  list-style: none;
+  display: grid;
+  grid-template-columns: 4.25rem 1fr;
+  gap: 0 1.25rem;
+  align-items: baseline;
+  padding-block: 1.125rem;
+  border-block-end: 1px solid var(--line);
+}
+.ablauf li:last-child { border-block-end: 0; }
+.ablauf time {
+  font: 400 1.0625rem/1 var(--ff-display);
+  font-variant-numeric: tabular-nums;
+  color: var(--brass);
+}
+.ablauf h3 { font-size: 1.0625rem; font-family: var(--ff-text); font-weight: 500;
+  letter-spacing: 0.01em; }
+.ablauf p { grid-column: 2; margin: 0.25rem 0 0; font-size: 0.875rem; color: var(--ink-2); }
+
+/* ---- Details ---- */
+.karte {
+  margin-top: 2rem;
+  padding: clamp(1.5rem, 6vw, 2.25rem);
+  background: var(--paper-2);
+  border: 1px solid var(--line);
+  border-radius: 3px;
+  text-align: center;
+}
+.karte h3 { font-size: 1.625rem; margin-bottom: 0.5rem; }
+.karte address { font-style: normal; color: var(--ink-2); font-size: 0.9375rem; }
+
+.knopfreihe {
+  display: grid;
+  gap: 0.625rem;
+  margin-top: 1.75rem;
+}
+@media (min-width: 26rem) { .knopfreihe { grid-auto-flow: column; } }
+
+.knopf {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  min-height: 2.875rem;
+  padding: 0 1.25rem;
+  border: 1px solid var(--brass);
+  border-radius: 999px;
+  background: transparent;
+  color: var(--brass);
+  font: 500 0.75rem/1 var(--ff-text);
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  text-decoration: none;
+  cursor: pointer;
+  transition: background-color 200ms var(--ease-out), color 200ms var(--ease-out),
+              transform 140ms var(--ease-out);
+}
+.knopf:hover { background: var(--brass); color: var(--paper); }
+.knopf:active { transform: scale(0.97); }
+.knopf svg { width: 0.9375rem; height: 0.9375rem; fill: none; stroke: currentColor;
+  stroke-width: 1.5; stroke-linecap: round; stroke-linejoin: round; }
+
+.knopf--voll {
+  background: var(--brass);
+  color: var(--paper);
+  border-color: var(--brass);
+}
+.knopf--voll:hover { background: #684E23; border-color: #684E23; }
+
+.on-night .knopf { border-color: var(--brass-lit); color: var(--brass-lit); }
+.on-night .knopf:hover { background: var(--brass-lit); color: var(--night); }
+.on-night .knopf--voll { background: var(--brass-lit); color: var(--night); }
+.on-night .knopf--voll:hover { background: #E7C98F; }
+
+.hinweis { font-size: 0.8125rem; color: var(--ink-2); margin-top: 1.25rem; }
+.on-night .hinweis { color: var(--on-night-2); }
+
+/* ============================================================== Formular = */
+.antwort { border-block-start: 1px solid var(--night-line); }
+
+.feld { display: grid; gap: 0.4375rem; margin-bottom: 1.25rem; }
+.feld > label {
+  font-size: 0.6875rem;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: var(--on-night-2);
+}
+.feld input[type="text"],
+.feld input[type="email"],
+.feld input[type="number"],
+.feld select,
+.feld textarea {
+  font: 400 1rem/1.5 var(--ff-text);
+  color: var(--on-night);
+  background: transparent;
+  border: 0;
+  border-block-end: 1px solid var(--night-line);
+  border-radius: 0;
+  padding: 0.625rem 0.125rem;
+  min-height: 2.75rem;
+  transition: border-color 200ms var(--ease-out);
+  width: 100%;
+}
+.feld textarea { resize: vertical; min-height: 5rem; }
+.feld select {
+  appearance: none;
+  background-image:
+    linear-gradient(45deg, transparent 50%, var(--on-night-2) 50%),
+    linear-gradient(135deg, var(--on-night-2) 50%, transparent 50%);
+  background-position: right 0.75rem center, right 0.4375rem center;
+  background-size: 5px 5px, 5px 5px;
+  background-repeat: no-repeat;
+}
+.feld select option { background: var(--night-2); color: var(--on-night); }
+.feld :is(input, select, textarea):hover { border-color: var(--on-night-2); }
+.feld :is(input, select, textarea):focus-visible {
+  outline: 0;
+  border-color: var(--brass-lit);
+  box-shadow: 0 1px 0 var(--brass-lit);
+}
+.feld ::placeholder { color: #8C8068; opacity: 1; }   /* 4,9:1 auf Nacht */
+
+/* Zusage oder Absage. Zwei Flaechen, keine Radiopunkte. */
+.wahl { display: grid; grid-template-columns: 1fr 1fr; gap: 0.625rem; }
+.wahl label {
+  position: relative;
+  display: grid;
+  place-items: center;
+  min-height: 3.25rem;
+  padding: 0.75rem;
+  border: 1px solid var(--night-line);
+  border-radius: 3px;
+  cursor: pointer;
+  font-size: 0.875rem;
+  text-align: center;
+  color: var(--on-night-2);
+  transition: border-color 200ms var(--ease-out), color 200ms var(--ease-out),
+              background-color 200ms var(--ease-out);
+}
+.wahl input { position: absolute; opacity: 0; inset: 0; cursor: pointer; }
+.wahl label:hover { border-color: var(--on-night-2); color: var(--on-night); }
+.wahl input:checked + span { color: var(--night); }
+.wahl label:has(input:checked) {
+  background: var(--brass-lit);
+  border-color: var(--brass-lit);
+  color: var(--night);
+}
+.wahl label:has(input:focus-visible) {
+  outline: 2px solid var(--brass-lit);
+  outline-offset: 3px;
+}
+
+.fehler {
+  font-size: 0.8125rem;
+  color: #E8A08C;
+  margin: 0;
+  min-height: 0;
+}
+.feld:has([aria-invalid="true"]) :is(input, select, textarea) { border-color: #E8A08C; }
+
+/* Der Knopf kennt drei Zustaende: bereit, sendet, fertig. */
+.senden { width: 100%; margin-top: 0.5rem; }
+.senden[data-busy="true"] { pointer-events: none; opacity: 0.7; }
+.senden[data-busy="true"] .senden__text::after {
+  content: "";
+  display: inline-block;
+  width: 0.7em; height: 0.7em;
+  margin-inline-start: 0.5em;
+  border: 1.5px solid currentColor;
+  border-block-start-color: transparent;
+  border-radius: 50%;
+  animation: dreh 700ms linear infinite;
+  vertical-align: -1px;
+}
+@keyframes dreh { to { transform: rotate(360deg); } }
+.senden:disabled { opacity: 0.45; pointer-events: none; }
+
+.quittung {
+  margin-top: 1.75rem;
+  padding: 1.25rem;
+  border: 1px solid var(--brass-lit);
+  border-radius: 3px;
+  text-align: center;
+  color: var(--on-night);
+  font-size: 0.9375rem;
+}
+.quittung:focus-visible { outline-offset: 6px; }
+
+/* ================================================================= Fuss = */
+.fuss {
+  background: var(--night);
+  color: var(--on-night-2);
+  text-align: center;
+  padding: 3.5rem 1.5rem calc(3.5rem + env(safe-area-inset-bottom));
+  font-size: 0.75rem;
+  letter-spacing: 0.06em;
+}
+.fuss .orn { color: var(--night-line); margin-bottom: 2rem; }
+.fuss a { color: var(--brass-lit); text-underline-offset: 3px; }
+
+/* Der Demo-Streifen. Er sagt, dass dies eine Vorschau ist, und er darf
+   die Einladung nicht stoeren: er steht unten und scrollt mit. */
+.vorschau {
+  background: var(--night-2);
+  border-block-start: 1px solid var(--night-line);
+  color: var(--on-night-2);
+  font-size: 0.75rem;
+  text-align: center;
+  padding: 1.25rem 1.5rem calc(1.25rem + env(safe-area-inset-bottom));
+}
+.vorschau b { color: var(--brass-lit); font-weight: 500; }
