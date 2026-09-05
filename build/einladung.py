@@ -249,28 +249,40 @@ def setzen(vorlage: str, werte: dict[str, str]) -> str:
     return vorlage
 
 
+def rendern(daten: dict, theme: str) -> tuple[str, str | None]:
+    """Aus Daten und Geruest die fertigen Seiten machen. Gibt die Einladung
+    zurueck und, sobald wirklich gesendet wird, die Datenschutzseite."""
+    werte = felder(daten)
+    seite = setzen((VORLAGEN / f"{theme}.html").read_text(encoding="utf-8"), werte)
+    if not daten["rsvp"].get("endpunkt"):
+        return seite, None
+    import datenschutz
+    return seite, datenschutz.bauen(daten, werte)
+
+
+def schreiben(ordner: pathlib.Path, daten: dict, theme: str) -> None:
+    """Beide Seiten in einen Ordner legen. Die Datenschutzseite verschwindet
+    wieder, wenn der Endpunkt entfernt wurde — eine Seite ueber die
+    Verarbeitung von Daten, die niemand verarbeitet, verwirrt mehr als sie
+    hilft."""
+    seite, schutz = rendern(daten, theme)
+    (ordner / "index.html").write_text(seite, encoding="utf-8")
+    print(f"  index.html        {len(seite) // 1024:>4} KB")
+
+    ziel = ordner / "datenschutz.html"
+    if schutz:
+        ziel.write_text(schutz, encoding="utf-8")
+        print(f"  datenschutz.html  {len(schutz) // 1024:>4} KB")
+    elif ziel.exists():
+        ziel.unlink()
+        print("  datenschutz.html  entfernt (es wird nichts gesendet)")
+
+
 def main(argv: list[str]) -> int:
     theme = argv[0] if argv else "ambra"
     ordner = ROOT / "themes" / theme
     daten = json.loads((ordner / "daten.json").read_text(encoding="utf-8"))
-
-    werte = felder(daten)
-    seite = setzen((VORLAGEN / f"{theme}.html").read_text(encoding="utf-8"), werte)
-    (ordner / "index.html").write_text(seite, encoding="utf-8")
-    print(f"  index.html        {len(seite) // 1024} KB")
-
-    # Die Datenschutzseite entsteht nur, wenn wirklich etwas gesendet wird.
-    # Eine Seite ueber die Verarbeitung von Daten, die niemand verarbeitet,
-    # verwirrt mehr als sie hilft.
-    schutz = ordner / "datenschutz.html"
-    if daten["rsvp"].get("endpunkt"):
-        from datenschutz import bauen
-        text = bauen(daten, werte)
-        schutz.write_text(text, encoding="utf-8")
-        print(f"  datenschutz.html  {len(text) // 1024} KB")
-    elif schutz.exists():
-        schutz.unlink()
-        print("  datenschutz.html  entfernt (es wird nichts gesendet)")
+    schreiben(ordner, daten, theme)
     return 0
 
 

@@ -1,2 +1,11 @@
 __pycache__/
 engine/rsvp/*.sqlite*
+
+# Kunden. Darin stehen Namen, Adressen, Termine und Fotos echter Menschen.
+# Die haben in einem Git-Repo nichts verloren — schon gar nicht in einem,
+# das jemand später öffentlich macht, und aus dem sich nichts mehr löschen
+# lässt, ohne die Historie umzuschreiben.
+#
+# Wie ein Kundenordner aussieht, zeigt: python3 build/kunde.py neu <kennung>
+kunden/
+auslieferung/

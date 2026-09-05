@@ -7,7 +7,11 @@ Nachricht eine leere Flaeche, und genau dort entsteht der erste Eindruck.
 Die Karte wird aus denselben Schriften und Farben gebaut wie die Einladung
 selbst, damit beides zusammengehoert.
 
-    python3 build/art/ambra_og.py
+    python3 build/art/ambra_og.py [ordner]
+
+Der Ordner ist ein fertig gebauter Kundenordner; ohne Angabe das Theme
+selbst. Die Namen und der Termin kommen aus der daten.json daneben — traegt
+jede Karte dasselbe Paar, steht in jeder geteilten Nachricht das falsche.
 
 Braucht Playwright und ein Chromium. Faellt eines von beidem aus, bleibt die
 vorhandene og.png liegen — sie ist eingecheckt.
@@ -19,6 +23,7 @@ import functools
 import http.server
 import pathlib
 import socketserver
+import sys
 import threading
 
 ROOT = pathlib.Path(__file__).resolve().parent.parent.parent
@@ -44,10 +49,10 @@ SEITE = """<meta charset="utf-8">
 </style>
 <div class="b"></div>
 <div class="i">
-  <p class="k">Wir heiraten</p>
-  <h1>Marlene<span class="a">&amp;</span>Anton</h1>
-  <p class="d">Sonntag, 13. Juni 2027</p>
-  <p class="o">Gut Morgentau am Starnberger See</p>
+  <p class="k">@@kicker@@</p>
+  <h1>@@a@@<span class="a">&amp;</span>@@b@@</h1>
+  <p class="d">@@datum@@</p>
+  <p class="o">@@ort@@</p>
   <svg viewBox="0 0 240 16"><g fill="none" stroke="currentColor" stroke-width="1" stroke-linecap="round">
     <path d="M0 8h96M144 8h96"/><path d="M120 2l7 6-7 6-7-6z"/>
     <path d="M104 8c4-4 8-4 9 0-1 4-5 4-9 0zM136 8c-4-4-8-4-9 0 1 4 5 4 9 0z"/></g></svg>
@@ -68,24 +73,46 @@ def server(verzeichnis: pathlib.Path):
             srv.shutdown()
 
 
-def main() -> None:
+def main(argv: list[str] | None = None) -> None:
+    import html
+    import json
     from playwright.sync_api import sync_playwright
 
-    tmp = THEME / "_og.html"
-    tmp.write_text(SEITE, encoding="utf-8")
+    argv = argv if argv is not None else sys.argv[1:]
+    ordner = pathlib.Path(argv[0]).resolve() if argv else THEME
+    daten = json.loads((ordner / "daten.json").read_text(encoding="utf-8"))
+
+    def z(feld, sprache="de"):
+        return (feld.get(sprache) or feld.get("de") or "") if isinstance(feld, dict) else (feld or "")
+
+    # Kein .format(): die Vorlage steckt voller CSS-Klammern, und die muesste
+    # man alle verdoppeln. Ein Platzhalter, der im CSS nicht vorkommt, ist
+    # weniger fehleranfaellig als eine Regel, an die sich jeder halten muss.
+    seite = SEITE
+    for name, wert in (
+        ("kicker", z(daten["hero"]["kicker"])),
+        ("a", daten["paar"]["a"]),
+        ("b", daten["paar"]["b"]),
+        ("datum", z(daten["termin"]["lang"])),
+        ("ort", z(daten["ort"]["kurz"])),
+    ):
+        seite = seite.replace("@@%s@@" % name, html.escape(wert))
+
+    tmp = ordner / "_og.html"
+    tmp.write_text(seite, encoding="utf-8")
     try:
-        with server(THEME) as port, sync_playwright() as p:
+        with server(ordner) as port, sync_playwright() as p:
             b = p.chromium.launch(executable_path=CHROME)
             pg = b.new_page(viewport={"width": 1200, "height": 630})
             pg.goto(f"http://127.0.0.1:{port}/_og.html", wait_until="networkidle")
             pg.wait_for_timeout(400)
-            ziel = THEME / "assets" / "img" / "og.png"
+            ziel = ordner / "assets" / "img" / "og.png"
             pg.screenshot(path=str(ziel))
             b.close()
-        print(f"  og.png  {ziel.stat().st_size // 1024} KB  (1200x630)")
+        print(f"  og.png            {ziel.stat().st_size // 1024:>4} KB  (1200x630)")
     finally:
         tmp.unlink(missing_ok=True)
 
 
 if __name__ == "__main__":
-    main()
+    main(sys.argv[1:])

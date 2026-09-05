@@ -266,6 +266,27 @@ Einzelheiten in `docs/10-legal-and-limits.md` und `docs/07-mvp-and-tech.md`.
 
 ## Eine Einladung ausliefern
 
+### Ein Theme, viele Kunden
+
+Ein verkauftes Theme darf nicht bedeuten, dass jemand einen 2,3-MB-Ordner
+kopiert und darin Namen sucht. Bei fünfzig Paaren lägen fünfzig Kopien
+derselben Schriften, desselben Films und desselben Programmcodes im Repo, und
+beim Ändern einer Kleinigkeit müsste jemand fünfzig Ordner anfassen.
+
+```
+themes/<theme>/           das Theme. Einmal da, für alle.
+kunden/<kennung>/         nur was diesem Paar gehört   ← nicht eingecheckt
+  daten.json              Namen, Termin, Ort, Texte
+  bilder/                 eigene Fotos, überlagern die des Themes
+  film/                   eigener Hero-Film, optional
+auslieferung/<kennung>/   das Ergebnis                 ← nicht eingecheckt
+```
+
+**`kunden/` und `auslieferung/` stehen in `.gitignore`, und das ist kein
+Versehen.** Darin stehen Namen, Adressen und Fotos echter Menschen. Die haben
+in einem Git-Repo nichts verloren, schon gar nicht in einem, aus dem sich
+nichts mehr löschen lässt, ohne die Historie umzuschreiben.
+
 ### Einmal je Marke
 
 1. Einen kleinen Server in der EU. Node 22 darauf.
@@ -276,25 +297,34 @@ Einzelheiten in `docs/10-legal-and-limits.md` und `docs/07-mvp-and-tech.md`.
 
 ### Je Kunde
 
-- [ ] `themes/ambra/` kopieren nach `themes/<paar>/`
-- [ ] `daten.json` ausfüllen: Namen, Termin, Ort, Weg, Ablauf, Hinweise
-- [ ] `vorschau` auf `false` — der Streifen gehört nicht auf eine echte Einladung
-- [ ] `rsvp.endpunkt` und eine eindeutige `kennung` eintragen
-- [ ] `kennung=YYYY-MM-DD` in `FESTE` des Dienstes ergänzen, Dienst neu starten
-- [ ] Fotos hereinreichen, `python3 build/art/ambra_fotos.py …`
-- [ ] Musik ersetzen, **mit Lizenz** (siehe oben)
-- [ ] `python3 build/einladung.py <paar>`
-- [ ] `python3 build/art/ambra_og.py` für die Vorschaukarte
-- [ ] `adresse` in `daten.json` eintragen, dann `build/einladung.py`. Daraus
-      werden `og:url` und `og:image` absolut. Ein relativer Pfad wird von
-      keinem Vorschaudienst aufgelöst, und dann zeigt die geteilte Nachricht
-      eine leere Fläche.
-- [ ] Ordner hochladen, Subdomain `<paar>.marke.de` daraufzeigen
-- [ ] **Einmal selbst antworten** und in `/uebersicht` nachsehen, dass es ankam
-- [ ] Dem Paar die Adresse von `/uebersicht` und sein Token geben
+```bash
+python3 build/kunde.py neu   clara-und-jonas
+# daten.json ausfüllen, Fotos nach kunden/clara-und-jonas/bilder/
+python3 build/kunde.py bauen clara-und-jonas
+# auslieferung/clara-und-jonas/ hochladen
+```
 
-`<meta name="robots" content="noindex, nofollow">` steht drin und bleibt drin:
-die Einladung eines Paares gehört nicht in eine Suchmaschine.
+`bauen` legt das Theme, die Fotos des Paares und die erzeugten Seiten
+zusammen, erneuert die Vorschaukarte mit **den Namen dieses Paares** und sagt,
+was noch fehlt. `python3 build/kunde.py liste` zeigt alle Kunden mit ihrem
+Stand.
+
+Checkliste:
+
+- [ ] `daten.json` ausgefüllt — `bauen` nennt die Felder, die noch leer sind
+- [ ] `adresse` eingetragen, sonst zeigt WhatsApp beim Teilen eine leere Fläche
+- [ ] Fotos in `bilder/`, mit `build/art/ambra_fotos.py` zugeschnitten
+- [ ] Musik ersetzt, **mit Lizenz** (siehe oben)
+- [ ] `rsvp.endpunkt` und die `kennung` eingetragen
+- [ ] `kennung=YYYY-MM-DD` in `FESTE` des Dienstes ergänzt, Dienst neu gestartet
+- [ ] Ordner hochgeladen, Subdomain `<kennung>.marke.de` daraufgezeigt
+- [ ] **Einmal selbst geantwortet** und in `/uebersicht` nachgesehen, dass es ankam
+- [ ] Dem Paar die Adresse von `/uebersicht` und sein Token gegeben
+
+`vorschau` steht bei einem neuen Kunden von selbst auf `false` — der Streifen
+gehört nicht auf eine echte Einladung. `<meta name="robots" content="noindex,
+nofollow">` bleibt drin: die Einladung eines Paares gehört nicht in eine
+Suchmaschine.
 
 ### Was beim Verkauf mitgeht
 
