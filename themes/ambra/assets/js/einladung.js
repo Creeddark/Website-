@@ -209,13 +209,24 @@
   })();
 
   /* ------------------------------------------------------------- Formular -- */
+  /* Ohne data-endpunkt bleibt die Antwort im Browser — so verhaelt sich die
+     oeffentliche Vorschau. Mit Endpunkt geht sie an den RSVP-Dienst, und dann
+     muss jeder Fehlerfall bedacht sein: kein Netz, langsames Netz, Server
+     kaputt, zu viele Versuche. Ein Formular, das im Fehlerfall einfach nichts
+     tut, kostet eine Zusage. */
   (function rsvp() {
     var form = $("[data-rsvp]");
     if (!form) return;
 
     var knopf = $("[data-senden]", form);
+    var knopfText = $(".senden__text", knopf);
     var quittung = $("[data-quittung]", form);
     var nurZusage = $$("[data-nur-zusage]", form);
+
+    var endpunkt = (form.dataset.endpunkt || "").replace(/\/+$/, "");
+    var kennung = form.dataset.kennung || "";
+    var gezeigt = Date.now();      // Grundlage der Zeitbremse gegen Roboter
+    var laeuft = false;
 
     var texte = {
       de: {
@@ -224,7 +235,13 @@
         zusage: "Bitte wählt aus, ob ihr dabei seid.",
         ja: "Danke, {name}. Wir haben euch eingeplant.",
         nein: "Schade, {name}. Wir denken an euch.",
-        demo: " In dieser Vorschau bleibt die Antwort in eurem Browser."
+        demo: " In dieser Vorschau bleibt die Antwort in eurem Browser.",
+        offline: "Ihr seid gerade offline. Die Antwort wurde noch nicht gesendet.",
+        netz: "Das hat nicht geklappt. Bitte versucht es gleich noch einmal.",
+        server: "Bei uns ist etwas schiefgelaufen. Bitte versucht es später noch einmal.",
+        zuoft: "Das waren zu viele Versuche. Bitte wartet ein paar Minuten.",
+        pruefen: "Bitte prüft eure Angaben.",
+        nochmal: "Nochmal senden"
       },
       en: {
         name: "Please enter your name.",
@@ -232,10 +249,18 @@
         zusage: "Please tell us whether you can come.",
         ja: "Thank you, {name}. We have you down.",
         nein: "We will miss you, {name}.",
-        demo: " In this preview the reply stays in your browser."
+        demo: " In this preview the reply stays in your browser.",
+        offline: "You are offline. Your reply has not been sent yet.",
+        netz: "That did not go through. Please try again in a moment.",
+        server: "Something went wrong on our side. Please try again later.",
+        zuoft: "That was too many attempts. Please wait a few minutes.",
+        pruefen: "Please check your details.",
+        nochmal: "Send again"
       }
     };
-    function t(k) { return texte[document.documentElement.lang] ? texte[document.documentElement.lang][k] : texte.de[k]; }
+    function t(k) {
+      return (texte[document.documentElement.lang] || texte.de)[k];
+    }
 
     /* Zusatzfelder erscheinen nur bei einer Zusage. */
     $$('input[name="zusage"]', form).forEach(function (r) {
@@ -266,8 +291,67 @@
       if (f) f.addEventListener("blur", function () { pruefe(f); });
     });
 
+    function quittieren(text, istFehler) {
+      quittung.textContent = text;
+      quittung.classList.toggle("quittung--fehler", !!istFehler);
+      quittung.hidden = false;
+      quittung.focus();
+    }
+
+    function fertig(wahl) {
+      laeuft = false;
+      knopf.dataset.busy = "false";
+      knopf.disabled = true;
+      var name = (form.elements.name.value || "").trim().split(" ")[0];
+      quittieren(t(wahl.value === "ja" ? "ja" : "nein").replace("{name}", name)
+                 + (endpunkt ? "" : t("demo")), false);
+    }
+
+    /* Scheitern heißt: der Knopf kommt zurück. Die Eingaben bleiben stehen,
+       niemand tippt seine Antwort ein zweites Mal ein. */
+    function scheitern(meldung) {
+      laeuft = false;
+      knopf.dataset.busy = "false";
+      knopf.disabled = false;
+      if (knopfText) knopfText.textContent = t("nochmal");
+      quittieren(meldung, true);
+    }
+
+    function senden(wahl) {
+      var daten = {
+        kennung: kennung,
+        name: form.elements.name.value.trim(),
+        mail: form.elements.mail.value.trim(),
+        zusage: wahl.value,
+        anzahl: Number(form.elements.anzahl && form.elements.anzahl.value) || 1,
+        essen: (form.elements.essen && form.elements.essen.value) || "alles",
+        gruss: (form.elements.gruss && form.elements.gruss.value.trim()) || "",
+        hp: (form.elements.web && form.elements.web.value) || "",
+        dauer: Date.now() - gezeigt
+      };
+
+      // Ohne Frist wartet ein Telefon mit schlechtem Empfang ewig auf einer
+      // Anzeige, die sich nicht mehr rührt.
+      var opt = {
+        method: "POST",
+        headers: { "content-type": "application/json" },
+        body: JSON.stringify(daten)
+      };
+      if (window.AbortSignal && AbortSignal.timeout) opt.signal = AbortSignal.timeout(12000);
+
+      window.fetch(endpunkt + "/rsvp", opt).then(function (a) {
+        if (a.ok) { fertig(wahl); return; }
+        if (a.status === 429) { scheitern(t("zuoft")); return; }
+        if (a.status === 422) { scheitern(t("pruefen")); return; }
+        scheitern(t("server"));
+      }).catch(function () {
+        scheitern(navigator.onLine === false ? t("offline") : t("netz"));
+      });
+    }
+
     form.addEventListener("submit", function (e) {
       e.preventDefault();
+      if (laeuft || knopf.disabled) return;
 
       var ok = true;
       ["name", "mail"].forEach(function (n) { if (!pruefe(form.elements[n])) ok = false; });
@@ -282,21 +366,19 @@
         return;
       }
 
+      laeuft = true;
       knopf.dataset.busy = "true";
+      quittung.hidden = true;
 
-      // Eine echte Einladung sendet hier an die Engine. Die Vorschau wartet
-      // nur kurz, damit der Zustand sichtbar wird, und behält alles hier.
-      window.setTimeout(function () {
-        knopf.dataset.busy = "false";
-        knopf.disabled = true;
-        var name = (form.elements.name.value || "").trim().split(" ")[0];
-        quittung.textContent = t(wahl.value === "ja" ? "ja" : "nein").replace("{name}", name) + t("demo");
-        quittung.hidden = false;
-        quittung.focus();
-      }, 900);
+      if (!endpunkt) {
+        // Vorschau: kurz warten, damit der Zustand sichtbar wird, und alles
+        // bleibt hier.
+        window.setTimeout(function () { fertig(wahl); }, 900);
+        return;
+      }
+      senden(wahl);
     });
   })();
-
   /* ------------------------------------------------------------- Sprache -- */
   (function sprache() {
     var knoepfe = $$("[data-lang]");

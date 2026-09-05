@@ -41,15 +41,14 @@ Dunkeln, dort wo die Antwort abgegeben wird.
 | Galerie mit Lichtkasten (`<dialog>`) | fertig, vier Fotos |
 | Ablauf des Tages | fertig |
 | Ort mit Karten- und Kalenderknopf (.ics im Browser erzeugt) | fertig |
-| RSVP mit allen acht Zustandsformen | fertig, sendet nichts |
+| RSVP mit allen acht Zustandsformen | fertig, sendet an den Dienst |
 | Sprachumschalter DE/EN | fertig |
 | Musik mit Ein/Aus und weichem Einblenden | fertig, selbst erzeugter Klang |
 | `prefers-reduced-motion`, Tastaturbedienung, Kontrast ≥ 4,5:1 | geprüft |
+| Inhalt in `daten.json`, HTML wird erzeugt | fertig |
+| Datenschutzseite, sobald gesendet wird | fertig, Entwurf |
 
 ### Was noch fehlt
-
-**Die Anbindung.** Das RSVP-Formular behält alles im Browser. Für einen echten
-Kunden muss es an die Engine senden, siehe unten.
 
 **Mehr Abwechslung in der Galerie.** Vier Kacheln im Zweierraster, davon zwei
 Porträts. Weitere Aufnahmen sollten Details ohne Gesichter sein (Hände, Tafel,
@@ -185,16 +184,35 @@ geändert werden soll.
 
 ## Inhalte ändern
 
-Alles steht in `index.html`. Es gibt keine Datenbank und keine Vorlagensprache.
+**Alles steht in `themes/<theme>/daten.json`.** Das HTML wird daraus erzeugt:
 
-- **Namen, Datum, Ort**: im Hero, im `<title>`, in den `og:`-Angaben und im Fuß.
-- **Countdown**: `data-ziel="2027-06-13T14:00:00+02:00"` am Element `[data-uhr]`.
-  Zeitzone mit angeben, sonst rechnet jedes Gerät anders.
-- **Kalendereintrag**: die `DTSTART`/`DTEND`-Zeilen in `assets/js/einladung.js`
-  stehen in UTC.
-- **Zweite Sprache**: jedes übersetzbare Element trägt ein `data-en="…"`.
-  Der deutsche Text bleibt im Element stehen. Bei Texten mit einem Link darin
-  wird nur der Textknoten getauscht, der Link bleibt.
+```bash
+python3 build/einladung.py ambra
+```
+
+Für einen neuen Kunden wird `daten.json` kopiert und geändert, nicht das HTML
+durchgesehen. Sonst steht nach dem dritten Paar im Fuß noch das Datum des
+zweiten.
+
+Das erzeugte `index.html` ist eingecheckt — die Einladung funktioniert also
+auch ohne den Generator. Er existiert nur, damit derselbe Text nicht an neun
+Stellen steht.
+
+Jeder Text steht als `{de, en}` da. Fehlt `en`, bleibt beim Umschalten der
+deutsche Text stehen; eine leere Zeile wäre schlimmer.
+
+| Feld in `daten.json` | wirkt auf |
+|---|---|
+| `paar`, `termin`, `ort` | Hero, `<title>`, `og:`-Angaben, Fuß, Beschreibung |
+| `termin.beginn` | den Countdown. **Zeitzone mit angeben**, sonst rechnet jedes Gerät anders |
+| `weg.punkte` | den Zeitstrahl. Beliebig viele; die Einblendung staffelt sich von selbst |
+| `galerie.bilder` | die Kacheln. Beliebig viele, `alt` ist Pflicht |
+| `ablauf.punkte`, `wo.hinweise` | Tagesablauf und die Liste darunter |
+| `rsvp.endpunkt` | ob wirklich gesendet wird, siehe unten |
+| `vorschau` | den Streifen am Fuß, der sagt, dass alles erfunden ist |
+
+Der Kalendereintrag steht noch in `assets/js/einladung.js`, in UTC. Das ist
+die eine Stelle, die der Generator noch nicht bedient.
 
 ### Weitere Sprachen, auch von rechts nach links
 
@@ -206,36 +224,84 @@ und eine dritte Taste in der Leiste, mehr ist nicht nötig.
 
 ---
 
-## RSVP wirklich anschließen
+## RSVP anschließen
 
-Heute fängt `assets/js/einladung.js` das Absenden ab und zeigt nur eine
-Quittung. Für einen zahlenden Kunden wird daraus ein `fetch` an die Engine.
+Ohne `rsvp.endpunkt` bleibt die Antwort im Browser — so verhält sich die
+öffentliche Vorschau, und der Hinweis unter dem Knopf sagt das auch. Mit
+Endpunkt geht sie an den Dienst unter `engine/rsvp/`:
 
-Ab diesem Moment werden **Daten fremder Gäste** verarbeitet — von Menschen,
-die nie einen Vertrag mit uns geschlossen haben. Damit gilt:
+```json
+"rsvp": {
+  "endpunkt": "https://rsvp.marke.example",
+  "kennung": "marlene-anton",
+  "frist": "2027-03-01"
+}
+```
+
+Danach `python3 build/einladung.py`. Das erzeugt zusätzlich
+`datenschutz.html` und verlinkt sie unter dem Formular und im Fuß.
+
+Aufbau und Betrieb des Dienstes: **`engine/rsvp/README.md`**.
+
+### Ab hier gilt Datenschutzrecht
+
+Vom ersten gesendeten Byte an werden **Daten fremder Gäste** verarbeitet — von
+Menschen, die nie einen Vertrag mit uns geschlossen haben. Damit gilt:
 
 - Auftragsverarbeitungsvertrag mit dem Paar, EU-Hosting, benannte Löschfrist.
+  Die Frist greift im Dienst von selbst; ein Löschversprechen, an das sich
+  jemand erinnern muss, wird irgendwann vergessen.
 - Keine Gratis-Formulardienste für echte Kunden.
 - **Keine Abfrage von Allergien oder Unverträglichkeiten.** Das sind
-  Gesundheitsdaten nach Art. 9 DSGVO. Das Formular fragt bewusst nur nach einer
-  Vorliebe am Tisch (alles / vegetarisch / vegan). Wer mehr braucht, erhebt es
-  getrennt, mit eigenem Hinweis und eigener Rechtsgrundlage.
+  Gesundheitsdaten nach Art. 9 DSGVO. Das Formular fragt bewusst nur nach
+  einer Vorliebe am Tisch (alles / vegetarisch / vegan). Wer mehr braucht,
+  erhebt es getrennt, mit eigenem Hinweis und eigener Rechtsgrundlage.
+- Der Text der Datenschutzseite (`build/datenschutz.py`) ist ein **Entwurf**.
+  Vor dem ersten verkauften Exemplar muss ihn jemand prüfen, der das darf.
 
 Einzelheiten in `docs/10-legal-and-limits.md` und `docs/07-mvp-and-tech.md`.
 
 ---
 
-## Ausliefern
+## Eine Einladung ausliefern
 
-1. Ordner `themes/ambra/` auf einen statischen Hoster laden
-   (Cloudflare Pages, Netlify, jeder Webspace).
-2. Subdomain darauf zeigen lassen: `ambra.<marke>.de` für die Demo,
-   `<paarname>.<marke>.de` für einen Kunden.
-3. In `index.html` die `og:image`-Angabe auf die **absolute** Adresse setzen.
-   Ein relativer Pfad wird von keinem Vorschaudienst aufgelöst, und dann zeigt
-   die geteilte Nachricht eine leere Fläche.
-4. `<meta name="robots" content="noindex, nofollow">` steht drin und bleibt
-   drin: die Einladung eines Paares gehört nicht in eine Suchmaschine.
+### Einmal je Marke
+
+1. Einen kleinen Server in der EU. Node 22 darauf.
+2. `engine/rsvp/` hinlegen, Dienst als systemd-Unit einrichten, Caddy davor.
+   Anleitung: `engine/rsvp/README.md`.
+3. Wildcard auf die Marke zeigen lassen: `*.marke.de` auf den Webspace,
+   `rsvp.marke.de` auf den Dienst.
+
+### Je Kunde
+
+- [ ] `themes/ambra/` kopieren nach `themes/<paar>/`
+- [ ] `daten.json` ausfüllen: Namen, Termin, Ort, Weg, Ablauf, Hinweise
+- [ ] `vorschau` auf `false` — der Streifen gehört nicht auf eine echte Einladung
+- [ ] `rsvp.endpunkt` und eine eindeutige `kennung` eintragen
+- [ ] `kennung=YYYY-MM-DD` in `FESTE` des Dienstes ergänzen, Dienst neu starten
+- [ ] Fotos hereinreichen, `python3 build/art/ambra_fotos.py …`
+- [ ] Musik ersetzen, **mit Lizenz** (siehe oben)
+- [ ] `python3 build/einladung.py <paar>`
+- [ ] `python3 build/art/ambra_og.py` für die Vorschaukarte
+- [ ] `og:image` auf die **absolute** Adresse setzen. Ein relativer Pfad wird
+      von keinem Vorschaudienst aufgelöst, und dann zeigt die geteilte
+      Nachricht eine leere Fläche.
+- [ ] Ordner hochladen, Subdomain `<paar>.marke.de` daraufzeigen
+- [ ] **Einmal selbst antworten** und in `/uebersicht` nachsehen, dass es ankam
+- [ ] Dem Paar die Adresse von `/uebersicht` und sein Token geben
+
+`<meta name="robots" content="noindex, nofollow">` steht drin und bleibt drin:
+die Einladung eines Paares gehört nicht in eine Suchmaschine.
+
+### Was beim Verkauf mitgeht
+
+| | |
+|---|---|
+| Die Einladung | unter eigener Subdomain, Laufzeit nach `docs/02-product-and-pricing.md` |
+| Die Gästeliste | `/uebersicht` mit eigenem Token, CSV jederzeit |
+| Der AVV | Vorlage in `site/recht/avv.html` |
+| Die Löschung | greift von selbst, Frist steht in der Datenschutzseite |
 
 ---
 

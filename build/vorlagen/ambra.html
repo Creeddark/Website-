@@ -3,8 +3,8 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-<title>Marlene &amp; Anton — 13. Juni 2027</title>
-<meta name="description" content="Wir heiraten. Am 13. Juni 2027 auf Gut Morgentau, 82335 Berg am Starnberger See. Alle Angaben zum Tag und zur Rückmeldung.">
+<title>{{titel}}</title>
+<meta name="description" content="{{beschreibung}}">
 <meta name="theme-color" content="#14100C">
 <meta name="robots" content="noindex, nofollow">
 
@@ -12,10 +12,10 @@
      zeigt WhatsApp eine leere Fläche, und genau dort entsteht der erste
      Eindruck. Das Bild wird beim Ausliefern erzeugt, siehe themes/README.md. -->
 <meta property="og:type" content="website">
-<meta property="og:title" content="Marlene &amp; Anton — 13. Juni 2027">
-<meta property="og:description" content="Wir heiraten. Gut Morgentau am Starnberger See.">
+<meta property="og:title" content="{{titel}}">
+<meta property="og:description" content="{{og_text}}">
 <meta property="og:locale" content="de_DE">
-<meta property="og:image" content="assets/img/og.png">
+<meta property="og:image" content="{{og_bild}}">
 <meta property="og:image:width" content="1200">
 <meta property="og:image:height" content="630">
 <meta name="twitter:card" content="summary_large_image">
@@ -72,8 +72,8 @@
     <div class="env__back" aria-hidden="true"></div>
 
     <div class="env__card" aria-hidden="true">
-      <span data-en="Save the date">Save the date</span>
-      <b>13 · 06 · 2027</b>
+      <span data-en="{{umschlag_en}}">{{umschlag_de}}</span>
+      <b>{{siegel_datum}}</b>
     </div>
 
     <div class="env__front" aria-hidden="true"></div>
@@ -113,26 +113,20 @@
          Bewegung eingestellt hat. Der Film legt sich erst darueber, wenn er
          wirklich spielen kann. -->
     <div class="hero__media" aria-hidden="true">
-      <img src="assets/img/hero.webp" alt="" width="1080" height="1920"
-           fetchpriority="high" data-optional>
-      <video class="hero__video" data-hero-video
-             muted loop playsinline disablepictureinpicture preload="none">
-        <source data-quelle="assets/video/hero.webm" type="video/webm">
-        <source data-quelle="assets/video/hero.mp4" type="video/mp4">
-      </video>
+{{hero_medien}}
     </div>
 
-    <p class="hero__kicker rise" data-en="We are getting married">Wir heiraten</p>
+    <p class="hero__kicker rise" data-en="{{kicker_en}}">{{kicker_de}}</p>
 
     <h1 class="hero__namen rise" style="--d:120ms">
-      Marlene<span class="hero__amp">&amp;</span>Anton
+      {{name_a}}<span class="hero__amp">&amp;</span>{{name_b}}
     </h1>
 
     <p class="hero__datum rise" style="--d:240ms">
-      <time datetime="2027-06-13" data-en="Sunday, 13 June 2027">Sonntag, 13. Juni 2027</time>
+      <time datetime="{{tag}}" data-en="{{datum_en}}">{{datum_de}}</time>
     </p>
     <p class="hero__ort rise" style="--d:320ms"
-       data-en="Gut Morgentau on Lake Starnberg">Gut Morgentau am Starnberger See</p>
+       data-en="{{ortkurz_en}}">{{ortkurz_de}}</p>
 
     <p class="hero__scroll" aria-hidden="true">
       <i></i>
@@ -147,7 +141,7 @@
       <p class="eyebrow rise" data-en="Until we say yes">Bis wir Ja sagen</p>
       <h2 class="vh" id="t-uhr">Countdown</h2>
 
-      <div class="uhr rise" style="--d:100ms" data-uhr data-ziel="2027-06-13T14:00:00+02:00">
+      <div class="uhr rise" style="--d:100ms" data-uhr data-ziel="{{beginn}}">
         <div><b data-uhr-t>—</b><span data-en="Days">Tage</span></div>
         <div><b data-uhr-h>—</b><span data-en="Hours">Stunden</span></div>
         <div><b data-uhr-m>—</b><span data-en="Minutes">Minuten</span></div>
@@ -165,36 +159,14 @@
   <!-- ====================================================== Geschichte == -->
   <section class="section on-paper" data-grund="hell" aria-labelledby="t-weg">
     <div class="wrap">
-      <p class="eyebrow rise" data-en="How it began">Wie es anfing</p>
+      <p class="eyebrow rise" data-en="{{weg_eyebrow_en}}">{{weg_eyebrow_de}}</p>
       <h2 class="section__title rise" style="--d:80ms" id="t-weg"
-          data-en="Our story">Unser Weg</h2>
+          data-en="{{weg_titel_en}}">{{weg_titel_de}}</h2>
 
       <ol class="spur rise" data-spur>
         <span class="spur__linie" aria-hidden="true"></span>
 
-        <li style="--d:200ms">
-          <time datetime="2019" data-en="Summer 2019">Sommer 2019</time>
-          <h3 data-en="A borrowed umbrella">Ein geliehener Schirm</h3>
-          <p data-en="A downpour outside the Munich Volkstheater, one umbrella between us, and a walk that took a lot longer than the way home needed.">Ein Wolkenbruch vor dem Münchner Volkstheater, ein Schirm für zwei, und ein Weg, der viel länger dauerte als der Heimweg gebraucht hätte.</p>
-        </li>
-
-        <li style="--d:320ms">
-          <time datetime="2021" data-en="Spring 2021">Frühjahr 2021</time>
-          <h3 data-en="Fifty-two square metres">Zweiundfünfzig Quadratmeter</h3>
-          <p data-en="Our first flat together. Too small, too loud, and the best year we could have asked for.">Die erste gemeinsame Wohnung. Zu klein, zu laut, und das beste Jahr, das wir uns hätten wünschen können.</p>
-        </li>
-
-        <li style="--d:440ms">
-          <time datetime="2024" data-en="Autumn 2024">Herbst 2024</time>
-          <h3 data-en="On the jetty">Auf dem Steg</h3>
-          <p data-en="Anton had rehearsed a speech. He got through the first sentence.">Anton hatte eine Rede vorbereitet. Bis zum ersten Satz kam er.</p>
-        </li>
-
-        <li style="--d:560ms">
-          <time datetime="2027-06-13" data-en="13 June 2027">13. Juni 2027</time>
-          <h3 data-en="And now, you">Und jetzt ihr</h3>
-          <p data-en="The part we cannot do on our own. We would love you to be there.">Der Teil, den wir nicht allein können. Wir würden uns freuen, wenn ihr dabei seid.</p>
-        </li>
+{{weg_punkte}}
       </ol>
     </div>
   </section>
@@ -204,24 +176,13 @@
   <section class="section on-paper" data-grund="hell" aria-labelledby="t-bilder"
            style="padding-block-start:0">
     <div class="wrap">
-      <p class="eyebrow rise" data-en="A few moments">Ein paar Augenblicke</p>
+      <p class="eyebrow rise" data-en="{{gal_eyebrow_en}}">{{gal_eyebrow_de}}</p>
       <h2 class="section__title rise" style="--d:80ms" id="t-bilder"
-          data-en="Us">Wir zwei</h2>
+          data-en="{{gal_titel_en}}">{{gal_titel_de}}</h2>
     </div>
 
     <ul class="galerie rise" style="--d:160ms" data-galerie>
-      <li><button type="button"><img src="assets/img/g-1.webp" width="900" height="1200" loading="lazy"
-        alt="Marlene und Anton im Kerzenlicht, sie lehnt an seiner Schulter"
-        data-alt-en="Marlene and Anton in candlelight, her head against his shoulder"></button></li>
-      <li><button type="button"><img src="assets/img/g-2.webp" width="900" height="1200" loading="lazy"
-        alt="Zwei Trauringe auf dunklem Holz neben einer brennenden Kerze"
-        data-alt-en="Two wedding bands on dark wood beside a lit candle"></button></li>
-      <li><button type="button"><img src="assets/img/g-3.webp" width="900" height="1200" loading="lazy"
-        alt="Stirn an Stirn, kurz bevor es losgeht"
-        data-alt-en="Forehead to forehead, moments before it begins"></button></li>
-      <li><button type="button"><img src="assets/img/g-4.webp" width="900" height="1200" loading="lazy"
-        alt="Gut Morgentau bei Einbruch der Dunkelheit, alle Fenster erleuchtet"
-        data-alt-en="Gut Morgentau at nightfall, every window lit"></button></li>
+{{galerie}}
     </ul>
 
     <div class="wrap"><svg class="orn" viewBox="0 0 240 16" aria-hidden="true"><use href="#i-orn"></use></svg></div>
@@ -232,41 +193,12 @@
   <section class="section on-paper" data-grund="hell" aria-labelledby="t-tag"
            style="padding-block-start:0">
     <div class="wrap">
-      <p class="eyebrow rise" data-en="How the day runs">So läuft der Tag</p>
+      <p class="eyebrow rise" data-en="{{tag_eyebrow_en}}">{{tag_eyebrow_de}}</p>
       <h2 class="section__title rise" style="--d:80ms" id="t-tag"
-          data-en="The day">Der Tag</h2>
+          data-en="{{tag_titel_en}}">{{tag_titel_de}}</h2>
 
       <ol class="ablauf">
-        <li class="rise" style="--d:120ms">
-          <time datetime="14:00">14:00</time>
-          <h3 data-en="Arrival">Ankommen</h3>
-          <p data-en="Sparkling wine in the courtyard. Come as early as you like.">Sekt im Innenhof. Kommt so früh, wie ihr mögt.</p>
-        </li>
-        <li class="rise" style="--d:200ms">
-          <time datetime="15:00">15:00</time>
-          <h3 data-en="Ceremony">Trauung</h3>
-          <p data-en="In the orchard. Please take your seats by ten to three.">Im Obstgarten. Bitte nehmt bis zehn vor drei Platz.</p>
-        </li>
-        <li class="rise" style="--d:280ms">
-          <time datetime="16:00">16:00</time>
-          <h3 data-en="Coffee and cake">Kaffee und Kuchen</h3>
-          <p data-en="On the lawn, with far too much cake.">Auf der Wiese, mit deutlich zu viel Kuchen.</p>
-        </li>
-        <li class="rise" style="--d:360ms">
-          <time datetime="18:30">18:30</time>
-          <h3 data-en="Dinner">Abendessen</h3>
-          <p data-en="At the long table in the barn.">An der langen Tafel im Stadel.</p>
-        </li>
-        <li class="rise" style="--d:440ms">
-          <time datetime="21:00">21:00</time>
-          <h3 data-en="First dance">Eröffnungstanz</h3>
-          <p data-en="After that the floor belongs to everyone.">Danach gehört die Fläche allen.</p>
-        </li>
-        <li class="rise" style="--d:520ms">
-          <time datetime="02:00">02:00</time>
-          <h3 data-en="Last song">Letztes Lied</h3>
-          <p data-en="Breakfast is at ten, for anyone still standing.">Frühstück gibt es um zehn, für alle, die noch stehen.</p>
-        </li>
+{{ablauf}}
       </ol>
     </div>
   </section>
@@ -276,20 +208,20 @@
   <section class="section on-paper" data-grund="hell" aria-labelledby="t-ort"
            style="padding-block-start:0">
     <div class="wrap">
-      <p class="eyebrow rise" data-en="Where">Wo</p>
+      <p class="eyebrow rise" data-en="{{wo_eyebrow_en}}">{{wo_eyebrow_de}}</p>
       <h2 class="section__title rise" style="--d:80ms" id="t-ort"
-          data-en="The place">Der Ort</h2>
+          data-en="{{wo_titel_en}}">{{wo_titel_de}}</h2>
 
       <div class="karte rise" style="--d:160ms">
-        <h3>Gut Morgentau</h3>
+        <h3>{{ort_name}}</h3>
         <address>
-          Seeuferweg 8<br>
-          82335 Berg am Starnberger See
+          {{ort_strasse}}<br>
+          {{ort_stadt}}
         </address>
 
         <div class="knopfreihe">
           <a class="knopf" data-karte
-             href="https://www.google.com/maps/search/?api=1&amp;query=Seeuferweg+8%2C+82335+Berg+am+Starnberger+See"
+             href="{{ort_karte}}"
              target="_blank" rel="noopener">
             <svg aria-hidden="true"><use href="#i-pin"></use></svg>
             <span data-en="Open in maps">In Karten öffnen</span>
@@ -304,18 +236,7 @@
       <svg class="orn" viewBox="0 0 240 16" aria-hidden="true"><use href="#i-orn"></use></svg>
 
       <ol class="ablauf rise">
-        <li><time data-en="Dress">Kleid</time>
-          <h3 data-en="Black tie, warm tones welcome">Festlich, gern in warmen Tönen</h3>
-          <p data-en="The ceremony is on grass. Bring heels you can walk on.">Die Trauung ist auf Wiese. Denkt an Absätze, mit denen ihr laufen könnt.</p>
-        </li>
-        <li><time data-en="Stay">Bett</time>
-          <h3 data-en="Rooms held until 1 March">Zimmer bis zum 1. März reserviert</h3>
-          <p data-en="Ten rooms at the estate, under our name.">Zehn Zimmer auf dem Gut, unter unserem Namen.</p>
-        </li>
-        <li><time data-en="Gifts">Gabe</time>
-          <h3 data-en="Your presence is plenty">Eure Anwesenheit reicht völlig</h3>
-          <p data-en="If you would still like to give something, we are saving for a long trip.">Wer trotzdem etwas schenken möchte: wir sparen auf eine lange Reise.</p>
-        </li>
+{{hinweise}}
       </ol>
     </div>
   </section>
@@ -326,13 +247,13 @@
        leuchtet. In dieser Vorschau verlässt nichts den Browser. -->
   <section class="section on-night antwort" data-grund="dunkel" aria-labelledby="t-rsvp">
     <div class="wrap">
-      <p class="eyebrow rise" data-en="Please reply">Bitte antwortet</p>
+      <p class="eyebrow rise" data-en="{{rsvp_eyebrow_en}}">{{rsvp_eyebrow_de}}</p>
       <h2 class="section__title rise" style="--d:80ms" id="t-rsvp">RSVP</h2>
       <p class="lede rise" style="--d:160ms"
-         data-en="We would be glad to hear from you by 1 March 2027.">Wir freuen uns über eure Rückmeldung bis zum 1. März 2027.</p>
+         data-en="{{rsvp_lede_en}}">{{rsvp_lede_de}}</p>
 
       <form class="rise" style="--d:240ms" data-rsvp novalidate
-            data-endpunkt="" data-kennung="marlene-anton">
+            data-endpunkt="{{rsvp_endpunkt}}" data-kennung="{{rsvp_kennung}}">
         <div class="feld">
           <label for="r-name" data-en="Name">Name</label>
           <input id="r-name" name="name" type="text" autocomplete="name" required
@@ -402,7 +323,7 @@
 
         <p class="quittung" data-quittung hidden tabindex="-1"></p>
 
-        <p class="hinweis" data-en="Nothing is sent in this preview. Your reply stays in your browser.">In dieser Vorschau wird nichts gesendet. Eure Antwort bleibt in eurem Browser.</p>
+{{rsvp_hinweis}}
       </form>
     </div>
   </section>
@@ -410,24 +331,20 @@
 
   <footer class="fuss" data-grund="dunkel">
     <svg class="orn" viewBox="0 0 240 16" aria-hidden="true"><use href="#i-orn"></use></svg>
-    <p>Marlene &amp; Anton · 13. Juni 2027</p>
-    <p data-en="Questions? Write to us: ">Fragen? Schreibt uns: <a href="mailto:hallo@example.invalid">hallo@example.invalid</a></p>
+    <p>{{name_a}} &amp; {{name_b}} · {{datum_kurz}}</p>
+    <p data-en="Questions? Write to us: ">Fragen? Schreibt uns: <a href="mailto:{{mail}}">{{mail}}</a></p>
+{{fuss_recht}}
   </footer>
 
 </main>
 
 
-<!-- Der Vorschaustreifen. Er steht am Ende, damit er die Einladung nicht
-     stört, und sagt unmissverständlich, was das hier ist. -->
-<div class="vorschau">
-  <p><b>Live-Vorschau</b> · Theme AMBRA. Namen, Daten und Bilder sind erfunden.
-     In dieser Vorschau wird nichts gesendet und nichts gespeichert.</p>
-</div>
+{{vorschau}}
 
 <!-- Der Klangteppich ist selbst erzeugt und damit lizenzfrei. Für eine
      verkaufte Einladung ersetzt ihr ihn durch eine lizenzierte Aufnahme,
      siehe themes/README.md. -->
-<audio data-audio src="assets/audio/ambra.m4a" loop preload="none"></audio>
+<audio data-audio src="{{musik}}" loop preload="none"></audio>
 
 <dialog class="lupe" data-lupe>
   <form method="dialog">

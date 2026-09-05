@@ -1,0 +1,350 @@
+{
+  "_": [
+    "Der ganze Inhalt einer Einladung. Fuer einen neuen Kunden wird diese",
+    "Datei kopiert und geaendert, danach 'python3 build/einladung.py' —",
+    "das HTML wird daraus erzeugt und ist eingecheckt.",
+    "",
+    "Jeder Text steht als {de, en} da. Fehlt en, bleibt beim Umschalten",
+    "der deutsche Text stehen; das ist besser als eine leere Zeile."
+  ],
+  "theme": "ambra",
+  "sprachen": [
+    "de",
+    "en"
+  ],
+  "vorschau": true,
+  "paar": {
+    "a": "Marlene",
+    "b": "Anton"
+  },
+  "termin": {
+    "tag": "2027-06-13",
+    "beginn": "2027-06-13T14:00:00+02:00",
+    "lang": {
+      "de": "Sonntag, 13. Juni 2027",
+      "en": "Sunday, 13 June 2027"
+    },
+    "kurz": {
+      "de": "13. Juni 2027",
+      "en": "13 June 2027"
+    },
+    "siegel": "13 · 06 · 2027"
+  },
+  "ort": {
+    "name": "Gut Morgentau",
+    "strasse": "Seeuferweg 8",
+    "stadt": "82335 Berg am Starnberger See",
+    "kurz": {
+      "de": "Gut Morgentau am Starnberger See",
+      "en": "Gut Morgentau on Lake Starnberg"
+    },
+    "karte": "https://www.google.com/maps/search/?api=1&query=Seeuferweg+8%2C+82335+Berg+am+Starnberger+See"
+  },
+  "kalender": {
+    "start_utc": "20270613T120000Z",
+    "ende_utc": "20270614T000000Z",
+    "titel": "Hochzeit von Marlene und Anton",
+    "text": "Trauung 15:00 Uhr im Obstgarten. Ankommen ab 14:00 Uhr.",
+    "datei": "marlene-und-anton.ics"
+  },
+  "hero": {
+    "kicker": {
+      "de": "Wir heiraten",
+      "en": "We are getting married"
+    },
+    "bild": "assets/img/hero.webp",
+    "bild_masse": [
+      1080,
+      1920
+    ],
+    "film": [
+      "assets/video/hero.webm",
+      "assets/video/hero.mp4"
+    ]
+  },
+  "umschlag": {
+    "zeile": {
+      "de": "Save the date",
+      "en": "Save the date"
+    }
+  },
+  "weg": {
+    "eyebrow": {
+      "de": "Wie es anfing",
+      "en": "How it began"
+    },
+    "titel": {
+      "de": "Unser Weg",
+      "en": "Our story"
+    },
+    "punkte": [
+      {
+        "zeit": "2019",
+        "wann": {
+          "de": "Sommer 2019",
+          "en": "Summer 2019"
+        },
+        "titel": {
+          "de": "Ein geliehener Schirm",
+          "en": "A borrowed umbrella"
+        },
+        "text": {
+          "de": "Ein Wolkenbruch vor dem Münchner Volkstheater, ein Schirm für zwei, und ein Weg, der viel länger dauerte als der Heimweg gebraucht hätte.",
+          "en": "A downpour outside the Munich Volkstheater, one umbrella between us, and a walk that took a lot longer than the way home needed."
+        }
+      },
+      {
+        "zeit": "2021",
+        "wann": {
+          "de": "Frühjahr 2021",
+          "en": "Spring 2021"
+        },
+        "titel": {
+          "de": "Zweiundfünfzig Quadratmeter",
+          "en": "Fifty-two square metres"
+        },
+        "text": {
+          "de": "Die erste gemeinsame Wohnung. Zu klein, zu laut, und das beste Jahr, das wir uns hätten wünschen können.",
+          "en": "Our first flat together. Too small, too loud, and the best year we could have asked for."
+        }
+      },
+      {
+        "zeit": "2024",
+        "wann": {
+          "de": "Herbst 2024",
+          "en": "Autumn 2024"
+        },
+        "titel": {
+          "de": "Auf dem Steg",
+          "en": "On the jetty"
+        },
+        "text": {
+          "de": "Anton hatte eine Rede vorbereitet. Bis zum ersten Satz kam er.",
+          "en": "Anton had rehearsed a speech. He got through the first sentence."
+        }
+      },
+      {
+        "zeit": "2027-06-13",
+        "wann": {
+          "de": "13. Juni 2027",
+          "en": "13 June 2027"
+        },
+        "titel": {
+          "de": "Und jetzt ihr",
+          "en": "And now, you"
+        },
+        "text": {
+          "de": "Der Teil, den wir nicht allein können. Wir würden uns freuen, wenn ihr dabei seid.",
+          "en": "The part we cannot do on our own. We would love you to be there."
+        }
+      }
+    ]
+  },
+  "galerie": {
+    "eyebrow": {
+      "de": "Ein paar Augenblicke",
+      "en": "A few moments"
+    },
+    "titel": {
+      "de": "Wir zwei",
+      "en": "Us"
+    },
+    "bilder": [
+      {
+        "datei": "assets/img/g-1.webp",
+        "alt": {
+          "de": "Marlene und Anton im Kerzenlicht, sie lehnt an seiner Schulter",
+          "en": "Marlene and Anton in candlelight, her head against his shoulder"
+        }
+      },
+      {
+        "datei": "assets/img/g-2.webp",
+        "alt": {
+          "de": "Zwei Trauringe auf dunklem Holz neben einer brennenden Kerze",
+          "en": "Two wedding bands on dark wood beside a lit candle"
+        }
+      },
+      {
+        "datei": "assets/img/g-3.webp",
+        "alt": {
+          "de": "Stirn an Stirn, kurz bevor es losgeht",
+          "en": "Forehead to forehead, moments before it begins"
+        }
+      },
+      {
+        "datei": "assets/img/g-4.webp",
+        "alt": {
+          "de": "Gut Morgentau bei Einbruch der Dunkelheit, alle Fenster erleuchtet",
+          "en": "Gut Morgentau at nightfall, every window lit"
+        }
+      }
+    ]
+  },
+  "ablauf": {
+    "eyebrow": {
+      "de": "So läuft der Tag",
+      "en": "How the day runs"
+    },
+    "titel": {
+      "de": "Der Tag",
+      "en": "The day"
+    },
+    "punkte": [
+      {
+        "zeit": "14:00",
+        "titel": {
+          "de": "Ankommen",
+          "en": "Arrival"
+        },
+        "text": {
+          "de": "Sekt im Innenhof. Kommt so früh, wie ihr mögt.",
+          "en": "Sparkling wine in the courtyard. Come as early as you like."
+        }
+      },
+      {
+        "zeit": "15:00",
+        "titel": {
+          "de": "Trauung",
+          "en": "Ceremony"
+        },
+        "text": {
+          "de": "Im Obstgarten. Bitte nehmt bis zehn vor drei Platz.",
+          "en": "In the orchard. Please take your seats by ten to three."
+        }
+      },
+      {
+        "zeit": "16:00",
+        "titel": {
+          "de": "Kaffee und Kuchen",
+          "en": "Coffee and cake"
+        },
+        "text": {
+          "de": "Auf der Wiese, mit deutlich zu viel Kuchen.",
+          "en": "On the lawn, with far too much cake."
+        }
+      },
+      {
+        "zeit": "18:30",
+        "titel": {
+          "de": "Abendessen",
+          "en": "Dinner"
+        },
+        "text": {
+          "de": "An der langen Tafel im Stadel.",
+          "en": "At the long table in the barn."
+        }
+      },
+      {
+        "zeit": "21:00",
+        "titel": {
+          "de": "Eröffnungstanz",
+          "en": "First dance"
+        },
+        "text": {
+          "de": "Danach gehört die Fläche allen.",
+          "en": "After that the floor belongs to everyone."
+        }
+      },
+      {
+        "zeit": "02:00",
+        "titel": {
+          "de": "Letztes Lied",
+          "en": "Last song"
+        },
+        "text": {
+          "de": "Frühstück gibt es um zehn, für alle, die noch stehen.",
+          "en": "Breakfast is at ten, for anyone still standing."
+        }
+      }
+    ]
+  },
+  "wo": {
+    "eyebrow": {
+      "de": "Wo",
+      "en": "Where"
+    },
+    "titel": {
+      "de": "Der Ort",
+      "en": "The place"
+    },
+    "hinweise": [
+      {
+        "marke": {
+          "de": "Kleid",
+          "en": "Dress"
+        },
+        "titel": {
+          "de": "Festlich, gern in warmen Tönen",
+          "en": "Black tie, warm tones welcome"
+        },
+        "text": {
+          "de": "Die Trauung ist auf Wiese. Denkt an Absätze, mit denen ihr laufen könnt.",
+          "en": "The ceremony is on grass. Bring heels you can walk on."
+        }
+      },
+      {
+        "marke": {
+          "de": "Bett",
+          "en": "Stay"
+        },
+        "titel": {
+          "de": "Zimmer bis zum 1. März reserviert",
+          "en": "Rooms held until 1 March"
+        },
+        "text": {
+          "de": "Zehn Zimmer auf dem Gut, unter unserem Namen.",
+          "en": "Ten rooms at the estate, under our name."
+        }
+      },
+      {
+        "marke": {
+          "de": "Gabe",
+          "en": "Gifts"
+        },
+        "titel": {
+          "de": "Eure Anwesenheit reicht völlig",
+          "en": "Your presence is plenty"
+        },
+        "text": {
+          "de": "Wer trotzdem etwas schenken möchte: wir sparen auf eine lange Reise.",
+          "en": "If you would still like to give something, we are saving for a long trip."
+        }
+      }
+    ]
+  },
+  "rsvp": {
+    "eyebrow": {
+      "de": "Bitte antwortet",
+      "en": "Please reply"
+    },
+    "lede": {
+      "de": "Wir freuen uns über eure Rückmeldung bis zum 1. März 2027.",
+      "en": "We would be glad to hear from you by 1 March 2027."
+    },
+    "_endpunkt": [
+      "Adresse des RSVP-Dienstes, ohne abschliessenden Schraegstrich.",
+      "Leer lassen heisst: die Antwort bleibt im Browser und es wird nichts",
+      "gesendet. Genau so verhaelt sich die oeffentliche Vorschau.",
+      "Mit Adresse siehe engine/rsvp/README.md."
+    ],
+    "endpunkt": "",
+    "kennung": "marlene-anton",
+    "frist": "2027-03-01"
+  },
+  "kontakt": {
+    "mail": "hallo@example.invalid"
+  },
+  "musik": "assets/audio/ambra.m4a",
+  "recht": {
+    "verantwortlich": {
+      "de": "Marlene und Anton",
+      "en": "Marlene and Anton"
+    },
+    "loeschfrist": {
+      "de": "vier Wochen nach der Hochzeit",
+      "en": "four weeks after the wedding"
+    },
+    "betreiber": "VELORA",
+    "_": "betreiber = wer den Dienst technisch betreibt und damit Auftragsverarbeiter nach Art. 28 DSGVO ist."
+  }
+}
