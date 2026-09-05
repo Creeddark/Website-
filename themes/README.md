@@ -211,8 +211,9 @@ deutsche Text stehen; eine leere Zeile wäre schlimmer.
 | `rsvp.endpunkt` | ob wirklich gesendet wird, siehe unten |
 | `vorschau` | den Streifen am Fuß, der sagt, dass alles erfunden ist |
 
-Der Kalendereintrag steht noch in `assets/js/einladung.js`, in UTC. Das ist
-die eine Stelle, die der Generator noch nicht bedient.
+Der Kalendereintrag kommt aus `kalender` in derselben Datei, Zeiten in UTC.
+Er steht als Attribute am Knopf, nicht im JavaScript — stünde er dort, trüge
+das zweite Paar die Hochzeit des ersten in seinen Kalender ein.
 
 ### Weitere Sprachen, auch von rechts nach links
 

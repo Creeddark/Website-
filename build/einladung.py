@@ -170,7 +170,7 @@ def vorschau(d: dict) -> str:
 
 def felder(d: dict) -> dict[str, str]:
     paar = d["paar"]
-    t, o = d["termin"], d["ort"]
+    t, o, k = d["termin"], d["ort"], d["kalender"]
     namen = f'{paar["a"]} & {paar["b"]}'
     return {
         "titel": f'{e(namen)} — {de(t["kurz"])}',
@@ -213,6 +213,11 @@ def felder(d: dict) -> dict[str, str]:
         "rsvp_endpunkt": e(d["rsvp"].get("endpunkt", "")),
         "rsvp_kennung": e(d["rsvp"].get("kennung", "")),
         "rsvp_hinweis": rsvp_hinweis(d),
+
+        "ics_start": e(k["start_utc"]), "ics_ende": e(k["ende_utc"]),
+        "ics_titel": e(k["titel"]), "ics_text": e(k["text"]),
+        "ics_ort": e(f'{o["name"]}, {o["strasse"]}, {o["stadt"]}'),
+        "ics_datei": e(k["datei"]),
 
         "mail": e(d["kontakt"]["mail"]),
         "fuss_recht": fuss_recht(d),

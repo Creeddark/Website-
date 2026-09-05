@@ -171,32 +171,54 @@
   })();
 
   /* ------------------------------------------------------------- Kalender -- */
+  /* Die Angaben stehen am Knopf, nicht hier. Stuenden sie hier, traegt das
+     zweite Paar die Hochzeit des ersten in seinen Kalender ein. */
   (function kalender() {
     var knopf = $("[data-ics]");
-    if (!knopf) return;
+    if (!knopf || !knopf.dataset.icsStart) return;
+
+    /* In einer ICS-Datei sind Komma, Semikolon und Backslash Trennzeichen.
+       Eine Adresse mit Komma zerlegt sonst den Eintrag. */
+    function ics_text(t) {
+      return String(t || "")
+        .replace(/\\/g, "\\\\")
+        .replace(/;/g, "\;")
+        .replace(/,/g, "\\,")
+        .replace(/\r?\n/g, "\\n");
+    }
+
+    /* Zeilen ueber 75 Oktett muessen umbrochen werden, sonst weisen strenge
+       Kalenderprogramme die Datei zurueck. */
+    function falten(zeile) {
+      if (zeile.length <= 73) return zeile;
+      var aus = zeile.slice(0, 73), rest = zeile.slice(73);
+      while (rest.length) { aus += "\r\n " + rest.slice(0, 72); rest = rest.slice(72); }
+      return aus;
+    }
 
     knopf.addEventListener("click", function () {
-      var ics = [
+      var d = knopf.dataset;
+      var zeilen = [
         "BEGIN:VCALENDAR",
         "VERSION:2.0",
         "PRODID:-//AMBRA//Einladung//DE",
         "CALSCALE:GREGORIAN",
         "BEGIN:VEVENT",
-        "UID:ambra-marlene-anton@example.invalid",
+        "UID:" + (d.icsKennung || "ambra") + "@einladung.invalid",
         "DTSTAMP:" + stempel(new Date()),
-        "DTSTART:20270613T120000Z",
-        "DTEND:20270614T000000Z",
-        "SUMMARY:Hochzeit von Marlene und Anton",
-        "LOCATION:Gut Morgentau\\, Seeuferweg 8\\, 82335 Berg am Starnberger See",
-        "DESCRIPTION:Trauung 15:00 Uhr im Obstgarten. Ankommen ab 14:00 Uhr.",
+        "DTSTART:" + d.icsStart,
+        "DTEND:" + d.icsEnde,
+        "SUMMARY:" + ics_text(d.icsTitel),
+        "LOCATION:" + ics_text(d.icsOrt),
+        "DESCRIPTION:" + ics_text(d.icsText),
         "END:VEVENT",
         "END:VCALENDAR"
-      ].join("\r\n");
+      ].map(falten).join("\r\n") + "\r\n";
 
-      var url = URL.createObjectURL(new Blob([ics], { type: "text/calendar;charset=utf-8" }));
+      var url = URL.createObjectURL(new Blob([zeilen], { type: "text/calendar;charset=utf-8" }));
       var a = document.createElement("a");
       a.href = url;
-      a.download = "marlene-und-anton.ics";
+      a.download = d.icsDatei || "einladung.ics";
       document.body.appendChild(a);
       a.click();
       a.remove();
