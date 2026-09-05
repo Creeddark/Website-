@@ -35,10 +35,10 @@ Dunkeln, dort wo die Antwort abgegeben wird.
 | Baustein | Zustand |
 |---|---|
 | Umschlag mit Wachssiegel, 3D-Öffnung | fertig |
-| Hero mit Namen, Datum, Ort, langsamer Bildfahrt | fertig, Foto fehlt |
+| Hero mit Namen, Datum, Ort, langsamer Bildfahrt | fertig |
 | Countdown, live, mit Zustand „danach" | fertig |
 | Zeitstrahl „Unser Weg", zeichnet sich beim Scrollen | fertig |
-| Galerie mit Lichtkasten (`<dialog>`) | fertig, Zeichnungen statt Fotos |
+| Galerie mit Lichtkasten (`<dialog>`) | fertig, drei Fotos |
 | Ablauf des Tages | fertig |
 | Ort mit Karten- und Kalenderknopf (.ics im Browser erzeugt) | fertig |
 | RSVP mit allen acht Zustandsformen | fertig, sendet nichts |
@@ -48,30 +48,56 @@ Dunkeln, dort wo die Antwort abgegeben wird.
 
 ### Was noch fehlt
 
-**Die Fotos.** Der Hero und die Galerie sind für Fotos gebaut, ausgeliefert
-werden vorerst Zeichnungen. Das ist kein Notbehelf: ein verkauftes Theme
-braucht ein fertiges Aussehen, *bevor* ein Paar eigene Bilder hochlädt.
+**Die Auflösung.** Hero, Siegel und Galerie sind mit 384 px breiten Vorlagen
+gebaut, weil der Weg über den Chat sie verkleinert hat. Auf einem heutigen
+Telefon ist der bildschirmfüllende Hero dadurch sichtbar weich. Die Originale
+haben 1536 bzw. 2048 px; siehe „Bilder in voller Auflösung nachreichen".
 
 **Die Anbindung.** Das RSVP-Formular behält alles im Browser. Für einen echten
 Kunden muss es an die Engine senden, siehe unten.
+
+**Zwei weitere Galeriebilder.** Drei Kacheln tragen die Galerie, fünf wären
+schöner. Details ohne Gesichter eignen sich am besten, weil dort die Frage der
+Wiedererkennbarkeit gar nicht erst entsteht.
 
 ---
 
 ## Eigene Fotos einsetzen
 
-Die Bildplätze sind bereits verdrahtet. Es reicht, Dateien abzulegen:
+Es gibt ein Skript dafür, damit bei jedem Kunden nicht von Hand zugeschnitten
+werden muss:
+
+```bash
+python3 build/art/ambra_fotos.py <hero> <siegel> <g1> <g2> <g3>
+```
+
+Es beschneidet auf das richtige Verhältnis, verkleinert auf die Zielgröße,
+schreibt WebP und **stellt das Siegel frei**: der weiße Grund wird von den
+Bildecken her weggeflutet, die Glanzlichter im Wachs bleiben stehen. Ein
+globaler Helligkeitsfilter würde die mit wegnehmen.
 
 | Datei | Format | Wo |
 |---|---|---|
-| `assets/img/hero.webp` | hochkant, 9:16, ca. 1150 × 2048 | Titelbild. Fehlt es, bleibt Kerzenlicht im Dunkeln stehen. |
-| `assets/img/g-1.webp` … `g-5.webp` | hochkant, 3:4, ca. 900 × 1200 | Galerie |
+| `assets/img/hero.webp` | hochkant 9:16, Ziel 1080 × 1920 | Titelbild. Fehlt es, bleibt Kerzenlicht im Dunkeln stehen. |
+| `assets/img/siegel.webp` | freigestellt, mit Alphakanal | das Siegel auf dem Umschlag |
+| `assets/img/g-1.webp` … | hochkant 3:4, Ziel 900 × 1200 | Galerie |
 
-Für die Galerie danach in `index.html` die fünf `src`-Angaben von
-`g-ringe.svg` … `g-gut.svg` auf die neuen Dateien umstellen und die
-`alt`-Texte anpassen. Die `alt`-Texte sind Pflicht, nicht Zierde.
+Hochskaliert wird bewusst nicht: ein weichgerechnetes Bild sieht schlechter
+aus als ein kleines, das der Browser selbst skaliert.
 
-Der Hero braucht kein Umstellen: `hero.webp` wird bereits geladen und
-verschwindet lautlos, solange die Datei fehlt (`data-optional`).
+Kommen weitere Kacheln dazu, in `index.html` ein `<li>` ergänzen. Die
+`alt`-Texte sind Pflicht, nicht Zierde, und jedes Bild trägt zusätzlich ein
+`data-alt-en` für die englische Fassung.
+
+### Bilder in voller Auflösung nachreichen
+
+Der Weg über den Chat verkleinert Bilder auf 384 px Breite. Wer die Originale
+einspielen will, lädt sie direkt in den Branch: auf GitHub **Add file →
+Upload files** in `themes/ambra/assets/img/`, oder lokal committen und pushen.
+Danach `build/art/ambra_fotos.py` erneut laufen lassen.
+
+Die gezeichneten Blätter (`g-ringe.svg` und die vier anderen) bleiben im
+Ordner. Sie sind der Stand für ein Paar, das noch keine Fotos hochgeladen hat.
 
 ### Bilder erzeugen
 

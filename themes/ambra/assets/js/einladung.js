@@ -326,6 +326,11 @@
         if (!el.dataset.de) el.dataset.de = lies(el);
         schreib(el, lang === "en" ? el.dataset.en : el.dataset.de);
       });
+      // Bildbeschreibungen gehoeren genauso uebersetzt wie der sichtbare Text.
+      $$("[data-alt-en]").forEach(function (img) {
+        if (!img.dataset.altDe) img.dataset.altDe = img.alt;
+        img.alt = lang === "en" ? img.dataset.altEn : img.dataset.altDe;
+      });
       knoepfe.forEach(function (b) {
         b.setAttribute("aria-pressed", String(b.dataset.lang === lang));
       });
