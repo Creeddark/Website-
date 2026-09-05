@@ -35,7 +35,7 @@ Dunkeln, dort wo die Antwort abgegeben wird.
 | Baustein | Zustand |
 |---|---|
 | Umschlag mit Wachssiegel, 3D-Öffnung | fertig |
-| Hero mit Namen, Datum, Ort, langsamer Bildfahrt | fertig |
+| Hero als Film, stumm in Schleife, mit Standbild als Rückfallebene | fertig |
 | Countdown, live, mit Zustand „danach" | fertig |
 | Zeitstrahl „Unser Weg", zeichnet sich beim Scrollen | fertig |
 | Galerie mit Lichtkasten (`<dialog>`) | fertig, vier Fotos |
@@ -48,10 +48,11 @@ Dunkeln, dort wo die Antwort abgegeben wird.
 
 ### Was noch fehlt
 
-**Die Auflösung.** Hero, Siegel und Galerie sind mit 384 px breiten Vorlagen
-gebaut, weil der Weg über den Chat sie verkleinert hat. Auf einem heutigen
-Telefon ist der bildschirmfüllende Hero dadurch sichtbar weich. Die Originale
-haben 1536 bzw. 2048 px; siehe „Bilder in voller Auflösung nachreichen".
+**Die Auflösung der Galerie.** Die vier Kacheln und das Siegel sind mit 384 px
+breiten Vorlagen gebaut, weil der Weg über den Chat Bilder verkleinert. Der
+Hero ist davon nicht mehr betroffen: sein Standbild wird aus dem Film
+geschnitten und hat volle 1080 × 1920. Für die Kacheln siehe „Bilder in voller
+Auflösung nachreichen".
 
 **Die Anbindung.** Das RSVP-Formular behält alles im Browser. Für einen echten
 Kunden muss es an die Engine senden, siehe unten.
@@ -114,6 +115,35 @@ sieht das Paar auf jedem Bild anders aus, und das fällt sofort auf.
 
 ---
 
+## Der Hero-Film
+
+`assets/video/hero.mp4` und `hero.webm` sind derselbe fünf Sekunden lange
+Clip in zwei Formaten. Der Browser nimmt das erste, das er abspielen kann:
+VP9 ist kleiner, H.264 läuft überall, insbesondere auf älteren iPhones.
+
+Erzeugt hat ihn `build/art/ambra_film.py` aus einem Rohclip von 15 MB. Übrig
+bleiben 0,49 bzw. 0,63 MB. Drei Dinge sind dabei nicht verhandelbar:
+
+- **`-movflags +faststart`.** Ohne das liegen die Kopfdaten am Dateiende und
+  die Wiedergabe beginnt erst, wenn alles geladen ist.
+- **Keine Tonspur.** Der Film ist stumm, die Musik läuft getrennt und nur auf
+  Knopfdruck.
+- **Das Standbild kommt aus dem Film selbst** (erstes Vollbild). Käme es aus
+  einer anderen Quelle, sähe man beim Übergang einen Sprung in Farbe und
+  Ausschnitt.
+
+So verhält sich die Seite:
+
+| Fall | Was passiert |
+|---|---|
+| Vor dem Öffnen | Film wird **nicht** angefordert, erste Ansicht bleibt bei 264 KB |
+| Nach dem Öffnen | lädt, spielt stumm in Schleife, blendet über 1,2 s ein |
+| Sobald er läuft | die Kamerafahrt des Standbilds hält an |
+| Datei fehlt oder Format wird nicht unterstützt | Videoelement verschwindet lautlos, Standbild plus Kamerafahrt bleiben |
+| `prefers-reduced-motion` | Film wird nie angefordert |
+
+---
+
 ## Musik austauschen
 
 `assets/audio/ambra.m4a` ist selbst synthetisiert (`build/art/ambra_ton.py`)
@@ -133,6 +163,7 @@ gehört sich auch nicht.
 python3 build/art/ambra.py        # Siegel und Galeriezeichnungen (SVG)
 python3 build/art/ambra_ton.py    # Klangteppich (24 s, nahtlose Schleife)
 python3 build/art/ambra_og.py     # Vorschaukarte 1200×630 für WhatsApp & Co.
+python3 build/art/ambra_film.py <rohclip.mp4>   # Hero-Film in Webgröße
 ```
 
 Alle drei Ergebnisse sind eingecheckt. Die Skripte laufen nur, wenn etwas

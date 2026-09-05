@@ -387,8 +387,11 @@
     if (!v || sanft.matches) return;          // weniger Bewegung: Standbild
 
     function starten() {
-      if (v.src) return;
-      v.src = v.dataset.quelle;
+      var quellen = $$("source[data-quelle]", v);
+      if (!quellen.length || quellen[0].src) return;
+      // Zwei Formate: VP9 ist kleiner, H.264 laeuft ueberall. Der Browser
+      // nimmt das erste, das er abspielen kann.
+      quellen.forEach(function (s) { s.src = s.dataset.quelle; });
       v.addEventListener("canplay", function () {
         var lauf = v.play();
         if (!lauf || !lauf.then) { zeigen(); return; }
