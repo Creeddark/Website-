@@ -119,7 +119,10 @@ function pruefen(k) {
   if (!Number.isFinite(anzahl) || anzahl < 1 || anzahl > 12) anzahl = 1;
   if (zusage === "nein") anzahl = 0;
 
-  const essen = ESSEN.has(k.essen) ? k.essen : "alles";
+  // Wer absagt, sitzt an keinem Tisch. Sonst stuende in der Liste des Paares
+  // neben jeder Absage eine Essenswahl, die niemand getroffen hat.
+  let essen = ESSEN.has(k.essen) ? k.essen : "alles";
+  if (zusage === "nein") essen = "";
   const gruss = typeof k.gruss === "string"
     ? k.gruss.replace(/[\u0000-\u0009\u000B\u000C\u000E-\u001F\u007F]/g, " ")
         .trim().slice(0, 1000)
@@ -259,7 +262,7 @@ const UEBERSICHT = `<!doctype html>
         "<td class='" + (a.zusage === "ja" ? "" : "nein") + "'>" +
         (a.zusage === "ja" ? "Ja" : "Nein") + "</td>" +
         "<td>" + (a.zusage === "ja" ? a.anzahl : "—") + "</td>" +
-        "<td class='g'>" + esc(a.essen) + "</td>" +
+        "<td class='g'>" + (a.essen ? esc(a.essen) : "—") + "</td>" +
         "<td class='g'>" + esc(a.gruss) + "</td></tr>";
     }).join("");
     inhalt.innerHTML =

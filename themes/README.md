@@ -24,6 +24,21 @@ cd themes/ambra && python3 -m http.server 8100
 Dann <http://localhost:8100>. **Über HTTP öffnen, nicht per Doppelklick** —
 `file://` blockiert das Laden der Schriften.
 
+### Zum Verschicken
+
+```bash
+python3 build/artefakt.py themes/ambra vorschau.html "Marlene &amp; Anton"
+```
+
+Faltet den ganzen Ordner in **eine** Datei: Schriften, Fotos, Film und Ton
+wandern als Daten-URLs ins HTML. Die Datei läuft ohne Server und ohne
+Nachbardateien — gut für eine Vorschau, die jemand nur anschauen soll.
+
+Für die Auslieferung ist das der falsche Weg: dort will man den Film erst
+auf Verlangen laden und Dateien, die der Browser behalten kann. Darum fehlt
+in der gefalteten Datei das WebM, und der Kalenderknopf sagt statt zu laden,
+dass er das nur auf der fertigen Seite tut.
+
 ---
 
 ## AMBRA
