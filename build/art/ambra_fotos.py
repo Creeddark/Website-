@@ -7,7 +7,7 @@ kommen, und legt sie im richtigen Zuschnitt, in der richtigen Groesse und als
 WebP im Theme ab. Dieselbe Aufgabe stellt sich bei jedem Kunden wieder, darum
 ein Skript und keine Handarbeit.
 
-    python3 build/art/ambra_fotos.py <hero> <siegel> <g1> <g2> <g3>
+    python3 build/art/ambra_fotos.py <hero> <siegel> <papier> <kachel> [<kachel> ...]
 
 Das Siegel wird freigestellt: der weisse Grund wird von den Ecken her
 weggenommen, damit es auf dem dunklen Umschlag liegen kann. Nur zusammen-
@@ -29,8 +29,9 @@ IMG = ROOT / "themes" / "ambra" / "assets" / "img"
 # aber nicht groesser als noetig: eine Einladung wird unterwegs geoeffnet,
 # oft mit schlechtem Empfang.
 ZIELE = {
-    "hero":  (1080, 1920, 80),   # bildschirmfuellend, 9:16
+    "hero":   (1080, 1920, 80),  # bildschirmfuellend, 9:16
     "kachel": (900, 1200, 78),   # Galerie, 3:4
+    "papier": (700, 700, 82),    # Faserung des Umschlags, quadratisch
 }
 
 
@@ -100,14 +101,18 @@ def freistellen(im: Image.Image, schwelle: int = 232, weich: float = 0.9) -> Ima
 
 
 def main(argv: list[str]) -> int:
-    if len(argv) != 5:
+    if len(argv) < 4:
         print(__doc__.strip())
         return 2
-    hero, siegel, *kacheln = (pathlib.Path(a) for a in argv)
+    hero, siegel, papier, *kacheln = (pathlib.Path(a) for a in argv)
 
     b, h, q = ZIELE["hero"]
     passend(Image.open(hero).convert("RGB"), b, h).save(
         IMG / "hero.webp", "WEBP", quality=q, method=6)
+
+    b, h, q = ZIELE["papier"]
+    passend(Image.open(papier).convert("RGB"), b, h).save(
+        IMG / "papier.webp", "WEBP", quality=q, method=6)
 
     s = freistellen(Image.open(siegel))
     if s.width > 640:
@@ -115,14 +120,17 @@ def main(argv: list[str]) -> int:
     s.save(IMG / "siegel.webp", "WEBP", quality=88, method=6, exact=True)
 
     b, h, q = ZIELE["kachel"]
+    namen = ["hero.webp", "siegel.webp", "papier.webp"]
     for i, k in enumerate(kacheln, start=1):
         passend(Image.open(k).convert("RGB"), b, h).save(
             IMG / f"g-{i}.webp", "WEBP", quality=q, method=6)
+        namen.append(f"g-{i}.webp")
 
-    for name in ("hero.webp", "siegel.webp", "g-1.webp", "g-2.webp", "g-3.webp"):
-        p = IMG / name
-        with Image.open(p) as im:
-            print(f"  {name:14} {im.size[0]:>5}x{im.size[1]:<5} {p.stat().st_size // 1024:>4} KB")
+    for name in namen:
+        pfad = IMG / name
+        with Image.open(pfad) as im:
+            print(f"  {name:14} {im.size[0]:>5}x{im.size[1]:<5} "
+                  f"{pfad.stat().st_size // 1024:>4} KB")
     return 0
 
 

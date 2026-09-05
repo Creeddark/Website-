@@ -38,7 +38,7 @@ Dunkeln, dort wo die Antwort abgegeben wird.
 | Hero mit Namen, Datum, Ort, langsamer Bildfahrt | fertig |
 | Countdown, live, mit Zustand „danach" | fertig |
 | Zeitstrahl „Unser Weg", zeichnet sich beim Scrollen | fertig |
-| Galerie mit Lichtkasten (`<dialog>`) | fertig, drei Fotos |
+| Galerie mit Lichtkasten (`<dialog>`) | fertig, vier Fotos |
 | Ablauf des Tages | fertig |
 | Ort mit Karten- und Kalenderknopf (.ics im Browser erzeugt) | fertig |
 | RSVP mit allen acht Zustandsformen | fertig, sendet nichts |
@@ -56,9 +56,10 @@ haben 1536 bzw. 2048 px; siehe „Bilder in voller Auflösung nachreichen".
 **Die Anbindung.** Das RSVP-Formular behält alles im Browser. Für einen echten
 Kunden muss es an die Engine senden, siehe unten.
 
-**Zwei weitere Galeriebilder.** Drei Kacheln tragen die Galerie, fünf wären
-schöner. Details ohne Gesichter eignen sich am besten, weil dort die Frage der
-Wiedererkennbarkeit gar nicht erst entsteht.
+**Mehr Abwechslung in der Galerie.** Vier Kacheln im Zweierraster, davon zwei
+Porträts. Weitere Aufnahmen sollten Details ohne Gesichter sein (Hände, Tafel,
+Schleier), weil die Frage der Wiedererkennbarkeit dort gar nicht erst entsteht
+und die Galerie sonst zu porträtlastig wird.
 
 ---
 
@@ -68,7 +69,7 @@ Es gibt ein Skript dafür, damit bei jedem Kunden nicht von Hand zugeschnitten
 werden muss:
 
 ```bash
-python3 build/art/ambra_fotos.py <hero> <siegel> <g1> <g2> <g3>
+python3 build/art/ambra_fotos.py <hero> <siegel> <papier> <kachel> [<kachel> ...]
 ```
 
 Es beschneidet auf das richtige Verhältnis, verkleinert auf die Zielgröße,
@@ -80,6 +81,7 @@ globaler Helligkeitsfilter würde die mit wegnehmen.
 |---|---|---|
 | `assets/img/hero.webp` | hochkant 9:16, Ziel 1080 × 1920 | Titelbild. Fehlt es, bleibt Kerzenlicht im Dunkeln stehen. |
 | `assets/img/siegel.webp` | freigestellt, mit Alphakanal | das Siegel auf dem Umschlag |
+| `assets/img/papier.webp` | quadratisch, Ziel 700 × 700 | Faserung aller Papierflächen des Umschlags |
 | `assets/img/g-1.webp` … | hochkant 3:4, Ziel 900 × 1200 | Galerie |
 
 Hochskaliert wird bewusst nicht: ein weichgerechnetes Bild sieht schlechter

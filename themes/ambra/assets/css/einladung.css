@@ -303,9 +303,15 @@ body.chrome-hell .chip button[aria-pressed="true"] { color: var(--brass); }
 .env__back, .env__front, .env__flap, .env__card {
   position: absolute;
   inset: 0;
+  /* Drei Lagen: feines Rauschen, das Licht, und darunter echte Papierfaser.
+     Jede Flaeche skaliert die Faser fuer sich, dadurch wirken sie wie
+     getrennte Bogen und nicht wie eine durchgehende Tapete. */
   background-image: var(--faser),
-    linear-gradient(160deg, #FDFAF4 0%, #F1E7D6 58%, #E6D9C3 100%);
-  background-size: 140px 140px, cover;
+    linear-gradient(160deg, rgba(255, 253, 248, 0.62) 0%,
+                            rgba(243, 233, 216, 0.50) 58%,
+                            rgba(226, 212, 188, 0.58) 100%),
+    url("../img/papier.webp");
+  background-size: 140px 140px, cover, cover;
 }
 .env__back {
   border-radius: 3px;
@@ -316,7 +322,10 @@ body.chrome-hell .chip button[aria-pressed="true"] { color: var(--brass); }
   clip-path: polygon(0 0, 50% 46%, 100% 0, 100% 100%, 0 100%);
   border-radius: 3px;
   background-image: var(--faser),
-    linear-gradient(168deg, #FCF7EE 0%, #EFE4D1 58%, #DFCFB5 100%);
+    linear-gradient(168deg, rgba(253, 249, 241, 0.60) 0%,
+                            rgba(238, 227, 208, 0.52) 58%,
+                            rgba(219, 203, 176, 0.62) 100%),
+    url("../img/papier.webp");
   box-shadow: 0 -1px 0 rgba(0, 0, 0, 0.07) inset;
   transform: translateZ(0);
 }
@@ -325,7 +334,10 @@ body.chrome-hell .chip button[aria-pressed="true"] { color: var(--brass); }
   transform-origin: 50% 0;
   transform: translateZ(1px) rotateX(0deg);
   background-image: var(--faser),
-    linear-gradient(184deg, #FAF2E5 0%, #E9DCC4 68%, #D4C1A0 100%);
+    linear-gradient(184deg, rgba(252, 246, 235, 0.58) 0%,
+                            rgba(233, 220, 196, 0.54) 68%,
+                            rgba(206, 187, 154, 0.64) 100%),
+    url("../img/papier.webp");
   filter: drop-shadow(0 4px 6px rgba(56, 38, 16, 0.28));
 }
 /* Keine eigene Rueckseite: der Filter oben flacht das Element ab, damit
@@ -345,7 +357,10 @@ body.chrome-hell .chip button[aria-pressed="true"] { color: var(--brass); }
   /* Heller und glatter als der Umschlag. Traegt die Karte dasselbe Papier,
      verschmilzt sie beim Herausfahren mit dem Fach. */
   background-image: var(--faser),
-    linear-gradient(170deg, #FFFDF8 0%, #FAF4E9 62%, #F2E9DA 100%);
+    linear-gradient(170deg, rgba(255, 255, 252, 0.74) 0%,
+                            rgba(252, 247, 238, 0.66) 62%,
+                            rgba(243, 234, 219, 0.70) 100%),
+    url("../img/papier.webp");
   box-shadow: 0 -2px 12px rgba(48, 32, 12, 0.16),
               0 16px 36px rgba(0, 0, 0, 0.42);
 }
@@ -703,8 +718,8 @@ body.is-scrolled .hero__scroll { opacity: 0; }
 @media (min-width: 46rem) {
   .galerie {
     grid-auto-flow: row;
-    grid-template-columns: repeat(3, 1fr);
-    width: min(100% - 3rem, 52rem);
+    grid-template-columns: repeat(2, 1fr);
+    width: min(100% - 3rem, 40rem);
     margin-inline: auto;
     padding-inline: 0;
     overflow: visible;
