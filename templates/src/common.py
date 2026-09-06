@@ -84,9 +84,14 @@ body{{display:flex;flex-direction:column;align-items:center;gap:40px;padding:40p
 """
 
 
-def page(inner, label, *, bg="#FFFFFF", extra_style=""):
+def page(inner, label, *, bg="#FFFFFF", extra_style="", w=None, h=None):
+    """Eine Designseite. w und h weichen nur ab, wo ein anderes Format noetig
+    ist — das Anleitungsblatt ist A4, die Karten bleiben 5 x 7 Zoll."""
+    size = ""
+    if w or h:
+        size = f"width:{w or W}px;height:{h or H}px;"
     return (f'<div class="page" data-document-role="page" data-label="{label}" '
-            f'style="background:{bg};{extra_style}">\n{inner}\n</div>')
+            f'style="{size}background:{bg};{extra_style}">\n{inner}\n</div>')
 
 
 def text(content, *, left, top, width=None, size=16, family="Montserrat",
