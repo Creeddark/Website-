@@ -15,8 +15,8 @@ das Produkt anfassen, bevor er zahlt. Er braucht eine Adresse, die dir gehört.
 #    Du bekommst eine Adresse wie zarte-torte-1a2b3c.netlify.app
 
 # 2. Alle Bilder mit dieser Adresse neu erzeugen:
-python3 build/etsy/bilder.py https://deine-adresse.netlify.app
-python3 build/etsy/pruefung.py https://deine-adresse.netlify.app
+python3 build/etsy/bilder.py https://simeah.netlify.app
+python3 build/etsy/pruefung.py https://simeah.netlify.app
 ```
 
 Die Prüfung liest den QR-Code aus dem fertigen Bild — einmal in voller Größe
@@ -59,7 +59,7 @@ elegante einladung
 > Fotos, der Ablauf des Tages — und ein Formular, mit dem eure Gäste antworten.
 >
 > **Probiert sie aus, bevor ihr bestellt:**
-> **‹DEMO-ADRESSE›**
+> **simeah.netlify.app**
 >
 > ---
 >
