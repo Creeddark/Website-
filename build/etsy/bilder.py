@@ -125,6 +125,64 @@ def qr(adresse: str, dunkel: str = "#1B150F") -> str:
             + "".join(teile) + "</svg>")
 
 
+# ====================================================================== 00 ==
+def abzeichen(inhalt: str, groesse: int = 210) -> str:
+    """Ein rundes Abzeichen in Messing. Zwei davon stehen auf dem Startbild:
+    was die Einladung kann, bevor jemand ein Wort gelesen hat."""
+    return f"""
+    <div style="width:{groesse}px; height:{groesse}px; border-radius:50%;
+                background:var(--night-2); border:2px solid var(--brass-lit);
+                box-shadow:0 18px 44px rgba(0,0,0,0.5);
+                display:grid; place-items:center; flex:none">{inhalt}</div>"""
+
+
+NOTE = """
+    <svg viewBox="0 0 24 24" width="86" height="86" fill="none"
+         stroke="#D8B677" stroke-width="1.3" stroke-linecap="round"
+         stroke-linejoin="round" aria-hidden="true">
+      <path d="M9 18V5l10-2v13"/>
+      <circle cx="6.5" cy="18" r="2.6"/>
+      <circle cx="16.5" cy="16" r="2.6"/>
+    </svg>"""
+
+RSVP = """
+    <span style="font-family:var(--ff-display); font-size:58px; line-height:1;
+                 color:var(--brass-lit); letter-spacing:0.02em">RSVP</span>"""
+
+
+def b00_start() -> str:
+    """Das Startbild. Es zeigt in einem Blick, was drin steckt: ein Umschlag,
+    der sich oeffnet, Musik, und eine Antwort, die zurueckkommt."""
+    return """
+<div class="buehne nacht" style="flex-direction:row; align-items:center;
+     gap:70px">
+  <div class="spalte" style="flex:1">
+    <p class="marke">simeah</p>
+    <h1 style="margin-top:40px; font-size:120px">
+      Hochzeits&shy;einladung<br>zum Öffnen.
+    </h1>
+    <div style="display:inline-flex; align-self:flex-start; margin-top:44px;
+                padding:20px 42px; border-radius:999px;
+                border:2px solid var(--brass-lit); color:var(--brass-lit);
+                font-size:27px; letter-spacing:0.26em; font-weight:500;
+                text-transform:uppercase">
+      Fertig eingerichtet
+    </div>
+    <p class="lede" style="margin-top:44px; font-size:35px; max-width:760px">
+      Wachssiegel, Film, Countdown, Musik — und eine Rückmeldung, die bei
+      euch ankommt statt im Gruppenchat.
+    </p>
+    <div class="reihe" style="gap:38px; margin-top:56px; align-items:center">
+      @@abz1@@ @@abz2@@
+    </div>
+  </div>
+  <div style="position:relative; width:820px; height:1400px; flex:none">
+    <div style="position:absolute; right:0; top:0">@@fon_hero@@</div>
+    <div style="position:absolute; left:0; bottom:0">@@fon_umschlag@@</div>
+  </div>
+</div>"""
+
+
 # ====================================================================== 01 ==
 def b01_titel() -> str:
     """Das Vorschaubild. Es hat eine Aufgabe: dass jemand klickt.
@@ -146,7 +204,7 @@ def b01_titel() -> str:
     </p>
     <p style="margin-top:56px; font-size:26px; letter-spacing:0.24em;
               text-transform:uppercase; color:var(--brass-lit)">
-      89&thinsp;€ · in fünf Tagen fertig
+      15&thinsp;€ · in fünf Tagen fertig
     </p>
   </div>
   <div style="position:relative; width:880px; height:1330px; flex:none">
@@ -275,7 +333,7 @@ def b06_preis() -> str:
      align-items:center">
   <p class="marke">Was es kostet</p>
   <p style="font-family:var(--ff-display); font-size:340px; line-height:1;
-            margin-top:40px">89&thinsp;€</p>
+            margin-top:40px">15&thinsp;€</p>
   <p style="margin-top:24px; font-size:28px; letter-spacing:0.24em;
             text-transform:uppercase; color:var(--brass-lit)">
     einmalig · 18 Monate online</p>
@@ -406,6 +464,12 @@ def seiten(adresse: str, echt: bool) -> dict[str, str]:
         ' Adresse neu erzeugen</p>')
 
     return {
+        "00-start": ersetzen(b00_start(), {
+            "abz1": abzeichen(RSVP),
+            "abz2": abzeichen(NOTE),
+            "fon_hero": fon("04-countdown", 420),
+            "fon_umschlag": fon("01-umschlag", 520),
+        }),
         "01-titel": ersetzen(b01_titel(), {
             "fon_hero": fon("03-hero", 440),
             "fon_umschlag": fon("01-umschlag", 540),
@@ -456,23 +520,6 @@ def seiten(adresse: str, echt: bool) -> dict[str, str]:
                 schritt(4, "Wir schalten sie frei",
                         "Ihr bekommt die Adresse zum Weitergeben und einen "
                         "eigenen Zugang zu den Rückmeldungen."),
-            ]),
-        }),
-        "08-eure": ersetzen(b08_eure(), {
-            "fon": fon("05-weg", 560),
-            "punkte": "".join([
-                punkt("Eure Namen und euer Termin",
-                      "So, wie sie auf der Einladung stehen sollen."),
-                punkt("Eure Geschichte",
-                      "Drei bis vier Stationen. Jahr, Überschrift, zwei Sätze."),
-                punkt("Der Ablauf des Tages",
-                      "Uhrzeit, was passiert, ein Satz dazu."),
-                punkt("Eure Fotos",
-                      "Ein hochkantes Titelbild und drei bis fünf weitere. "
-                      "Wenn ihr einen kurzen Film habt: her damit."),
-                punkt("Wir bauen daraus die Seite",
-                      "Ihr braucht kein Konto, keine Vorlage und kein "
-                      "Programm."),
             ]),
         }),
         "09-zwei": ersetzen(b09_zwei(), {

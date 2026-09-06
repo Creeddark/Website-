@@ -56,7 +56,7 @@ Das Video, das du ohnehin drehen wolltest: Umschlag öffnet sich, Countdown,
 Galerie. Die Adresse aus Schritt 3 in die Bio.
 
 Was in der Bildunterschrift funktioniert: **was es kostet und wie lange es
-dauert.** „89 €, in fünf Tagen fertig" beantwortet die zwei Fragen, die sonst
+dauert.** „15 €, in fünf Tagen fertig" beantwortet die zwei Fragen, die sonst
 in den Kommentaren stehen.
 
 ### 5 · Auf die erste Anfrage antworten
@@ -192,7 +192,7 @@ Damit du dich nicht daran aufhältst:
 
 | | |
 |---|---|
-| Einladung | **89 €**, 18 Monate online |
+| Einladung | **15 €**, 18 Monate online |
 | Deine Kosten je Kunde | rund **0 €** — Server und Domain laufen ohnehin |
 | Deine Zeit je Kunde | **2 bis 3 Stunden**, davon eine für die Fotos |
 

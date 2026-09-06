@@ -92,7 +92,7 @@ elegante einladung
 > 4. Wir schalten sie frei. Ihr bekommt die endgültige Adresse und einen
 >    eigenen Zugang zu den Rückmeldungen.
 >
-> **89 € einmalig, 18 Monate online.** Änderungen in dieser Zeit kosten nichts.
+> **15 € einmalig, 18 Monate online.** Änderungen in dieser Zeit kosten nichts.
 > **Deutsch und Englisch sind enthalten**, wenn ihr die Texte in beiden
 > Sprachen liefert. Sollen wir übersetzen, kostet das 29 €.
 > Eigene Domain angebunden 39 € · Verlängerung um 12 Monate 19 €
@@ -123,7 +123,7 @@ elegante einladung
 | Herstellung | **Auf Bestellung angefertigt** |
 | Bearbeitungszeit | 3–5 Werktage |
 | Personalisierung | **an** — Feld: „Eure Namen und euer Hochzeitsdatum" |
-| Preis | 89 € |
+| Preis | 15 € |
 | Rückgabe | Bei personalisierten digitalen Artikeln ausgeschlossen. **Sag das auch in der Beschreibung**, sonst gibt es Ärger. |
 
 **Kein Sofort-Download.** Etsy würde sonst nach einer Datei fragen, die es
@@ -135,11 +135,22 @@ beim Widerrufsrecht.
 
 ## Was Etsy kostet
 
-Bei 89 € gehen etwa **8 €** an Etsy: 0,18 € Einstellgebühr, 6,5 %
-Transaktionsgebühr, dazu die Zahlungsabwicklung (rund 4 % + 0,30 €). Rechne
-mit **81 € netto** je Verkauf, bevor deine Steuer darauf anfällt.
+Bei 15 € gehen etwa **2 €** an Etsy: 0,18 € Einstellgebühr, 6,5 %
+Transaktionsgebühr, dazu die Zahlungsabwicklung (rund 4 % + 0,30 €). Bleiben
+**13 € netto** je Verkauf, bevor deine Steuer darauf anfällt.
 
-Ein Verkauf über deine eigene Seite bringt dir die vollen 89 €. Etsy ist
+**Rechne einmal mit deiner Zeit gegen.** Eine Einladung einzurichten dauert
+zwei bis drei Stunden — Fotos freistellen, Texte setzen, prüfen, ausliefern.
+Bei 13 € netto sind das vier bis sechs Euro die Stunde. Das trägt sich nur,
+wenn du entweder deutlich schneller wirst oder das Produkt so umbaust, dass
+der Kunde es selbst befüllt.
+
+Der Vergleich, den du selbst gefunden hast, sagt dasselbe: dieselbe Leistung
+als **„Done For You" liegt dort bei 66,75 €** (herabgesetzt von 89 €), und
+sie verkauft sich. Die 17 € daneben sind eine Canva-Vorlage, bei der der
+Käufer die Arbeit macht.
+
+Ein Verkauf über deine eigene Seite bringt dir die vollen 15 €. Etsy ist
 trotzdem der schnellere Anfang: dort suchen Leute bereits nach genau diesem
 Produkt. Nimm es als Schaufenster, nicht als Zuhause.
 
@@ -152,6 +163,5 @@ Produkt. Nimm es als Schaufenster, nicht als Zuhause.
 - **Gewerbeanmeldung**, bevor der erste Verkauf kommt.
 - **Kleinunternehmerregelung** in den Steuereinstellungen hinterlegen, falls
   sie für dich gilt.
-- **Ein Video.** Etsy erlaubt eines, 5–15 Sekunden, und Anzeigen mit Video
-  werden deutlich öfter geklickt. Nimm mit dem Telefon auf, wie sich der
-  Umschlag öffnet — das ist der stärkste Moment, den du hast.
+- **Das Video hochladen.** `build/etsy/bilder/video.mp4`, 13 Sekunden. Etsy
+  erlaubt genau eines, und Anzeigen mit Video werden deutlich öfter geklickt.
