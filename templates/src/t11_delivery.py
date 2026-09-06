@@ -97,8 +97,7 @@ def p_sheet():
                     + _link_box(336, 132)
                     + _rule(548)
                     + _step_marks(step_tops)
-                    + _rule(986)
-                    + _spray(AW / 2, 1058, scale=0.7, opacity=0.7),
+                    + _rule(972),
                     w=AW, h=AH)
     tt = [
         text("YOUR SHOP NAME", left=64, top=76, width=AW - 128, size=11,
@@ -142,10 +141,15 @@ def p_sheet():
                  line=1.6),
         ]
     tt += [
+        text("If your set has a photo area, this download also contains a short "
+             "video that shows how to swap the picture in Canva.",
+             left=64, top=986, width=AW - 128, size=12.5,
+             family="Cormorant Garamond", weight=400, color=INK_2,
+             style="italic", align="left", line=1.5),
         text("Personal use only. Please do not resell, share or redistribute "
              "this template or the link. &nbsp;·&nbsp; Questions? Message me "
              "through the shop &mdash; I answer every one.",
-             left=64, top=1012, width=AW - 128, size=11,
+             left=64, top=1042, width=AW - 128, size=11,
              family="Montserrat", weight=400, color=INK_3, align="left",
              line=1.7),
     ]

@@ -10,6 +10,7 @@ als eigene Designseite anlegt.
 """
 
 import base64
+import os
 import pathlib
 
 W, H = 750, 1050
@@ -112,6 +113,14 @@ def text(content, *, left, top, width=None, size=16, family="Montserrat",
 
 ASSET_DIR = pathlib.Path(__file__).resolve().parent.parent / "assets"
 
+# Traegt DEMO_PHOTOS einen Anlassnamen ("wedding", "baby"), treten an die
+# Stelle der neutralen Platzhalter die Beispielfotos dieses Anlasses. Das gilt
+# nur fuer die Verkaufsbilder: die ausgelieferte Vorlage behaelt den
+# Platzhalter, weil "YOUR PHOTO HERE" dem Kaeufer im Design deutlicher sagt,
+# was er dort tun soll. demo_render.py setzt die Variable je Suite neu, darum
+# wird sie erst beim Aufruf von image() gelesen und nicht beim Import.
+DEMO_PHOTOS = os.environ.get("DEMO_PHOTOS") or ""
+
 
 def image(name, *, left, top, width, height, alt="", extra="", radius=0):
     """
@@ -123,6 +132,10 @@ def image(name, *, left, top, width, height, alt="", extra="", radius=0):
     muss und nicht halb fehlschlagen kann.
     """
     path = ASSET_DIR / name
+    if DEMO_PHOTOS:
+        demo = ASSET_DIR / name.replace("photo-", f"demo-{DEMO_PHOTOS}-")
+        if demo.exists():
+            path = demo
     b64 = base64.b64encode(path.read_bytes()).decode()
     r = f"border-radius:{radius}px;" if radius else ""
     return (f'<img src="data:image/png;base64,{b64}" alt="{alt}" '

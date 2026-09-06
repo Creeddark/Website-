@@ -14,6 +14,7 @@ import re
 
 BASE = pathlib.Path(__file__).resolve().parent.parent
 PREV = BASE / "previews"
+PREV_DEMO = BASE / "previews-demo"      # dieselben Seiten mit Beispielfoto
 OUT = BASE / "listings"
 
 SUITES = [
@@ -96,8 +97,18 @@ SUITES = [
 ]
 
 
-def pages_of(slug):
-    return sorted(PREV.glob(f"{slug}-*.png"))
+def pages_of(slug, demo=True):
+    """Seiten einer Suite. Wo es eine Fassung mit eingesetztem Beispielfoto
+    gibt, gewinnt sie — im Verkaufsbild soll kein grauer Kasten stehen."""
+    plain = sorted(PREV.glob(f"{slug}-*.png"))
+    if not demo:
+        return plain
+    return [(PREV_DEMO / f.name) if (PREV_DEMO / f.name).exists() else f
+            for f in plain]
+
+
+def has_photo(slug):
+    return bool(list(PREV_DEMO.glob(f"{slug}-*.png")))
 
 
 CSS = """
@@ -121,6 +132,21 @@ body{background:#222;font-family:'Montserrat',system-ui,sans-serif;}
 .grid figcaption{margin-top:15px;font-size:13px;letter-spacing:.22em;
   text-transform:uppercase;font-weight:500;}
 .rule{position:absolute;height:1px;}
+/* --- Ablaufblatt --------------------------------------------------- */
+.step{position:absolute;display:flex;gap:26px;align-items:flex-start;}
+.step .num{flex:0 0 62px;height:62px;border-radius:50%;display:flex;
+  align-items:center;justify-content:center;font-family:'Playfair Display',serif;
+  font-size:27px;border:1.5px solid currentColor;}
+.step h3{font-family:'Playfair Display',Georgia,serif;font-size:34px;
+  font-weight:400;line-height:1.2;margin-bottom:9px;}
+.step p{font-size:16px;line-height:1.62;font-weight:400;}
+/* --- Vorher/Nachher ------------------------------------------------ */
+.pair{position:absolute;display:flex;gap:56px;align-items:center;}
+.pair figure{margin:0;text-align:center;}
+.pair figcaption{margin-top:18px;font-size:13px;letter-spacing:.24em;
+  text-transform:uppercase;font-weight:500;}
+.arrow{display:flex;flex-direction:column;align-items:center;gap:10px;
+  margin-top:-30px;}
 """
 
 
@@ -162,7 +188,13 @@ def hero(s):
 def included(s):
     pages = pages_of(s["slug"])
     n = len(pages)
-    card_w = 196 if n >= 4 else 246
+    # Die Karten bekommen den Platz, der zwischen Kopfzeile und Fusszeile
+    # tatsaechlich frei ist, statt an einer festen Hoehe zu kleben.
+    card_w = 216 if n >= 4 else 262
+    gap = 20
+    card_h = card_w * 1050 / 750
+    block_h = card_h + 15 + 16
+    top = 246 + (900 - 246 - block_h) / 2
     cells = ""
     for p in pages:
         # Dateiname ist <slug>-<nr>-<name>; nur der Name gehoert unter das Bild.
@@ -170,7 +202,7 @@ def included(s):
         cells += (f'<figure><img src="file://{p}" style="width:{card_w}px">'
                   f'<figcaption style="color:{s["ink"]};opacity:.72">{cap}</figcaption>'
                   f'</figure>')
-    total_w = n * card_w + (n - 1) * 26
+    total_w = n * card_w + (n - 1) * gap
     left = (1000 - total_w) / 2
     return f"""
 <div class="sheet" data-name="{s['slug']}-2-included">
@@ -183,7 +215,7 @@ def included(s):
        color:{s['ink']};letter-spacing:.02em">{s['name']}</div>
   <div class="rule" style="left:440px;top:214px;width:120px;
        background:{s['accent']};opacity:.85"></div>
-  <div class="grid" style="left:{left:.0f}px;top:280px">{cells}</div>
+  <div class="grid" style="left:{left:.0f}px;top:{top:.0f}px;gap:{gap}px">{cells}</div>
   <div class="badge" style="left:0;bottom:78px;width:1000px;justify-content:center;
        background:transparent;color:{s['ink']};opacity:.72;font-size:13px">
     5 &times; 7 in &nbsp;·&nbsp; 300 DPI &nbsp;·&nbsp; Fully editable in Canva
@@ -191,9 +223,105 @@ def included(s):
 </div>"""
 
 
+STEPS = [
+    ("Buy and download",
+     "You receive a PDF straight away. Inside is your personal link to the "
+     "template &mdash; nothing to unzip, nothing to install."),
+    ("Open it in Canva",
+     "A free Canva account is all you need. Click &ldquo;Use template&rdquo; "
+     "and Canva makes a private copy that is yours to change."),
+    ("Type over the text, print it",
+     "Names, dates, colours, fonts &mdash; everything is editable. Then "
+     "download as PDF for the printer, or as PNG to send by message."),
+]
+
+
+def how(s):
+    """Drittes Verkaufsbild: der Ablauf.
+
+    Auf Etsy ist die haeufigste unausgesprochene Frage bei einer digitalen
+    Vorlage nicht "gefaellt sie mir", sondern "kriege ich das hin". Dieses
+    Bild beantwortet sie, bevor sie gestellt wird.
+    """
+    rows = ""
+    for i, (title, body) in enumerate(STEPS):
+        rows += f"""
+  <div class="step" style="left:112px;top:{330 + i * 186}px;width:776px;
+       color:{s['ink']}">
+    <div class="num" style="color:{s['accent']}">{i + 1}</div>
+    <div><h3 style="color:{s['ink']}">{title}</h3>
+         <p style="color:{s['ink']};opacity:.74">{body}</p></div>
+  </div>"""
+    return f"""
+<div class="sheet" data-name="{s['slug']}-3-how-it-works">
+  <div class="surface" style="background:{s['bg']}"></div>
+  <div class="grain"></div>
+  <div class="label" style="left:0;top:108px;width:1000px;text-align:center;
+       font-size:14px;color:{s['ink']};opacity:.6;font-weight:500">How it works</div>
+  <div style="position:absolute;left:0;top:138px;width:1000px;text-align:center;
+       font-family:'Playfair Display',Georgia,serif;font-size:60px;
+       color:{s['ink']};letter-spacing:.02em">Three steps</div>
+  <div class="rule" style="left:440px;top:246px;width:120px;
+       background:{s['accent']};opacity:.85"></div>
+  {rows}
+  <div class="badge" style="left:0;bottom:80px;width:1000px;justify-content:center;
+       background:transparent;color:{s['ink']};opacity:.7;font-size:13px">
+    Works on phone, tablet or computer &nbsp;·&nbsp; No software to install
+  </div>
+</div>"""
+
+
+def photo_sheet(s):
+    """Viertes Verkaufsbild, nur fuer Suiten mit Bildfenster: derselbe
+    Entwurf einmal leer und einmal mit Foto. Das ist die Frage, die bei
+    Fotovorlagen sonst per Nachricht kommt."""
+    empty = pages_of(s["slug"], demo=False)[0]
+    filled = pages_of(s["slug"])[0]
+    return f"""
+<div class="sheet" data-name="{s['slug']}-4-your-photo">
+  <div class="surface" style="background:{s['bg']}"></div>
+  <div class="grain"></div>
+  <div class="label" style="left:0;top:104px;width:1000px;text-align:center;
+       font-size:14px;color:{s['ink']};opacity:.6;font-weight:500">
+    Add your own photo</div>
+  <div style="position:absolute;left:0;top:134px;width:1000px;text-align:center;
+       font-family:'Playfair Display',Georgia,serif;font-size:58px;
+       color:{s['ink']};letter-spacing:.02em">Drop it in. It fits.</div>
+  <div class="rule" style="left:440px;top:240px;width:120px;
+       background:{s['accent']};opacity:.85"></div>
+
+  <div class="pair" style="left:118px;top:300px">
+    <figure><img class="card" src="file://{empty}" style="width:340px;
+        position:static;display:block">
+      <figcaption style="color:{s['ink']};opacity:.7">The template</figcaption>
+    </figure>
+    <div class="arrow" style="color:{s['accent']}">
+      <svg width="66" height="26" viewBox="0 0 66 26">
+        <path d="M0,13 H58 M48,4 L60,13 L48,22" fill="none"
+              stroke="currentColor" stroke-width="1.6"/></svg>
+      <span style="font-size:11px;letter-spacing:.22em;text-transform:uppercase;
+            font-weight:500">Your photo</span>
+    </div>
+    <figure><img class="card" src="file://{filled}" style="width:340px;
+        position:static;display:block">
+      <figcaption style="color:{s['ink']};opacity:.7">Yours</figcaption>
+    </figure>
+  </div>
+
+  <div class="badge" style="left:0;bottom:74px;width:1000px;justify-content:center;
+       background:transparent;color:{s['ink']};opacity:.72;font-size:13px">
+    Drag your picture onto the frame in Canva &mdash; it crops itself
+  </div>
+</div>"""
+
+
 def build():
     from common import font_css
-    sheets = "".join(hero(s) + included(s) for s in SUITES)
+    sheets = ""
+    for s in SUITES:
+        sheets += hero(s) + included(s) + how(s)
+        if has_photo(s["slug"]):
+            sheets += photo_sheet(s)
     return f"""<!DOCTYPE html>
 <html><head><meta charset="utf-8"><title>Etsy listing images</title>
 <style>

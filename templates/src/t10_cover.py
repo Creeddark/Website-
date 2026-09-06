@@ -20,7 +20,7 @@ FAMILIES = {"Bodoni Moda", "Abril Fatface", "Montserrat", "Pinyon Script",
 
 def _defs(t):
     return (art.scrim("top", stops=((0, 0.62), (0.30, 0.20), (1, 0.06)), angle=90)
-            + art.scrim("bottom", stops=((0, 0.0), (0.42, 0.14), (1, 0.86)),
+            + art.scrim("bottom", stops=((0, 0.0), (0.38, 0.20), (1, 0.90)),
                         angle=90)
             + art.paper_grain("grain", opacity=0.05, freq=0.9)
             + art.linear_bg("edge", [(0, t["ink"], 0.35), (0.3, t["ink"], 0),

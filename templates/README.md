@@ -23,13 +23,21 @@ src/
   art.py          Vektor-Kunst: Blattwerk, Kränze, Girlanden, 3D-Kugeln,
                   Schnee, Fledermäuse, Spinnennetz, Verläufe
   common.py       Seitenformat, Schrifteinbettung, Text- und SVG-Helfer
-  t01…t06_*.py    je eine Suite
+  t01…t11_*.py    je ein System (t11 ist das Anleitungsblatt A4)
   listings.py     Etsy-Verkaufsbilder aus den gerenderten Seiten
+  photo_crops.py  schneidet das Beispielfoto auf die vier Bildfenster zu
+  demo_render.py  zweiter Durchlauf der Foto-Suiten mit eingesetztem Foto
+  video.py        Erklärvideo und Angebotsvideo als HTML-Szene
   render.js       schießt Seiten als PNG (Faktor 2 = 300 DPI)
+  capture.js      nimmt eine Video-Szene Bild für Bild auf
+  encode.sh       Einzelbilder → mp4 (H.264)
   sheet.js        Kontaktbogen zum Prüfen mehrerer Seiten auf einen Blick
 dist/             fertige HTML-Dateien — das ist, was Canva importiert
+dist-demo/        dieselben Suiten mit Beispielfoto, nur für Verkaufsbilder
 previews/         Druckvorlagen 1500 × 2100 px
+previews-demo/    dieselben Seiten mit Foto
 listings/         Etsy-Bilder 2000 × 2000 px
+video/            Erklärvideo (1920 × 1080) und Angebotsvideo (1080 × 1080)
 fonts/            Schriften unter SIL Open Font License
 ```
 
@@ -46,8 +54,15 @@ python3 src/t01_wedding_ambra.py          # HTML nach dist/
 node src/render.js dist/01-wedding-ambra.html previews
 node src/sheet.js /tmp/pruef.png 4 330 previews/01-*.png
 
+python3 src/photo_crops.py                # Beispielfoto → vier Zuschnitte
+python3 src/demo_render.py                # Foto-Suiten nach previews-demo/
+
 python3 src/listings.py                   # alle Verkaufsbilder
 node src/render.js dist/_listings.html listings 2 ".sheet" "data-name"
+
+python3 src/video.py                      # Szenen nach video/*.html
+node src/capture.js video/howto-photo-de.html /tmp/f 1280 720 1.5 30
+sh src/encode.sh /tmp/f video/howto-photo-de.mp4 30
 ```
 
 ## Weg nach Canva
@@ -61,6 +76,54 @@ Etsy-Vorlagen.
 ```
 https://raw.githubusercontent.com/Creeddark/Website-/refs/heads/<branch>/templates/dist/<datei>.html
 ```
+
+## Beispielfoto und Bildfenster
+
+Fünf Suiten haben ein Bildfenster: **THE TIMES** (drei Anlässe) und **COVER**
+(zwei). Canva macht daraus beim Import ein austauschbares Bildfeld — der Käufer
+zieht sein eigenes Foto darauf und es rastet ein.
+
+Zwei getrennte Fassungen, mit Absicht:
+
+- **Ausgeliefert** wird die Vorlage mit dem neutralen Platzhalter
+  (`assets/photo-*.png`, „YOUR PHOTO HERE"). Der sagt dem Käufer im Design
+  selbst, was er dort tun soll.
+- **Verkaufsbilder und Video** zeigen dieselben Seiten mit einem echten Foto
+  (`assets/demo-<anlass>-<fenster>.png`, zugeschnitten aus
+  `assets/photo-example-<anlass>.*`). Ein grauer Kasten im Angebotsbild
+  verkauft nichts.
+
+Jeder Anlass hat sein eigenes Foto — ein Hochzeitskuss in einer Geburtsanzeige
+wäre schlimmer als ein grauer Platzhalter. `demo_render.DEMO_SUITES` ordnet
+Suite und Anlass einander zu; wer dort fehlt, behält auch im Verkaufsbild den
+Platzhalter. Zurzeit belegt: **wedding** und **baby**. Für die beiden
+Geburtstags-Suiten fehlt noch ein passendes Foto.
+
+Umgeschaltet wird über `common.DEMO_PHOTOS`; `demo_render.py` setzt die
+Variable je Suite und schreibt nach `dist-demo/` und `previews-demo/`.
+
+> Die Beispielfotos zeigen erkennbare Personen und stehen in öffentlichen
+> Verkaufsbildern — sie brauchen die Zustimmung der Abgebildeten und des
+> Fotografen. Zum Austauschen genügt eine neue `photo-example-<anlass>.*`,
+> ein Bezugspunkt in `photo_crops.PHOTOS` und ein Lauf von `photo_crops.py`
+> und `demo_render.py`.
+
+## Videos
+
+`video.py` baut zwei Szenen als HTML mit einer Funktion `seek(t)`. `capture.js`
+ruft sie für jedes Einzelbild auf und schießt ein Foto — kein Bildschirmmitschnitt,
+sondern gerechnete Einzelbilder. Dadurch sitzt jedes Bild exakt und ein zweiter
+Lauf ergibt dasselbe Ergebnis.
+
+- `howto-photo-{de,en}.mp4` — 1920 × 1080, ~19 s. Nachgebauter Canva-Editor,
+  der das Einsetzen des Fotos einmal komplett vorführt. Für den Käufer nach dem
+  Kauf.
+- `listing-photo-{de,en}.mp4` — 1080 × 1080, 12 s. Nur die Karten, das Foto
+  fliegt in den Rahmen. Für das Videofeld der Angebotsseite: dort läuft es
+  stumm und klein, eine Bedienoberfläche wäre darin nicht lesbar.
+
+Das gebündelte ffmpeg von Playwright kann nur VP8/WebM. Für H.264 kommt das
+vollständige ffmpeg aus dem PyPI-Paket `imageio-ffmpeg`.
 
 ## Zwei Fallen, die schon zugeschnappt sind
 
