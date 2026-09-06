@@ -250,3 +250,104 @@ h2 { font-size: clamp(1.875rem, 7vw, 2.75rem); margin-bottom: 1.25rem; }
 @media (prefers-reduced-motion: reduce) {
   *, *::before, *::after { transition-duration: 0.01ms !important; }
 }
+
+/* ------------------------------------------------------- Rückmeldungen -- */
+/* Die Liste des Paares, nachgebaut. Eigener Grund, damit der Abschnitt sich
+   von den beiden hellen Nachbarn abhebt, ohne eine dritte Farbe zu brauchen. */
+
+.rueck { background: var(--paper-2); }
+.rueck .lede { margin-bottom: 0; }
+
+.honig {
+  position: absolute; width: 1px; height: 1px;
+  margin: -1px; padding: 0; border: 0;
+  clip-path: inset(50%); overflow: hidden; white-space: nowrap;
+}
+
+/* Der Rahmen zitiert die echte Seite: Überschrift, Kennung, darunter die
+   Zahlen und die Tabelle. Kein nachgemachtes Browserfenster — das Paar
+   sieht genau das hier. */
+.tafel {
+  margin-block: 2.5rem 0;
+  background: var(--paper);
+  border: 1px solid var(--line);
+  border-radius: 6px;
+  overflow: hidden;
+}
+.tafel__kopf {
+  display: flex; flex-wrap: wrap; gap: 0.5rem 1rem;
+  align-items: baseline; justify-content: space-between;
+  padding: 1.125rem clamp(1rem, 4vw, 1.75rem);
+  border-block-end: 1px solid var(--line);
+}
+.tafel__kopf b {
+  font: 400 1.375rem/1.1 var(--ff-display);
+  display: block;
+}
+.tafel__kopf > div span {
+  display: block; margin-top: 0.1875rem;
+  font-size: 0.8125rem; color: var(--ink-2);
+}
+.tafel__marke {
+  margin: 0;
+  font-size: 0.625rem; letter-spacing: 0.2em; text-transform: uppercase;
+  color: var(--brass);
+}
+.tafel__innen { padding: clamp(1.25rem, 4vw, 1.75rem); }
+.tafel figcaption {
+  padding: 0.875rem clamp(1rem, 4vw, 1.75rem);
+  border-block-start: 1px solid var(--line);
+  font-size: 0.75rem; color: var(--ink-2);
+}
+
+.zahlen {
+  display: flex; gap: clamp(1.75rem, 8vw, 3.5rem);
+  margin-block-end: 2rem;
+}
+.zahlen b {
+  display: block;
+  font: 400 clamp(1.875rem, 8vw, 2.5rem)/1 var(--ff-display);
+  font-variant-numeric: tabular-nums;
+}
+.zahlen span {
+  display: block; margin-top: 0.375rem;
+  font-size: 0.625rem; letter-spacing: 0.2em; text-transform: uppercase;
+  color: var(--ink-2);
+}
+
+/* Breite Inhalte scrollen in ihrem eigenen Kasten, nie die ganze Seite. */
+.tabelle { overflow-x: auto; }
+.tabelle table {
+  width: 100%; border-collapse: collapse;
+  font-size: 0.875rem; text-align: start;
+}
+.tabelle th, .tabelle td {
+  padding: 0.75rem 1rem 0.75rem 0;
+  border-block-end: 1px solid var(--line);
+  vertical-align: top; text-align: start;
+}
+.tabelle tr > :last-child { padding-inline-end: 0; }
+.tabelle thead th {
+  padding-block-start: 0;
+  font-size: 0.625rem; font-weight: 500;
+  letter-spacing: 0.18em; text-transform: uppercase;
+  color: var(--ink-2); white-space: nowrap;
+}
+.tabelle tbody th { font-weight: 400; }
+.tabelle tbody tr:last-child > * { border-block-end: 0; padding-block-end: 0; }
+.tabelle .zahl { font-variant-numeric: tabular-nums; }
+.tabelle .ja, .tabelle .zahl { white-space: nowrap; }
+/* Eine Absage soll nicht so laut sein wie eine Zusage. */
+.tabelle .nein { color: var(--ink-2); white-space: nowrap; }
+.tabelle .leise { color: var(--ink-2); }
+
+/* Erst wird die Nachricht sichtbar, dann die Adresse: was beim Planen zählt,
+   kommt zuerst. Auf dem Handy bliebe von sechs Spalten sonst nichts übrig. */
+.sp-mail, .sp-mehr { display: none; }
+@media (min-width: 40rem) { .sp-mehr { display: table-cell; } }
+@media (min-width: 56rem) { .sp-mail { display: table-cell; } }
+
+.klein {
+  margin-block: 1.75rem 0;
+  font-size: 0.875rem; color: var(--ink-2);
+}
