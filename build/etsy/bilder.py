@@ -24,10 +24,29 @@ import segno
 from playwright.sync_api import sync_playwright
 
 sys.path.insert(0, str(pathlib.Path(__file__).resolve().parent))
-from werkstatt import KANTE, bild, ersetzen, fon, kopf   # noqa: E402
+from werkstatt import (KANTE, SIEGEL, bild, daten, ersetzen,  # noqa: E402
+                       fon, kopf)
 
 CHROME = "/opt/pw-browsers/chromium-1194/chrome-linux/chrome"
 ZIEL = pathlib.Path(__file__).resolve().parent / "bilder"
+# Wie viel Schmuck der Code vertraegt, wurde nicht geschaetzt, sondern
+# gemessen: bilder.py erzeugen, den Code aus dem fertigen Produktbild
+# zurueckleseFn, das Bild dabei Schritt fuer Schritt verkleinern. Ergebnis am
+# Beispiel simeah.netlify.app, Karte 540 Punkte im 2000er Bild:
+#
+#   Module rund 0,20   durchgehend lesbar ab 440 px   — kostenlos
+#   Module rund 0,32   ab 840 px
+#   Module rund 0,45   ab 1560 px                     — unbrauchbar
+#   Ecken rund 0,6     ab 520 px                      — bezahlbar
+#   Ecken rund 0,9     ab 1480 px                     — Abriss
+#   Siegel 5 / 7 / 9   unveraendert
+#
+# Die Ecken sind die empfindliche Stelle: der Leser sucht dort das Verhaeltnis
+# 1:1:3:1:1, und runde Ecken ziehen es diagonal zusammen. Genommen ist darum
+# die vorsichtige Seite jeder Messung.
+RUND = 0.20      # Rundung der einzelnen Module
+ECKE = 0.6       # Rundung der drei Erkennungsmarken
+LOCH = 7         # Module, die das Siegel in der Mitte verdeckt
 PLATZHALTER = "https://eure-marke.de/demo"
 
 
@@ -48,16 +67,62 @@ def knapp(adresse: str) -> str:
     return adresse
 
 
-def qr(adresse: str, dunkel: str = "#14100C") -> str:
-    """Ein QR-Code als Bild.
+def qr(adresse: str, dunkel: str = "#1B150F") -> str:
+    """Der QR-Code, von Hand gezeichnet.
 
-    Fehlerkorrektur hoch: dann liest ihn eine Kamera auch von einem
-    Telefonbildschirm, schraeg, oder von einem Blatt, auf dem eine Ecke
-    fehlt. Ohne Rand liest ihn keine Kamera — die vier Module Weiss aussen
-    herum gehoeren zum Code, nicht zum Layout."""
+    Ein Code von der Stange ist ein Raster harter schwarzer Quadrate. Neben
+    einem Wachssiegel sieht das aus wie ein Paketaufkleber. Also werden die
+    Module einzeln gesetzt: weich in den Ecken, in der Tinte der Einladung
+    statt in Schwarz, und in der Mitte das Siegel.
+
+    Das Siegel darf dort stehen, weil die Fehlerkorrektur auf H liegt — bis
+    zu dreissig Prozent duerfen fehlen, es verdeckt knapp sechs. Der Rand von
+    vier Modulen gehoert zum Code und nicht zum Layout; ohne ihn findet keine
+    Kamera den Anfang.
+
+    Wie weich die Formen sein duerfen, steht oben bei RUND, ECKE und LOCH —
+    gemessen, nicht geschaetzt."""
     code = segno.make(knapp(adresse), error="h")
-    uri = code.png_data_uri(scale=20, border=4, dark=dunkel, light="#FBF6EE")
-    return f'<img src="{uri}" alt="" style="width:100%;height:100%;display:block">' 
+    m = [list(z) for z in code.matrix]
+    n = len(m)
+    rand = 4
+    k = n + 2 * rand
+    ecken = [(0, 0), (0, n - 7), (n - 7, 0)]
+    von = (n - LOCH) // 2
+
+    def in_ecke(y, x):
+        return any(ey <= y < ey + 7 and ex <= x < ex + 7 for ey, ex in ecken)
+
+    def in_mitte(y, x):
+        return bool(LOCH) and von <= y < von + LOCH and von <= x < von + LOCH
+
+    teile = [f'<rect x="{rand+x}" y="{rand+y}" width="1" height="1"'
+             f' rx="{RUND}" fill="{dunkel}"/>'
+             for y in range(n) for x in range(n)
+             if m[y][x] and not in_ecke(y, x) and not in_mitte(y, x)]
+
+    for ey, ex in ecken:
+        X, Y = rand + ex, rand + ey
+        teile.append(f'<rect x="{X}" y="{Y}" width="7" height="7"'
+                     f' rx="{ECKE}" fill="{dunkel}"/>')
+        teile.append(f'<rect x="{X+1}" y="{Y+1}" width="5" height="5"'
+                     f' rx="{max(0, ECKE-0.6)}" fill="#FBF6EE"/>')
+        teile.append(f'<rect x="{X+2}" y="{Y+2}" width="3" height="3"'
+                     f' rx="{max(0, ECKE-1.0)}" fill="{dunkel}"/>')
+
+    if LOCH:
+        c = rand + n / 2
+        sg = LOCH - 0.4
+        teile.append(f'<rect x="{c-LOCH/2-0.3}" y="{c-LOCH/2-0.3}"'
+                     f' width="{LOCH+0.6}" height="{LOCH+0.6}" rx="1.6"'
+                     f' fill="#FBF6EE"/>')
+        teile.append(f'<image href="{daten(SIEGEL)}" x="{c-sg/2}"'
+                     f' y="{c-sg*549/512/2}" width="{sg}"'
+                     f' height="{sg*549/512}"/>')
+
+    return (f'<svg viewBox="0 0 {k} {k}" width="100%" height="100%">'
+            f'<rect width="{k}" height="{k}" fill="#FBF6EE"/>'
+            + "".join(teile) + "</svg>")
 
 
 # ====================================================================== 01 ==
@@ -125,7 +190,7 @@ def b03_demo(adresse: str, echt: bool) -> str:
   <div class="reihe" style="flex:1; align-items:center; gap:80px;
        margin-top:60px">
     <div class="spalte" style="align-items:center; flex:none">
-      <div style="background:var(--paper); padding:44px; border-radius:16px;
+      <div style="background:var(--paper); padding:36px; border-radius:20px;
                   width:540px; height:540px">@@qr@@</div>
       <p style="margin-top:32px; font-size:29px; letter-spacing:0.04em;
                 color:var(--brass-lit); text-align:center; max-width:540px;

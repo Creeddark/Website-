@@ -66,11 +66,13 @@ def main(argv):
         # So gross ist das Bild auf einem Telefon, wenn jemand es antippt.
         klein = lesen(demo, 800)
         pruef("QR lesbar bei 800 Punkten", klein == voll and bool(klein))
-        # Gemessen liest er bis 420 Punkte herunter und bis 16 Grad schraeg.
-        # Geprueft wird mit Abstand dazu: eine laengere Adresse braucht eine
-        # dichtere Version, und dann faellt der Code hier durch, bevor er auf
-        # einem Produktbild landet.
-        pruef("QR lesbar bei 500 Punkten", bool(lesen(demo, 500)))
+        # 800 Punkte ist die Anforderung: so gross liefert Etsy das Bild an
+        # ein Telefon, und von dort scannt jemand es ab. 700 ist die
+        # Warnschwelle darunter — gemessen liest der geschmueckte Code
+        # durchgehend ab 560. Wird die Adresse laenger, braucht der Code eine
+        # dichtere Version, und dann faellt er hier durch, bevor er auf einem
+        # Produktbild landet.
+        pruef("QR lesbar bei 700 Punkten", bool(lesen(demo, 700)))
         pruef("QR lesbar schraeg und unscharf",
               bool(lesen(demo, 700, winkel=12)), "12 Grad, leicht unscharf")
         if erwartet:

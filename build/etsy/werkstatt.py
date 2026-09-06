@@ -17,6 +17,7 @@ import pathlib
 WURZEL = pathlib.Path(__file__).resolve().parents[2]
 SCHRIFT = WURZEL / "themes/ambra/assets/fonts"
 AUFNAHMEN = pathlib.Path(__file__).resolve().parent / "aufnahmen"
+SIEGEL = WURZEL / "themes/ambra/assets/img/siegel.webp"
 
 # Etsy zeigt Quadrate. Wer ein anderes Verhaeltnis hochlaedt, bekommt einen
 # Beschnitt, den er nicht selbst gewaehlt hat.
