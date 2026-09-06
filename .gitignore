@@ -9,3 +9,13 @@ engine/rsvp/*.sqlite*
 # Wie ein Kundenordner aussieht, zeigt: python3 build/kunde.py neu <kennung>
 kunden/
 auslieferung/
+
+# Produktbilder und ihre Zwischenschritte. Beides entsteht in zwei Minuten
+# neu aus dem, was ohnehin im Repo liegt — und die fertigen Bilder tragen
+# einen QR-Code, der auf eine bestimmte Adresse zeigt. Eingecheckt waere er
+# beim naechsten Umzug still falsch, und jemand laedt ihn trotzdem hoch.
+#
+#   python3 build/etsy/aufnahmen.py && bash build/etsy/liste.sh
+#   python3 build/etsy/bilder.py https://eure-adresse.de
+build/etsy/aufnahmen/
+build/etsy/bilder/
