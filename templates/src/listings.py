@@ -147,6 +147,17 @@ body{background:#222;font-family:'Montserrat',system-ui,sans-serif;}
   text-transform:uppercase;font-weight:500;}
 .arrow{display:flex;flex-direction:column;align-items:center;gap:10px;
   margin-top:-30px;}
+/* --- Detailansicht ------------------------------------------------- */
+.closeup{position:absolute;overflow:hidden;inset:0;}
+.closeup img{position:absolute;display:block;
+  box-shadow:0 40px 90px rgba(0,0,0,.34),0 10px 24px rgba(0,0,0,.2);}
+.col{position:absolute;left:70px;top:300px;width:290px;}
+.col h3{font-family:'Playfair Display',Georgia,serif;font-size:54px;
+  font-weight:400;line-height:1.06;letter-spacing:.02em;margin-bottom:22px;}
+.col p{font-size:15px;line-height:1.7;}
+.col ul{list-style:none;margin-top:26px;}
+.col li{font-size:13px;letter-spacing:.16em;text-transform:uppercase;
+  font-weight:500;padding:9px 0;border-top:1px solid currentColor;}
 """
 
 
@@ -315,6 +326,39 @@ def photo_sheet(s):
 </div>"""
 
 
+def detail(s):
+    """Fuenftes Verkaufsbild: eine Grossaufnahme.
+
+    Auf Etsy laeuft der Kaeufer durch eine Kachelwand aus Vorschaubildern,
+    auf denen jede Karte briefmarkengross ist. Ein Bild, das die Karte
+    angeschnitten und gross zeigt, faellt darin auf und beweist nebenbei,
+    dass die Typografie den Druck aushaelt.
+    """
+    front = pages_of(s["slug"])[0]
+    return f"""
+<div class="sheet" data-name="{s['slug']}-5-close-up">
+  <div class="surface" style="background:{s['bg']}"></div>
+  <div class="grain"></div>
+  <div class="closeup">
+    <img src="file://{front}" style="width:900px;left:392px;top:-46px">
+  </div>
+  <div class="label" style="left:70px;top:250px;width:290px;text-align:left;
+       font-size:12px;color:{s['ink']};opacity:.62;font-weight:500">
+    A closer look</div>
+  <div class="col" style="color:{s['ink']}">
+    <h3>{s['name']}</h3>
+    <p style="opacity:.76">Set in real typefaces on a printed paper texture
+      &mdash; not a flat graphic. Every line is yours to rewrite; the layout
+      holds its shape while you do.</p>
+    <ul style="opacity:.66">
+      <li>5 &times; 7 inches &middot; 300 DPI</li>
+      <li>Edit in Canva &middot; free account</li>
+      <li>Print at home or at a shop</li>
+    </ul>
+  </div>
+</div>"""
+
+
 def build():
     from common import font_css
     sheets = ""
@@ -322,6 +366,7 @@ def build():
         sheets += hero(s) + included(s) + how(s)
         if has_photo(s["slug"]):
             sheets += photo_sheet(s)
+        sheets += detail(s)
     return f"""<!DOCTYPE html>
 <html><head><meta charset="utf-8"><title>Etsy listing images</title>
 <style>

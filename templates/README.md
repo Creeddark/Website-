@@ -77,6 +77,18 @@ Etsy-Vorlagen.
 https://raw.githubusercontent.com/Creeddark/Website-/refs/heads/<branch>/templates/dist/<datei>.html
 ```
 
+## Verkaufsbilder
+
+Fünf Blätter je Suite, 2000 × 2000 px, alle aus `listings.py`:
+
+| Blatt | Was es beantwortet |
+|---|---|
+| `-1-hero` | Wie sieht es aus? Zwei Karten gekippt, mit Schatten. |
+| `-2-included` | Was bekomme ich? Alle Seiten nebeneinander. |
+| `-3-how-it-works` | Kriege ich das hin? Drei Schritte, in den Farben der Suite. |
+| `-4-your-photo` | Nur bei Bildfenster: derselbe Entwurf leer und mit Foto. |
+| `-5-close-up` | Grossaufnahme, angeschnitten — fällt in der Kachelwand auf. |
+
 ## Beispielfoto und Bildfenster
 
 Fünf Suiten haben ein Bildfenster: **THE TIMES** (drei Anlässe) und **COVER**
@@ -115,12 +127,16 @@ ruft sie für jedes Einzelbild auf und schießt ein Foto — kein Bildschirmmits
 sondern gerechnete Einzelbilder. Dadurch sitzt jedes Bild exakt und ein zweiter
 Lauf ergibt dasselbe Ergebnis.
 
-- `howto-photo-{de,en}.mp4` — 1920 × 1080, ~19 s. Nachgebauter Canva-Editor,
-  der das Einsetzen des Fotos einmal komplett vorführt. Für den Käufer nach dem
-  Kauf.
-- `listing-photo-{de,en}.mp4` — 1080 × 1080, 12 s. Nur die Karten, das Foto
-  fliegt in den Rahmen. Für das Videofeld der Angebotsseite: dort läuft es
-  stumm und klein, eine Bedienoberfläche wäre darin nicht lesbar.
+- `howto-photo-<anlass>-{de,en}.mp4` — 1920 × 1080, ~19 s. Nachgebauter
+  Canva-Editor, der das Einsetzen des Fotos einmal komplett vorführt. Für den
+  Käufer nach dem Kauf.
+- `listing-photo-<anlass>-{de,en}.mp4` — 1080 × 1080, 12 s. Nur die Karten,
+  das Foto fliegt in den Rahmen. Für das Videofeld der Angebotsseite: dort
+  läuft es stumm und klein, eine Bedienoberfläche wäre darin nicht lesbar.
+
+Der Ablauf ist überall derselbe, die Karte und das Foto nicht — `video.SCENES`
+hält je Anlass Suite, Foto, Bildfenster und die Texte des Angebotsvideos. Wer
+ein Baby-Set kauft, soll im Video sein Set sehen und nicht das der Hochzeit.
 
 Das gebündelte ffmpeg von Playwright kann nur VP8/WebM. Für H.264 kommt das
 vollständige ffmpeg aus dem PyPI-Paket `imageio-ffmpeg`.

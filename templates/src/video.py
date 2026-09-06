@@ -25,6 +25,41 @@ from common import FONT_DIR, ASSET_DIR
 
 ROOT = pathlib.Path(__file__).resolve().parent.parent
 PREVIEWS = ROOT / "previews"
+PREVIEWS_DEMO = ROOT / "previews-demo"      # dieselben Seiten mit Foto
+
+# Je Anlass eine Szene. Der Ablauf in Canva ist immer derselbe, die Karte und
+# das Foto nicht — und ein Kaeufer, der ein Baby-Set kauft, soll im Video sein
+# Set sehen und nicht das der Hochzeit.
+SCENES = {
+    "wedding": {
+        "slug": "08-times-wedding",
+        "photo": "demo-wedding-landscape.png",
+        "slot": (64, 462, 622, 366),          # Bildfenster auf Seite eins
+        "thumbs": ["10-cover-wedding-1-cover.png",
+                   "01-wedding-ambra-1-invitation.png"],
+        "de": ("Hochzeitszeitung",
+               "Titel &middot; Innenseite &middot; Details &middot; Dank"),
+        "en": ("The wedding gazette",
+               "Front &middot; Inside &middot; Details &middot; Thanks"),
+    },
+    "baby": {
+        "slug": "08-times-baby",
+        "photo": "demo-baby-landscape.png",
+        "slot": (64, 462, 622, 366),
+        "thumbs": ["04-baby-shower-1-invitation.png",
+                   "09-ruban-baby-1-invitation.png"],
+        "de": ("Geburtsanzeige als Zeitung",
+               "Titel &middot; Innenseite &middot; Details &middot; Dank"),
+        "en": ("The baby gazette",
+               "Front &middot; Inside &middot; Details &middot; Thanks"),
+    },
+}
+
+
+def _pages(slug, demo=False):
+    """Die Seiten einer Suite in der richtigen Reihenfolge."""
+    src = PREVIEWS_DEMO if demo else PREVIEWS
+    return sorted(src.glob(f"{slug}-*.png"))
 
 PURPLE = "#8B3DFF"
 PURPLE_SOFT = "#F3E9FF"
@@ -366,12 +401,15 @@ seek(0);
 """
 
 
-def howto(lang):
-    photo = _b64(ASSET_DIR / "demo-wedding-landscape.png", "image/png")
-    card_png = _b64(PREVIEWS / "08-times-wedding-1-front-page.png", "image/png")
-    other = [_b64(PREVIEWS / "10-cover-wedding-1-cover.png", "image/png")
-             if (PREVIEWS / "10-cover-wedding-1-cover.png").exists() else photo,
-             _b64(PREVIEWS / "01-wedding-ambra-1-invitation.png", "image/png")]
+def howto(lang, theme="wedding"):
+    sc = SCENES[theme]
+    sx, sy, sw, sh = sc["slot"]
+    photo = _b64(ASSET_DIR / sc["photo"], "image/png")
+    card_png = _b64(_pages(sc["slug"])[0], "image/png")
+    other = [_b64(PREVIEWS / n, "image/png") for n in sc["thumbs"]
+             if (PREVIEWS / n).exists()]
+    while len(other) < 2:
+        other.append(photo)
 
     # Karte: 750 x 1050 auf halbe Groesse
     SC = 0.52
@@ -379,8 +417,8 @@ def howto(lang):
     cardY = 44 + (676 - cardH) / 2 - 24
     cardA = 72 + (1280 - 72 - cardW) / 2            # Panel zu
     cardB = 72 + 292 + (1280 - 72 - 292 - cardW) / 2  # Panel offen
-    slot = {"x": cardB + 64 * SC, "y": cardY + 462 * SC,
-            "w": 622 * SC, "h": 366 * SC}
+    slot = {"x": cardB + sx * SC, "y": cardY + sy * SC,
+            "w": sw * SC, "h": sh * SC}
     thumb = {"w": 124, "h": 92}
     th0 = (16 + 72 + 62, 150 + 44 + 46)             # Mitte Miniatur 1
 
@@ -624,18 +662,22 @@ window.seek=seek; window.__duration=S.duration; seek(0);
 """
 
 
-def listing(lang):
-    photo = _b64(ASSET_DIR / "demo-wedding-landscape.png", "image/png")
-    names = ["08-times-wedding-1-front-page.png", "08-times-wedding-2-inside.png",
-             "08-times-wedding-3-the-particulars.png",
-             "08-times-wedding-4-notice-of-thanks.png"]
-    pngs = [_b64(PREVIEWS / n, "image/png") for n in names]
+def listing(lang, theme="wedding"):
+    sc = SCENES[theme]
+    sx, sy, sw, sh = sc["slot"]
+    photo = _b64(ASSET_DIR / sc["photo"], "image/png")
+    # Seite eins ohne Foto — dort fliegt es hinein. Die Begleitblaetter im
+    # Faecher dagegen mit Foto, sonst stehen dort leere Kaesten.
+    plain = _pages(sc["slug"])
+    filled = _pages(sc["slug"], demo=True) or plain
+    pngs = [_b64(plain[0], "image/png")] + [_b64(f, "image/png")
+                                            for f in filled[1:4]]
 
     SC = 0.50
     cw, ch = 750 * SC, 1050 * SC                             # 375 x 525
     hero = {"x": (1080 - cw) / 2, "y": 268}
-    slot = {"x": hero["x"] + 64 * SC, "y": hero["y"] + 462 * SC,
-            "w": 622 * SC, "h": 366 * SC}
+    slot = {"x": hero["x"] + sx * SC, "y": hero["y"] + sy * SC,
+            "w": sw * SC, "h": sh * SC}
     fan = [
         {"x": hero["x"] - 268, "y": hero["y"] + 62, "dx": 74, "dy": 30,
          "r0": 0, "r": -12.0, "s": 0.78},
@@ -652,20 +694,18 @@ def listing(lang):
     if lang == "de":
         kick = "SOFORT-DOWNLOAD  &middot;  IN CANVA BEARBEITBAR"
         caps = [
-            [1.30, 3.05, "", "Hochzeitszeitung", "5 &times; 7 Zoll &middot; 300 dpi"],
+            [1.30, 3.05, "", sc["de"][0], "5 &times; 7 Zoll &middot; 300 dpi"],
             [3.20, 5.90, "", "Dein eigenes Foto", "Hineinziehen &mdash; es rastet ein"],
-            [6.20, 9.10, "", "Vier passende Karten", "Titel &middot; Innenseite "
-                             "&middot; Details &middot; Dank"],
+            [6.20, 9.10, "", "Vier passende Karten", sc["de"][1]],
             [9.30, 12.0, "", "In Minuten fertig", "Bearbeiten in Canva &middot; "
                              "zu Hause drucken"],
         ]
     else:
         kick = "INSTANT DOWNLOAD  &middot;  EDITABLE IN CANVA"
         caps = [
-            [1.30, 3.05, "", "The wedding gazette", "5 &times; 7 inches &middot; 300 dpi"],
+            [1.30, 3.05, "", sc["en"][0], "5 &times; 7 inches &middot; 300 dpi"],
             [3.20, 5.90, "", "Your own photo", "Drag it in &mdash; it snaps to fit"],
-            [6.20, 9.10, "", "Four matching cards", "Front &middot; Inside "
-                             "&middot; Details &middot; Thanks"],
+            [6.20, 9.10, "", "Four matching cards", sc["en"][1]],
             [9.30, 12.0, "", "Ready in minutes", "Edit in Canva &middot; print at home"],
         ]
 
@@ -675,7 +715,7 @@ def listing(lang):
 
     sheets = "".join(
         f'<div class="sheet" id="fan{i}" style="opacity:0">'
-        f'<img src="{pngs[i + 1]}"></div>' for i in range(3))
+        f'<img src="{pngs[i + 1]}"></div>' for i in range(len(pngs) - 1))
 
     return f"""<!DOCTYPE html><html lang="{lang}"><head><meta charset="utf-8">
 <title>Listing — photo</title><style>
@@ -714,9 +754,11 @@ def listing(lang):
 if __name__ == "__main__":
     out = ROOT / "video"
     out.mkdir(exist_ok=True)
-    for lang in ("en", "de"):
-        (out / f"howto-photo-{lang}.html").write_text(howto(lang), encoding="utf-8")
-        (out / f"listing-photo-{lang}.html").write_text(listing(lang),
-                                                        encoding="utf-8")
+    for theme in SCENES:
+        for lang in ("en", "de"):
+            (out / f"howto-photo-{theme}-{lang}.html").write_text(
+                howto(lang, theme), encoding="utf-8")
+            (out / f"listing-photo-{theme}-{lang}.html").write_text(
+                listing(lang, theme), encoding="utf-8")
     for f in sorted(out.glob("*.html")):
-        print(f"{f.name}  {f.stat().st_size // 1024} KB")
+        print(f"{f.name:34} {f.stat().st_size // 1024} KB")
