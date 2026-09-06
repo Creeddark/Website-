@@ -18,6 +18,7 @@ from __future__ import annotations
 
 import pathlib
 import sys
+import urllib.parse
 
 import segno
 from playwright.sync_api import sync_playwright
@@ -30,6 +31,23 @@ ZIEL = pathlib.Path(__file__).resolve().parent / "bilder"
 PLATZHALTER = "https://eure-marke.de/demo"
 
 
+def knapp(adresse: str) -> str:
+    """Dieselbe Adresse, aber in moeglichst wenigen Zeichen fuer den Code.
+
+    Schema und Rechnername sind gross- und kleinschreibungsblind (RFC 3986),
+    ein Pfad ist es nicht. Hat die Adresse keinen Pfad, darf man sie also in
+    Grossbuchstaben schreiben — dann faellt sie in den alphanumerischen
+    Modus des QR-Codes statt in den Byte-Modus und braucht eine Version
+    weniger: 29 statt 33 Module. Bei gleicher Druckgroesse sind die Kacheln
+    damit ein Siebtel groesser, und der Code liest sich aus mehr Abstand und
+    schraeger. Auf dem Bild steht die Adresse trotzdem klein geschrieben —
+    lesen soll sie ein Mensch, scannen eine Kamera."""
+    t = urllib.parse.urlsplit(adresse)
+    if t.path in ("", "/") and not t.query and not t.fragment:
+        return f"{t.scheme}://{t.netloc}".upper()
+    return adresse
+
+
 def qr(adresse: str, dunkel: str = "#14100C") -> str:
     """Ein QR-Code als Bild.
 
@@ -37,7 +55,7 @@ def qr(adresse: str, dunkel: str = "#14100C") -> str:
     Telefonbildschirm, schraeg, oder von einem Blatt, auf dem eine Ecke
     fehlt. Ohne Rand liest ihn keine Kamera — die vier Module Weiss aussen
     herum gehoeren zum Code, nicht zum Layout."""
-    code = segno.make(adresse, error="h")
+    code = segno.make(knapp(adresse), error="h")
     uri = code.png_data_uri(scale=20, border=4, dark=dunkel, light="#FBF6EE")
     return f'<img src="{uri}" alt="" style="width:100%;height:100%;display:block">' 
 
@@ -335,7 +353,7 @@ def seiten(adresse: str, echt: bool) -> dict[str, str]:
         }),
         "03-demo": ersetzen(b03_demo(adresse, echt), {
             "qr": qr(adresse),
-            "adresse": adresse.replace("https://", ""),
+            "adresse": adresse.replace("https://", "").rstrip("/"),
             "hinweis": hinweis,
             "fon": fon("03-hero", 380),
         }),
