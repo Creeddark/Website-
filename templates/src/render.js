@@ -4,14 +4,19 @@
  * deviceScaleFactor 2 macht aus 750 x 1050 CSS-Pixeln 1500 x 2100 Bildpunkte —
  * das sind echte 300 DPI auf 5 x 7 Zoll, also Druckaufloesung.
  *
- *   node render.js <datei.html> <ziel-ordner> [scale]
+ *   node render.js <datei.html> <ziel-ordner> [scale] [selektor] [namens-attribut]
+ *
+ * Ohne Selektor werden die .page-Elemente einer Vorlage geschossen. Mit
+ * Selektor lassen sich auch andere Kacheln rendern, etwa die Verkaufsbilder.
  */
 const { chromium } = require('/opt/node22/lib/node_modules/playwright');
 const path = require('path');
 const fs = require('fs');
 
 (async () => {
-  const [, , htmlFile, outDir, scaleArg] = process.argv;
+  const [, , htmlFile, outDir, scaleArg, selArg, attrArg] = process.argv;
+  const selector = selArg || '.page';
+  const nameAttr = attrArg || 'data-label';
   if (!htmlFile || !outDir) {
     console.error('usage: node render.js <datei.html> <ziel-ordner> [scale]');
     process.exit(1);
@@ -30,13 +35,16 @@ const fs = require('fs');
   await page.waitForTimeout(400);
 
   const base = path.basename(htmlFile, '.html');
-  const pages = await page.$$('.page');
+  const pages = await page.$$(selector);
   const written = [];
   for (let i = 0; i < pages.length; i++) {
-    const label = await pages[i].getAttribute('data-label');
+    const label = await pages[i].getAttribute(nameAttr);
     const slug = (label || `page-${i + 1}`).toLowerCase()
       .replace(/[^a-z0-9]+/g, '-').replace(/^-|-$/g, '');
-    const file = path.join(outDir, `${base}-${i + 1}-${slug}.png`);
+    // data-name traegt schon den vollen Dateinamen, data-label nur die Seite
+    const file = nameAttr === 'data-name'
+      ? path.join(outDir, `${slug}.png`)
+      : path.join(outDir, `${base}-${i + 1}-${slug}.png`);
     await pages[i].screenshot({ path: file });
     written.push(file);
   }
