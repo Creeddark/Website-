@@ -37,6 +37,16 @@ FONT_FACES = {
     "poppins-2.woff2":    ("Poppins", "400", "normal"),
     "poppins-3.woff2":    ("Poppins", "600", "normal"),
     "poppins-4.woff2":    ("Poppins", "700", "normal"),
+    "fraktur-1.woff2":    ("UnifrakturMaguntia", "400", "normal"),
+    "abril-1.woff2":      ("Abril Fatface", "400", "normal"),
+    "bodoni-1.woff2":     ("Bodoni Moda", "400 900", "normal"),
+    "archivoblack-1.woff2": ("Archivo Black", "400", "normal"),
+    "oswald-1.woff2":     ("Oswald", "200 700", "normal"),
+    "italiana-1.woff2":   ("Italiana", "400", "normal"),
+    "ebgaramond-2.woff2": ("EB Garamond", "400 800", "normal"),
+    "ebgaramond-1.woff2": ("EB Garamond", "400 800", "italic"),
+    "pinyon-1.woff2":     ("Pinyon Script", "400", "normal"),
+    "anticdidone-1.woff2": ("Antic Didone", "400", "normal"),
 }
 
 
@@ -93,6 +103,26 @@ def text(content, *, left, top, width=None, size=16, family="Montserrat",
             f'color:{color};letter-spacing:{tracking}em;line-height:{line};'
             f'text-align:{align};font-style:{style};text-transform:{transform};{extra}">'
             f'{content}</div>')
+
+
+ASSET_DIR = pathlib.Path(__file__).resolve().parent.parent / "assets"
+
+
+def image(name, *, left, top, width, height, alt="", extra="", radius=0):
+    """
+    Bild als eigenes Element — Canva legt daraus beim Import ein Bildfeld an,
+    das der Kaeufer per Klick durch ein eigenes Foto ersetzt. Waere das Motiv
+    Teil der SVG-Ebene, waere es fest eingebrannt.
+
+    Die Datei wird als Data-URI eingebettet, damit der Import nichts nachladen
+    muss und nicht halb fehlschlagen kann.
+    """
+    path = ASSET_DIR / name
+    b64 = base64.b64encode(path.read_bytes()).decode()
+    r = f"border-radius:{radius}px;" if radius else ""
+    return (f'<img src="data:image/png;base64,{b64}" alt="{alt}" '
+            f'style="position:absolute;left:{left}px;top:{top}px;'
+            f'width:{width}px;height:{height}px;object-fit:cover;{r}{extra}">')
 
 
 def svg_layer(defs, body, *, w=W, h=H, extra=""):
