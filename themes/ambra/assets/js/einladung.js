@@ -149,6 +149,124 @@
   })();
 
   /* ------------------------------------------------------------- Galerie -- */
+  /* ------------------------------------------------------------ Bilderlauf -- */
+  /* Auf dem Telefon ist die Galerie ein Wischstreifen: ein Foto steht im
+     Bild, drei liegen daneben. Wer nicht wischt, sieht sie nie — und die
+     meisten wischen nicht. Also zeigt der Streifen sie von selbst.
+
+     Weiterruecken statt gleiten: ein durchlaufendes Band zeigt jedes Foto
+     nur im Vorbeifahren. Hier steht jedes ein paar Sekunden still, wie in
+     einem Album, das jemand umblaettert.
+
+     Am Rechner wird aus dem Streifen ein Raster mit allen vier Fotos. Dann
+     gibt es nichts zu zeigen, und es passiert nichts. */
+  (function bilderlauf() {
+    var streifen = $("[data-galerie]");
+    if (!streifen || sanft.matches) return;
+
+    var kacheln = $$("li", streifen);
+    if (kacheln.length < 2) return;
+
+    var HALT = 3800;                  // wie lange ein Foto steht
+    var stelle = 0, uhr = null, sichtbar = false;
+    var abgegeben = false;            // der Gast wischt selbst: dann fuer immer
+    /* Drei Gruende zu warten, unabhaengig voneinander. Ein einzelner Schalter
+       wuerde sich gegenseitig ausknipsen: der Finger geht hoch, und der
+       Streifen liefe unter dem Mauszeiger weiter, der noch daraufliegt. */
+    var zeigt = false, tastatur = false, finger = false;
+    function wartet() { return zeigt || tastatur || finger; }
+
+    /* Nur wenn ueberhaupt etwas ausserhalb des Bildes liegt. Das ist zugleich
+       die Weiche zwischen Streifen und Raster — ohne feste Breite im Skript,
+       die dann irgendwann nicht mehr zur CSS-Grenze passt. */
+    function ueberhang() {
+      return streifen.scrollWidth - streifen.clientWidth > 4;
+    }
+
+    /* Dorthin, wo scroll-snap die Kachel ohnehin haben will: in die Mitte. */
+    function mitte(kachel) {
+      var s = streifen.getBoundingClientRect();
+      var k = kachel.getBoundingClientRect();
+      var ziel = streifen.scrollLeft + (k.left - s.left) - (s.width - k.width) / 2;
+      return Math.max(0, Math.min(ziel, streifen.scrollWidth - streifen.clientWidth));
+    }
+
+    function weiter() {
+      if (abgegeben || !sichtbar || wartet() || !ueberhang()) return;
+      // Hinter dem Lichtkasten weiterzulaufen hiesse: der Gast schliesst ihn
+      // und findet den Streifen woanders, als er ihn verlassen hat.
+      if ($("dialog[open]")) return;
+      stelle = (stelle + 1) % kacheln.length;
+      streifen.scrollTo({ left: mitte(kacheln[stelle]), behavior: "smooth" });
+    }
+
+    function starten() {
+      if (uhr || abgegeben) return;
+      uhr = window.setInterval(weiter, HALT);
+    }
+    function stoppen() {
+      window.clearInterval(uhr);
+      uhr = null;
+    }
+
+    /* Sobald der Gast selbst wischt, ist er am Zug und bleibt es. Ein
+       Streifen, der gegen den Daumen zurueckzieht, ist schlimmer als einer,
+       der stillsteht. */
+    function abgeben() {
+      abgegeben = true;
+      stoppen();
+    }
+
+    /* Zeigen und Tastaturfokus halten nur an. Wer schaut, will nicht, dass
+       ihm das Bild unter dem Zeiger weglaeuft — aber danach darf es weiter. */
+    streifen.addEventListener("mouseenter", function () { zeigt = true; });
+    streifen.addEventListener("mouseleave", function () { zeigt = false; });
+    /* Nur der Fokus von der Tastatur haelt an: wer sich durchtabbt, soll
+       nicht verlieren, wo er gerade steht. Beim Tippen setzt der Browser den
+       Fokus ebenfalls auf den Knopf — der Streifen bliebe danach fuer immer
+       stehen, obwohl der Gast nur ein Foto gross sehen wollte. Genau diesen
+       Unterschied kennt :focus-visible. */
+    function tastaturfokus() {
+      var a = document.activeElement;
+      try { return !!(a && a.matches && a.matches(":focus-visible")); }
+      catch (e) { return true; }        // kennt der Browser nicht: anhalten
+    }
+    streifen.addEventListener("focusin", function () {
+      tastatur = tastaturfokus();
+    });
+    streifen.addEventListener("focusout", function () { tastatur = false; });
+
+    /* Tippen ist nicht Wischen. Ein Tipp oeffnet ein Foto gross und heisst
+       nicht, dass der Gast von nun an selbst blaettern will — erst der
+       gezogene Finger heisst das. Darum zaehlt nicht das Aufsetzen, sondern
+       der zurueckgelegte Weg. */
+    var aufgesetzt = null;
+    streifen.addEventListener("pointerdown", function (e) {
+      aufgesetzt = e.clientX;
+      finger = true;
+    }, { passive: true });
+    streifen.addEventListener("pointermove", function (e) {
+      if (aufgesetzt !== null && Math.abs(e.clientX - aufgesetzt) > 10) abgeben();
+    }, { passive: true });
+    ["pointerup", "pointercancel"].forEach(function (art) {
+      streifen.addEventListener(art, function () {
+        aufgesetzt = null;
+        finger = false;
+      }, { passive: true });
+    });
+    // Am Rechner mit Rollrad oder Trackpad gibt es kein Ziehen — hier ist
+    // schon die erste Bewegung eindeutig.
+    streifen.addEventListener("wheel", abgeben, { passive: true });
+
+    /* Nur laufen, solange jemand hinsieht. Sonst waere die Galerie beim
+       Zurueckscrollen an einer Stelle, die niemand ausgewaehlt hat. */
+    if (!("IntersectionObserver" in window)) return;
+    new IntersectionObserver(function (eintraege) {
+      sichtbar = eintraege[0].isIntersecting;
+      if (sichtbar) starten(); else stoppen();
+    }, { threshold: 0.5 }).observe(streifen);
+  })();
+
   (function galerie() {
     var lupe = $("[data-lupe]");
     var bild = $("[data-lupe-bild]");

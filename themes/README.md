@@ -24,6 +24,17 @@ cd themes/ambra && python3 -m http.server 8100
 Dann <http://localhost:8100>. **Über HTTP öffnen, nicht per Doppelklick** —
 `file://` blockiert das Laden der Schriften.
 
+### Prüfen
+
+```bash
+python3 themes/pruefung/galerie.py   # 12 Prüfungen, braucht den Server oben
+```
+
+Der Bilderstreifen rückt von selbst weiter und muss dabei ein halbes Dutzend
+Regeln einhalten — wer selbst wischt, hat das Sagen; ein Tipp aufs Foto ist
+kein Wischen; bei reduzierter Bewegung passiert nichts. Die stehen dort als
+Prüfungen, damit der nächste Umbau sie nicht still umdreht.
+
 ### Zum Verschicken
 
 ```bash

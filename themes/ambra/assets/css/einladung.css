@@ -187,9 +187,6 @@ main:focus { outline: none; }
     scroll-behavior: auto !important;
   }
   .rise { opacity: 1; transform: none; }
-  /* Sonst kuerzt die Regel oben die Wanderung auf einen Wimpernschlag und
-     das Foto bliebe am rechten Anschlag stehen. */
-  .galerie img { animation: none; transform: none; }
 }
 
 /* ------------------------------------------------------------- Bedienung -- */
@@ -732,45 +729,6 @@ body.is-scrolled .hero__scroll { opacity: 0; }
 }
 .galerie button:hover img { transform: scale(1.03); }
 .galerie button:active { transform: scale(0.99); }
-
-/* Die Fotos wandern langsam nach rechts. Ein Standbild in einem festen
-   Rahmen wirkt wie ein Aushang; eine Aufnahme, die sich bewegt, wirkt wie
-   eine Erinnerung.
-
-   Damit dabei nie ein Rand frei wird, ist das Bild um 20 Prozent groesser
-   als sein Rahmen. Es haengt also zehn Prozent ueber jede Seite und darf
-   hoechstens zehn Prozent wandern — acht sind es hier, mit Luft nach beiden
-   Seiten.
-
-   Zum Tempo: der erste Versuch lief mit anderthalb Bildpunkten je Sekunde
-   und war auf dem Papier richtig — nur sieht man ihn nicht. Wer eine Weile
-   auf ein Foto schaut, nimmt drei Bildpunkte je Sekunde als ruhige Fahrt
-   wahr; darunter haelt man das Bild fuer ein Standbild. Langsam heisst also
-   nicht: so langsam wie moeglich.
-
-   Gleichmaessig und ohne Anlauf: eine Kurve mit weichen Enden hielte das
-   Bild an beiden Umkehrpunkten sekundenlang fast still, und genau das faellt
-   auf. Am Ende laeuft es ebenso ruhig zurueck. Ein harter Sprung an den
-   Anfang waere das Einzige, was man dann noch sieht; die Umkehr in dieser
-   Geschwindigkeit bemerkt niemand. */
-@keyframes wandern {
-  from { transform: translateX(-8%) scale(1.2); }
-  to   { transform: translateX(8%)  scale(1.2); }
-}
-.galerie img {
-  animation: wandern 16s linear infinite alternate;
-}
-/* Vier verschiedene Dauern, vier verschiedene Startpunkte. Im Gleichschritt
-   sieht es nach Technik aus, versetzt nach Leben. Die negativen Verzoegerungen
-   liegen alle im ersten Durchgang, damit anfangs alles nach rechts laeuft. */
-.galerie li:nth-child(1) img { animation-duration: 15s; animation-delay: -1s; }
-.galerie li:nth-child(2) img { animation-duration: 21s; animation-delay: -6s; }
-.galerie li:nth-child(3) img { animation-duration: 17s; animation-delay: -3s; }
-.galerie li:nth-child(4) img { animation-duration: 24s; animation-delay: -9s; }
-
-/* Wer hinsieht, will das Bild anhalten — und gleich darauf antippen. */
-.galerie button:hover img,
-.galerie button:focus-visible img { animation-play-state: paused; }
 
 /* Ab Tabletbreite wird aus dem Wischstreifen ein Raster. Es ist breiter als
    die Lesespalte, aber nicht randlos — randlos sieht auf dem Rechner nach
