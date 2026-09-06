@@ -809,3 +809,38 @@ def pine_garland(cx, cy, half_w, sag, *, n=19, length=20.0, stroke="#2E6247",
                                   stroke_width=stroke_width,
                                   seed=seed * 13 + i * 5 + int(scale * 10)))
     return "".join(out)
+
+
+def barcode(x, y, w, h, *, seed=7, color="#111111", digits="0 001234 567890",
+            label_size=None, quiet=4):
+    """
+    Strichcode-Attrappe fuer Magazin-Cover.
+
+    Kein echter EAN — die Balkenbreiten sind zufaellig, aber in der typischen
+    Verteilung. Ein echter Code waere ein Versprechen, das die Vorlage nicht
+    halten kann; als Gestaltungselement zaehlt allein das Bild.
+    """
+    rnd = random.Random(seed)
+    bars, cx = [], x + quiet
+    limit = x + w - quiet
+    while cx < limit:
+        bw = rnd.choice([1, 1, 1, 2, 2, 3]) * (w / 90)
+        if cx + bw > limit:
+            break
+        gap = rnd.choice([1, 1, 2]) * (w / 90)
+        bars.append(f'<rect x="{_fmt(cx)}" y="{_fmt(y)}" width="{_fmt(bw)}" '
+                    f'height="{_fmt(h)}" fill="{color}"/>')
+        cx += bw + gap
+    fs = label_size or max(5.0, h * 0.19)
+    text_y = y + h + fs * 1.15
+    return ("".join(bars)
+            + f'<text x="{_fmt(x + w / 2)}" y="{_fmt(text_y)}" '
+              f'text-anchor="middle" fill="{color}" font-size="{_fmt(fs)}" '
+              f'font-family="Helvetica,Arial,sans-serif" '
+              f'letter-spacing="{_fmt(fs * 0.14)}">{digits}</text>')
+
+
+def scrim(gid, *, color="#000000", stops=((0, 0.0), (0.45, 0.06), (1, 0.72)),
+          angle=90):
+    """Abdunklung fuer Text auf Fotos — ohne sie ist heller Text nicht lesbar."""
+    return linear_bg(gid, [(o, color, a) for o, a in stops], angle=angle)

@@ -400,3 +400,93 @@ def bow(cx, cy, size, *, color="#1A1A1A", highlight=None, tail_len=1.0,
                     for d in (tail_l, tail_r, loop_l, loop_r, knot))
     return (f'<g transform="translate({_fmt(cx)},{_fmt(cy)}) rotate({tilt})">'
             f'{paths}{hi}</g>')
+
+
+# ------------------------------------------------------------------- Glaeser
+
+def coupe_glass(cx, cy, size, *, glass="#D9D6CE", rim="#B9B4A8", liquid=None,
+                bubbles=True, seed=3):
+    """
+    Coupe-Glas im Profil — flache Schale, schlanker Stiel, breiter Fuss.
+
+    Die Schale ist bewusst weit und niedrig; ein hohes schmales Kelchglas
+    liest sich als Weinglas und trifft die Coquette-Anmutung nicht.
+    """
+    import random
+    rnd = random.Random(seed)
+    s = size / 100.0
+
+    def P(dx, dy):
+        return f"{_fmt(cx + dx * s)},{_fmt(cy + dy * s)}"
+
+    bowl = (f"M{P(-50, -46)} "
+            f"C{P(-49, -18)} {P(-30, 2)} {P(0, 3)} "
+            f"C{P(30, 2)} {P(49, -18)} {P(50, -46)} Z")
+    stem = (f"M{P(-4.5, 3)} L{P(-3.5, 44)} L{P(3.5, 44)} L{P(4.5, 3)} Z")
+    foot = (f"M{P(-26, 52)} "
+            f"C{P(-26, 45)} {P(-12, 44)} {P(0, 44)} "
+            f"C{P(12, 44)} {P(26, 45)} {P(26, 52)} "
+            f"C{P(26, 55)} {P(12, 56)} {P(0, 56)} "
+            f"C{P(-12, 56)} {P(-26, 55)} {P(-26, 52)} Z")
+    parts = [f'<path d="{bowl}" fill="{glass}" opacity="0.6"/>',
+             f'<path d="{stem}" fill="{glass}" opacity="0.75"/>',
+             f'<path d="{foot}" fill="{glass}" opacity="0.75"/>']
+    if liquid:
+        fill = (f"M{P(-46, -34)} C{P(-45, -14)} {P(-28, 0)} {P(0, 1)} "
+                f"C{P(28, 0)} {P(45, -14)} {P(46, -34)} Z")
+        parts.insert(1, f'<path d="{fill}" fill="{liquid}" opacity="0.85"/>')
+        if bubbles:
+            for _ in range(11):
+                bx = rnd.uniform(-38, 38)
+                by = rnd.uniform(-30, -2)
+                parts.append(f'<circle cx="{_fmt(cx + bx * s)}" '
+                             f'cy="{_fmt(cy + by * s)}" '
+                             f'r="{_fmt(rnd.uniform(0.8, 2.0) * s)}" '
+                             f'fill="#FFFFFF" opacity="{rnd.uniform(0.35, 0.8):.2f}"/>')
+    # Rand und Kontur zuletzt, damit sie ueber der Fuellung liegen
+    parts += [
+        f'<path d="{bowl}" fill="none" stroke="{rim}" stroke-width="{_fmt(1.5 * s)}"/>',
+        f'<path d="{stem}" fill="none" stroke="{rim}" stroke-width="{_fmt(1.2 * s)}"/>',
+        f'<path d="{foot}" fill="none" stroke="{rim}" stroke-width="{_fmt(1.3 * s)}"/>',
+        f'<ellipse cx="{_fmt(cx - 26 * s)}" cy="{_fmt(cy - 30 * s)}" '
+        f'rx="{_fmt(4 * s)}" ry="{_fmt(11 * s)}" fill="#FFFFFF" opacity="0.5" '
+        f'transform="rotate(-14 {_fmt(cx - 26 * s)} {_fmt(cy - 30 * s)})"/>',
+    ]
+    return "".join(parts)
+
+
+def pearl_strand(points, *, r=3.2, color="#E8E2D6", stroke="#C9C1B2",
+                 vary=0.22, seed=1):
+    """Perlenkette entlang einer Punktfolge — Groesse streut leicht."""
+    import random
+    rnd = random.Random(seed)
+    out = []
+    for (x, y) in points:
+        rr = r * (1 - vary / 2 + rnd.random() * vary)
+        out.append(f'<circle cx="{_fmt(x)}" cy="{_fmt(y)}" r="{_fmt(rr)}" '
+                   f'fill="{color}" stroke="{stroke}" stroke-width="0.5"/>'
+                   f'<circle cx="{_fmt(x - rr * 0.3)}" cy="{_fmt(y - rr * 0.3)}" '
+                   f'r="{_fmt(rr * 0.28)}" fill="#FFFFFF" opacity="0.75"/>')
+    return "".join(out)
+
+
+def pearl_arc(cx, cy, rx, ry, start_deg, end_deg, *, n=22, r=3.2,
+              color="#E8E2D6", stroke="#C9C1B2", seed=2):
+    pts = []
+    for i in range(n):
+        t = i / max(n - 1, 1)
+        a = math.radians(start_deg + (end_deg - start_deg) * t)
+        pts.append((cx + math.cos(a) * rx, cy + math.sin(a) * ry))
+    return pearl_strand(pts, r=r, color=color, stroke=stroke, seed=seed)
+
+
+def ribbon_tail(x, y, length, *, width=9, color="#1A1A1A", sway=26, seed=4,
+                taper=0.55):
+    """Haengendes Band mit leichter Drehung — das Detail unter einer Schleife."""
+    pts, wds = [], []
+    steps = 34
+    for i in range(steps + 1):
+        t = i / steps
+        pts.append((x + math.sin(t * 3.1) * sway * t, y + length * t))
+        wds.append(width * (1 - taper * t) * (0.75 + 0.25 * abs(math.cos(t * 4))))
+    return f'<path d="{tapered_curve(pts, wds)}" fill="{color}"/>'
