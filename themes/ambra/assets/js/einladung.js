@@ -152,23 +152,40 @@
   /* ------------------------------------------------------------ Bilderlauf -- */
   /* Auf dem Telefon ist die Galerie ein Wischstreifen: ein Foto steht im
      Bild, drei liegen daneben. Wer nicht wischt, sieht sie nie — und die
-     meisten wischen nicht. Also zeigt der Streifen sie von selbst.
+     meisten wischen nicht. Also wischt der Streifen selbst, langsam und
+     ohne Unterlass, von rechts nach links.
 
-     Weiterruecken statt gleiten: ein durchlaufendes Band zeigt jedes Foto
-     nur im Vorbeifahren. Hier steht jedes ein paar Sekunden still, wie in
-     einem Album, das jemand umblaettert.
+     Damit das nie endet, steht jedes Foto zweimal da. Sobald der Streifen
+     genau eine Runde weit gelaufen ist, springt er um diese eine Runde
+     zurueck — und weil an dieser Stelle dasselbe Bild steht wie am Anfang,
+     sieht man den Sprung nicht. Ein Band ohne Anfang und Ende, aus vier
+     Fotos.
 
-     Am Rechner wird aus dem Streifen ein Raster mit allen vier Fotos. Dann
-     gibt es nichts zu zeigen, und es passiert nichts. */
+     Am Rechner wird aus dem Streifen ein Raster mit allen vier Fotos. Dort
+     verschwinden die Zweitfotos per CSS, es gibt nichts zu zeigen, und es
+     passiert nichts. */
   (function bilderlauf() {
     var streifen = $("[data-galerie]");
     if (!streifen || sanft.matches) return;
 
-    var kacheln = $$("li", streifen);
-    if (kacheln.length < 2) return;
+    var urbild = $$("li", streifen);
+    var anzahl = urbild.length;
+    if (anzahl < 2) return;
 
-    var HALT = 3800;                  // wie lange ein Foto steht
-    var stelle = 0, uhr = null, sichtbar = false;
+    /* Die Zweitfotos sind fuer das Auge da, nicht fuer den Leser: eine
+       Vorlesehilfe soll die Galerie nicht doppelt ansagen, und die
+       Tabulatortaste soll nicht zweimal durch dieselben vier Bilder gehen. */
+    urbild.forEach(function (li) {
+      var kopie = li.cloneNode(true);
+      kopie.classList.add("kopie");
+      kopie.setAttribute("aria-hidden", "true");
+      $$("button", kopie).forEach(function (b) { b.tabIndex = -1; });
+      streifen.appendChild(kopie);
+    });
+    var kacheln = $$("li", streifen);
+
+    var TEMPO = 22;                   // Bildpunkte je Sekunde
+    var ort = 0, periode = 0, basis = 0, bild = null, letzte = 0, sichtbar = false;
     var abgegeben = false;            // der Gast wischt selbst: dann fuer immer
     /* Drei Gruende zu warten, unabhaengig voneinander. Ein einzelner Schalter
        wuerde sich gegenseitig ausknipsen: der Finger geht hoch, und der
@@ -176,37 +193,67 @@
     var zeigt = false, tastatur = false, finger = false;
     function wartet() { return zeigt || tastatur || finger; }
 
-    /* Nur wenn ueberhaupt etwas ausserhalb des Bildes liegt. Das ist zugleich
-       die Weiche zwischen Streifen und Raster — ohne feste Breite im Skript,
-       die dann irgendwann nicht mehr zur CSS-Grenze passt. */
-    function ueberhang() {
-      return streifen.scrollWidth - streifen.clientWidth > 4;
+    /* Eine Runde ist der Abstand von einem Foto zu seinem Zweitfoto. Der
+       haengt an der Fensterbreite, also wird er neu gemessen, wenn sich die
+       aendert — und nicht in jedem Einzelbild, das kostet jedes Mal ein
+       neues Layout.
+
+       Der Rueckstellpunkt liegt nicht bei null, sondern an der Kante des
+       ersten Fotos. Vor dem ersten liegt die Polsterung des Streifens, vor
+       dem fuenften liegt das vierte Foto — bei null saehe die Naht also um
+       genau diese Polsterung anders aus, und der Sprung waere sichtbar. Ab
+       der Kante des ersten Fotos ist beides gleich. */
+    function messen() {
+      var rand = streifen.getBoundingClientRect().left;
+      basis = kacheln[0].getBoundingClientRect().left - rand + streifen.scrollLeft;
+      periode = kacheln[anzahl].getBoundingClientRect().left
+              - kacheln[0].getBoundingClientRect().left;
+      var weite = streifen.scrollWidth - streifen.clientWidth;
+      // Passt keine ganze Runde in den Bildlauf, waere der Sprung sichtbar.
+      if (periode < 8 || weite < basis + periode) periode = 0;
+      if (periode && ort >= basis + periode) ort = basis + (ort - basis) % periode;
     }
 
-    /* Dorthin, wo scroll-snap die Kachel ohnehin haben will: in die Mitte. */
-    function mitte(kachel) {
-      var s = streifen.getBoundingClientRect();
-      var k = kachel.getBoundingClientRect();
-      var ziel = streifen.scrollLeft + (k.left - s.left) - (s.width - k.width) / 2;
-      return Math.max(0, Math.min(ziel, streifen.scrollWidth - streifen.clientWidth));
+    /* Waehrend der Streifen von selbst laeuft, darf nichts einrasten: das
+       Rasten zoege ihn bei jedem Einzelbild auf das naechste Foto zurueck.
+       Sobald der Gast den Finger aufsetzt, ist es wieder da, damit sein
+       Wisch sauber stehen bleibt. */
+    var frei = false;
+    function rasten(aus) {
+      if (aus === frei) return;
+      frei = aus;
+      streifen.classList.toggle("laeuft", aus);
     }
 
-    function weiter() {
-      if (abgegeben || !sichtbar || wartet() || !ueberhang()) return;
+    function schritt(jetzt) {
+      bild = window.requestAnimationFrame(schritt);
+      var dt = letzte ? Math.min((jetzt - letzte) / 1000, 0.1) : 0;
+      letzte = jetzt;
+
       // Hinter dem Lichtkasten weiterzulaufen hiesse: der Gast schliesst ihn
       // und findet den Streifen woanders, als er ihn verlassen hat.
-      if ($("dialog[open]")) return;
-      stelle = (stelle + 1) % kacheln.length;
-      streifen.scrollTo({ left: mitte(kacheln[stelle]), behavior: "smooth" });
+      if (wartet() || !periode || $("dialog[open]")) { rasten(false); return; }
+
+      rasten(true);
+      ort += TEMPO * dt;
+      if (ort >= basis + periode) ort -= periode;   // die unsichtbare Naht
+      streifen.scrollLeft = ort;
     }
 
     function starten() {
-      if (uhr || abgegeben) return;
-      uhr = window.setInterval(weiter, HALT);
+      if (bild || abgegeben) return;
+      messen();
+      // Passt keine ganze Runde hinein — zwei Fotos auf einem breiten Schirm —
+      // dann gibt es nichts zu wischen und auch keinen Takt dafuer.
+      if (!periode) return;
+      ort = streifen.scrollLeft;
+      letzte = 0;
+      bild = window.requestAnimationFrame(schritt);
     }
     function stoppen() {
-      window.clearInterval(uhr);
-      uhr = null;
+      if (bild) window.cancelAnimationFrame(bild);
+      bild = null;
+      rasten(false);
     }
 
     /* Sobald der Gast selbst wischt, ist er am Zug und bleibt es. Ein
@@ -217,10 +264,9 @@
       stoppen();
     }
 
-    /* Zeigen und Tastaturfokus halten nur an. Wer schaut, will nicht, dass
-       ihm das Bild unter dem Zeiger weglaeuft — aber danach darf es weiter. */
     streifen.addEventListener("mouseenter", function () { zeigt = true; });
     streifen.addEventListener("mouseleave", function () { zeigt = false; });
+
     /* Nur der Fokus von der Tastatur haelt an: wer sich durchtabbt, soll
        nicht verlieren, wo er gerade steht. Beim Tippen setzt der Browser den
        Fokus ebenfalls auf den Knopf — der Streifen bliebe danach fuer immer
@@ -244,6 +290,7 @@
     streifen.addEventListener("pointerdown", function (e) {
       aufgesetzt = e.clientX;
       finger = true;
+      rasten(false);                   // ab jetzt soll sein Wisch einrasten
     }, { passive: true });
     streifen.addEventListener("pointermove", function (e) {
       if (aufgesetzt !== null && Math.abs(e.clientX - aufgesetzt) > 10) abgeben();
@@ -258,13 +305,19 @@
     // schon die erste Bewegung eindeutig.
     streifen.addEventListener("wheel", abgeben, { passive: true });
 
-    /* Nur laufen, solange jemand hinsieht. Sonst waere die Galerie beim
-       Zurueckscrollen an einer Stelle, die niemand ausgewaehlt hat. */
+    var neu_messen = null;
+    window.addEventListener("resize", function () {
+      window.clearTimeout(neu_messen);
+      neu_messen = window.setTimeout(messen, 200);
+    });
+
+    /* Nur laufen, solange jemand hinsieht. Ein Einzelbild-Takt fuer eine
+       Galerie zwei Bildschirme weiter oben ist verschenkte Rechenzeit. */
     if (!("IntersectionObserver" in window)) return;
     new IntersectionObserver(function (eintraege) {
       sichtbar = eintraege[0].isIntersecting;
       if (sichtbar) starten(); else stoppen();
-    }, { threshold: 0.5 }).observe(streifen);
+    }, { threshold: 0.3 }).observe(streifen);
   })();
 
   (function galerie() {

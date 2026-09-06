@@ -27,13 +27,18 @@ Dann <http://localhost:8100>. **Über HTTP öffnen, nicht per Doppelklick** —
 ### Prüfen
 
 ```bash
-python3 themes/pruefung/galerie.py   # 12 Prüfungen, braucht den Server oben
+python3 themes/pruefung/galerie.py   # braucht den Server oben
 ```
 
-Der Bilderstreifen rückt von selbst weiter und muss dabei ein halbes Dutzend
-Regeln einhalten — wer selbst wischt, hat das Sagen; ein Tipp aufs Foto ist
-kein Wischen; bei reduzierter Bewegung passiert nichts. Die stehen dort als
-Prüfungen, damit der nächste Umbau sie nicht still umdreht.
+Der Bilderstreifen wischt von selbst nach links, damit ein Gast alle Fotos
+sieht, ohne zu wischen. Damit das nie endet, steht jedes Foto zweimal da;
+nach einer Runde springt der Streifen um genau diese Runde zurück, und weil
+dort dasselbe Bild steht, sieht man den Sprung nicht. Die Prüfung vergleicht
+die beiden Stellen Punkt für Punkt.
+
+Dazu die Regeln drumherum: wer selbst wischt, hat ab da das Sagen; ein Tipp
+aufs Foto ist kein Wischen; Zeiger und Tastaturfokus halten an; im Raster und
+bei reduzierter Bewegung passiert nichts. Das sind mehr, als man sich merkt.
 
 ### Zum Verschicken
 

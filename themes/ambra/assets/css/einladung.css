@@ -730,6 +730,12 @@ body.is-scrolled .hero__scroll { opacity: 0; }
 .galerie button:hover img { transform: scale(1.03); }
 .galerie button:active { transform: scale(0.99); }
 
+/* Der Streifen wischt von selbst (siehe bilderlauf in einladung.js). Waehrend
+   das laeuft, darf nichts einrasten — das Rasten zoege ihn bei jedem
+   Einzelbild auf das naechste Foto zurueck. Ohne JavaScript wird die Klasse
+   nie gesetzt und das Wischen rastet wie zuvor. */
+.galerie.laeuft { scroll-snap-type: none; }
+
 /* Ab Tabletbreite wird aus dem Wischstreifen ein Raster. Es ist breiter als
    die Lesespalte, aber nicht randlos — randlos sieht auf dem Rechner nach
    Versehen aus. */
@@ -743,6 +749,9 @@ body.is-scrolled .hero__scroll { opacity: 0; }
     overflow: visible;
     gap: 1rem;
   }
+  /* Im Raster stehen ohnehin alle vier. Die Zweitfotos, die den Streifen
+     endlos machen, waeren hier vier Fotos zu viel. */
+  .galerie .kopie { display: none; }
 }
 
 /* Lichtkasten. Nativer Dialog, damit Escape und Fokus ohne eigenen Code
