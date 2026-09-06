@@ -36,9 +36,11 @@ nach einer Runde springt der Streifen um genau diese Runde zurück, und weil
 dort dasselbe Bild steht, sieht man den Sprung nicht. Die Prüfung vergleicht
 die beiden Stellen Punkt für Punkt.
 
-Dazu die Regeln drumherum: wer selbst wischt, hat ab da das Sagen; ein Tipp
-aufs Foto ist kein Wischen; Zeiger und Tastaturfokus halten an; im Raster und
-bei reduzierter Bewegung passiert nichts. Das sind mehr, als man sich merkt.
+Dazu die Regeln drumherum: wer selbst wischt, hat das Steuer — aber nur
+geliehen, nach ein paar Sekunden Ruhe läuft der Streifen von dort aus weiter.
+Ein Tipp aufs Foto ist kein Wischen. Zeiger und Tastaturfokus halten an. Im
+Raster und bei reduzierter Bewegung passiert nichts. Das sind mehr, als man
+sich merkt.
 
 ### Zum Verschicken
 

@@ -185,13 +185,41 @@
     var kacheln = $$("li", streifen);
 
     var TEMPO = 22;                   // Bildpunkte je Sekunde
+    var WARTEN = 3;                   // Sekunden Ruhe, nachdem der Gast loslaesst
     var ort = 0, periode = 0, basis = 0, bild = null, letzte = 0, sichtbar = false;
-    var abgegeben = false;            // der Gast wischt selbst: dann fuer immer
-    /* Drei Gruende zu warten, unabhaengig voneinander. Ein einzelner Schalter
-       wuerde sich gegenseitig ausknipsen: der Finger geht hoch, und der
-       Streifen liefe unter dem Mauszeiger weiter, der noch daraufliegt. */
-    var zeigt = false, tastatur = false, finger = false;
-    function wartet() { return zeigt || tastatur || finger; }
+    /* Wischt der Gast selbst, hat er das Steuer — aber nur geliehen. Danach
+       nimmt der Streifen den Faden wieder auf, dort wo der Gast aufgehoert
+       hat. Die Ruhe zaehlt erst ab, wenn der Finger weg ist und auch der
+       Schwung ausgelaufen. */
+    var handbetrieb = false, ruhe = 0;
+    /* Drei Gruende zu warten. Zwei davon werden gefragt statt mitgeschrieben:
+       ein Schalter, der auf ein Ereignis wartet, bleibt haengen, wenn das
+       Ereignis ausbleibt — und nach dem Lichtkasten bleibt genau das aus.
+       Der Streifen stuende dann fuer immer still. Was der Browser ohnehin
+       weiss, muss man ihm nicht nacherzaehlen. */
+    var finger = false;
+
+    /* Zeigen haelt nur dort an, wo es ein Zeigen gibt. Auf dem Telefon bleibt
+       :hover nach einem Tipp am Element kleben; ohne diese Frage stuende der
+       Streifen nach dem ersten angetippten Foto. */
+    var zeiger = window.matchMedia("(hover: hover)");
+    function zeigtdrauf() {
+      return zeiger.matches && streifen.matches(":hover");
+    }
+
+    /* Nur der Fokus von der Tastatur haelt an: wer sich durchtabbt, soll
+       nicht verlieren, wo er gerade steht. Beim Tippen setzt der Browser den
+       Fokus ebenfalls auf den Knopf — dann stuende der Streifen still,
+       obwohl der Gast nur ein Foto gross sehen wollte. Genau diesen
+       Unterschied kennt :focus-visible. */
+    function tastaturdrin() {
+      var a = document.activeElement;
+      if (!a || !streifen.contains(a)) return false;
+      try { return a.matches(":focus-visible"); }
+      catch (e) { return true; }        // kennt der Browser nicht: anhalten
+    }
+
+    function wartet() { return finger || zeigtdrauf() || tastaturdrin(); }
 
     /* Eine Runde ist der Abstand von einem Foto zu seinem Zweitfoto. Der
        haengt an der Fensterbreite, also wird er neu gemessen, wenn sich die
@@ -214,15 +242,27 @@
       if (periode && ort >= basis + periode) ort = basis + (ort - basis) % periode;
     }
 
-    /* Waehrend der Streifen von selbst laeuft, darf nichts einrasten: das
-       Rasten zoege ihn bei jedem Einzelbild auf das naechste Foto zurueck.
-       Sobald der Gast den Finger aufsetzt, ist es wieder da, damit sein
-       Wisch sauber stehen bleibt. */
-    var frei = false;
-    function rasten(aus) {
-      if (aus === frei) return;
-      frei = aus;
-      streifen.classList.toggle("laeuft", aus);
+    /* Ein Streifen, der von selbst laeuft, und ein Streifen, der einrastet,
+       sind zwei verschiedene Dinge. Das Rasten zoege den laufenden bei jedem
+       Einzelbild auf das naechste Foto zurueck; und schaltete man es fuer die
+       Wischgeste des Gastes wieder ein, wuerde es die Geste mitten im Zug
+       abwuergen und auf die naechste Rastung zerren. Also bleibt es aus,
+       solange dieses Skript laeuft — einmal gesetzt und nie wieder angefasst.
+
+       Ohne JavaScript rastet der Streifen wie zuvor. Dort gibt es auch
+       nichts, was von selbst liefe. */
+    streifen.classList.add("laeuft");
+
+    /* Den Faden wieder aufnehmen, dort wo der Gast aufgehoert hat. Hat er
+       ueber die Naht hinaus gewischt, wird die Stelle auf die erste Runde
+       zurueckgerechnet — dort steht dasselbe Bild, also sieht man nichts. */
+    function anknuepfen() {
+      var pos = streifen.scrollLeft;
+      ort = pos >= basis + periode ? basis + (pos - basis) % periode : pos;
+    }
+    function uebernehmen() {
+      handbetrieb = false;
+      anknuepfen();
     }
 
     function schritt(jetzt) {
@@ -230,57 +270,51 @@
       var dt = letzte ? Math.min((jetzt - letzte) / 1000, 0.1) : 0;
       letzte = jetzt;
 
+      if (handbetrieb) {
+        // Solange der Finger liegt oder der Schwung noch laeuft, faengt die
+        // Ruhe immer wieder von vorn an.
+        if (finger) ruhe = WARTEN;
+        else if ((ruhe -= dt) <= 0) uebernehmen();
+      }
       // Hinter dem Lichtkasten weiterzulaufen hiesse: der Gast schliesst ihn
       // und findet den Streifen woanders, als er ihn verlassen hat.
-      if (wartet() || !periode || $("dialog[open]")) { rasten(false); return; }
+      if (handbetrieb || wartet() || !periode || $("dialog[open]")) return;
 
-      rasten(true);
       ort += TEMPO * dt;
       if (ort >= basis + periode) ort -= periode;   // die unsichtbare Naht
       streifen.scrollLeft = ort;
     }
 
     function starten() {
-      if (bild || abgegeben) return;
+      if (bild) return;
       messen();
       // Passt keine ganze Runde hinein — zwei Fotos auf einem breiten Schirm —
       // dann gibt es nichts zu wischen und auch keinen Takt dafuer.
       if (!periode) return;
-      ort = streifen.scrollLeft;
+      anknuepfen();
       letzte = 0;
       bild = window.requestAnimationFrame(schritt);
     }
     function stoppen() {
       if (bild) window.cancelAnimationFrame(bild);
       bild = null;
-      rasten(false);
     }
 
-    /* Sobald der Gast selbst wischt, ist er am Zug und bleibt es. Ein
-       Streifen, der gegen den Daumen zurueckzieht, ist schlimmer als einer,
-       der stillsteht. */
-    function abgeben() {
-      abgegeben = true;
-      stoppen();
+    /* Sobald der Gast selbst wischt, ist er am Zug. Ein Streifen, der gegen
+       den Daumen zurueckzieht, ist schlimmer als einer, der stillsteht. */
+    function uebergeben() {
+      handbetrieb = true;
+      ruhe = WARTEN;
     }
-
-    streifen.addEventListener("mouseenter", function () { zeigt = true; });
-    streifen.addEventListener("mouseleave", function () { zeigt = false; });
-
-    /* Nur der Fokus von der Tastatur haelt an: wer sich durchtabbt, soll
-       nicht verlieren, wo er gerade steht. Beim Tippen setzt der Browser den
-       Fokus ebenfalls auf den Knopf — der Streifen bliebe danach fuer immer
-       stehen, obwohl der Gast nur ein Foto gross sehen wollte. Genau diesen
-       Unterschied kennt :focus-visible. */
-    function tastaturfokus() {
-      var a = document.activeElement;
-      try { return !!(a && a.matches && a.matches(":focus-visible")); }
-      catch (e) { return true; }        // kennt der Browser nicht: anhalten
-    }
-    streifen.addEventListener("focusin", function () {
-      tastatur = tastaturfokus();
-    });
-    streifen.addEventListener("focusout", function () { tastatur = false; });
+    /* Der sicherste Hinweis, dass der Gast selbst am Werk ist: der Streifen
+       steht woanders, als wir ihn zuletzt hingesetzt haben. Das gilt fuer
+       den Finger, den ausrollenden Schwung danach, das Trackpad, die
+       Bildlaufleiste und die Pfeiltasten gleichermassen — und es haengt an
+       keiner Eigenheit eines einzelnen Browsers. */
+    streifen.addEventListener("scroll", function () {
+      if (handbetrieb) ruhe = WARTEN;                     // der Schwung laeuft
+      else if (Math.abs(streifen.scrollLeft - ort) > 3) uebergeben();
+    }, { passive: true });
 
     /* Tippen ist nicht Wischen. Ein Tipp oeffnet ein Foto gross und heisst
        nicht, dass der Gast von nun an selbst blaettern will — erst der
@@ -290,20 +324,24 @@
     streifen.addEventListener("pointerdown", function (e) {
       aufgesetzt = e.clientX;
       finger = true;
-      rasten(false);                   // ab jetzt soll sein Wisch einrasten
     }, { passive: true });
     streifen.addEventListener("pointermove", function (e) {
-      if (aufgesetzt !== null && Math.abs(e.clientX - aufgesetzt) > 10) abgeben();
+      if (aufgesetzt !== null && Math.abs(e.clientX - aufgesetzt) > 10) uebergeben();
     }, { passive: true });
+    /* Das Loslassen wird am Dokument abgehoert, nicht am Streifen: ein Wisch
+       endet oft neben ihm, und dann kaeme es dort nie an. */
     ["pointerup", "pointercancel"].forEach(function (art) {
-      streifen.addEventListener(art, function () {
+      document.addEventListener(art, function () {
         aufgesetzt = null;
         finger = false;
       }, { passive: true });
     });
     // Am Rechner mit Rollrad oder Trackpad gibt es kein Ziehen — hier ist
-    // schon die erste Bewegung eindeutig.
-    streifen.addEventListener("wheel", abgeben, { passive: true });
+    // schon die erste Bewegung eindeutig. Aber nur die seitliche: wer die
+    // Seite an der Galerie vorbeirollt, wollte nichts von ihr.
+    streifen.addEventListener("wheel", function (e) {
+      if (Math.abs(e.deltaX) > Math.abs(e.deltaY)) uebergeben();
+    }, { passive: true });
 
     var neu_messen = null;
     window.addEventListener("resize", function () {

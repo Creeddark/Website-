@@ -12,9 +12,11 @@ umdreht — darum stehen sie hier als Pruefungen:
 
   * er laeuft gleichmaessig nach links, ohne Halt
   * die Naht ist unsichtbar: das Bild dort ist Punkt fuer Punkt dasselbe
-  * wer selbst wischt oder rollt, hat ab da das Sagen
+  * wer selbst wischt oder rollt, hat das Steuer — aber nur geliehen
+  * nach ein paar Sekunden Ruhe laeuft er von dort aus weiter
   * ein Tipp aufs Foto ist kein Wischen: danach laeuft er weiter
-  * Zeiger darauf und Tastaturfokus halten nur an
+  * Zeiger darauf und Tastaturfokus halten nur an — der Zeiger aber nur
+    dort, wo es einen gibt: auf dem Telefon klebt :hover nach einem Tipp
   * ausserhalb des Bildes, im Raster und bei reduzierter Bewegung: nichts
   * die Zweitfotos sind fuer das Auge da, nicht fuer Vorlesehilfe und Tabulator
 
@@ -53,6 +55,31 @@ def oeffnen(pg):
     pg.wait_for_timeout(700)
 
 
+def wischen(pg, cdp, weite=220):
+    """Eine echte Wischgeste, kein Mausziehen.
+
+    Mit gedrueckter Maustaste ueber einen Streifen zu fahren scrollt ihn
+    nicht — das tut nur ein Finger. Darum werden die Beruehrungsereignisse
+    einzeln ueber das Browserprotokoll geschickt: sie loesen dieselben
+    Zeigerereignisse aus wie ein echter Daumen und bewegen den Streifen
+    wirklich.
+    """
+    k = pg.eval_on_selector("[data-galerie]", "e=>{const r=e.getBoundingClientRect();"
+                            "return {x:Math.round(r.left+r.width/2),"
+                            " y:Math.round(r.top+r.height/2)};}")
+
+    def punkt(art, x):
+        cdp.send("Input.dispatchTouchEvent", {
+            "type": art,
+            "touchPoints": [] if art == "touchEnd" else [{"x": x, "y": k["y"]}]})
+
+    punkt("touchStart", k["x"])
+    for dx in range(20, weite + 1, 20):
+        punkt("touchMove", k["x"] - dx)
+        pg.wait_for_timeout(16)
+    punkt("touchEnd", 0)
+
+
 def steht(pg, sekunden=4.0):
     """Wahr, wenn sich der Streifen in dieser Zeit nicht bewegt."""
     a = pg.evaluate(POS)
@@ -66,6 +93,7 @@ def lauf():
         pg = b.new_page(viewport={"width": 390, "height": 844}, has_touch=True)
         fehler = []
         pg.on("pageerror", lambda e: fehler.append(str(e)))
+        cdp = pg.context.new_cdp_session(pg)
 
         print("— Der Streifen wischt selbst —")
         oeffnen(pg)
@@ -113,30 +141,53 @@ def lauf():
             pruef(f"Naht bei {x:>6.0f} und {x + periode:>6.0f} gleich",
                   bilder[0] == bilder[1], bilder[0])
 
-        print("— Der Gast uebernimmt —")
+        print("— Der Gast uebernimmt, aber nur geliehen —")
         oeffnen(pg)
         pg.wait_for_timeout(2000)
         k = pg.eval_on_selector("[data-galerie]", "e=>{const r=e.getBoundingClientRect();"
                                 "return {x:r.left+r.width/2, y:r.top+r.height/2};}")
-        pg.mouse.move(k["x"], k["y"])
-        pg.mouse.down()
-        for dx in (-25, -70, -120):
-            pg.mouse.move(k["x"] + dx, k["y"])
-            pg.wait_for_timeout(40)
-        pg.mouse.up()
+        vorher = pg.evaluate(POS)
+        wischen(pg, cdp)
         pg.mouse.move(5, 5)
+        gewischt = pg.evaluate(POS)
+        pruef("der Wisch bewegt den Streifen", gewischt > vorher + 120,
+              f"{vorher:.0f} → {gewischt:.0f}")
         pg.wait_for_timeout(600)
-        pruef("nach dem Wischen still", steht(pg, 6))
-        pruef("und das Rasten ist zurueck",
+        pruef("gleich danach laeuft er noch nicht", steht(pg, 1.4))
+        pg.wait_for_timeout(2600)                       # zusammen ueber die Ruhe
+        pruef("nach der Ruhe laeuft er weiter", not steht(pg, 2))
+        pruef("und zwar von dort, wo der Gast aufhoerte",
+              abs(pg.evaluate(POS) - gewischt) < 220,
+              f"{gewischt:.0f} → {pg.evaluate(POS):.0f}")
+        pruef("das Rasten bleibt durchgehend aus",
               pg.eval_on_selector("[data-galerie]",
-                                  "e=>getComputedStyle(e).scrollSnapType") != "none")
+                                  "e=>getComputedStyle(e).scrollSnapType") == "none")
 
         oeffnen(pg)
+        k = pg.eval_on_selector("[data-galerie]", "e=>{const r=e.getBoundingClientRect();"
+                                "return {x:r.left+r.width/2, y:r.top+r.height/2};}")
         pg.mouse.move(k["x"], k["y"])
         pg.mouse.wheel(60, 0)
         pg.mouse.move(5, 5)
-        pg.wait_for_timeout(600)
-        pruef("nach dem Rollrad still", steht(pg, 6))
+        pg.wait_for_timeout(500)
+        pruef("nach dem Rollrad kurz still", steht(pg, 1.4))
+        pg.wait_for_timeout(2600)
+        pruef("und danach wieder in Fahrt", not steht(pg, 2))
+
+        # Ueber die Naht hinaus wischen: der Streifen rechnet zurueck und
+        # laeuft weiter, statt am harten Ende haengenzubleiben.
+        oeffnen(pg)
+        masse2 = pg.eval_on_selector("[data-galerie]",
+                                     "e=>e.scrollWidth - e.clientWidth")
+        wischen(pg, cdp, 2200)          # bis zum Anschlag
+        pg.mouse.move(5, 5)
+        pruef("bis ans Ende gewischt", pg.evaluate(POS) > masse2 - 40,
+              f"{pg.evaluate(POS):.0f} von {masse2:.0f}")
+        pg.wait_for_timeout(4200)
+        endstelle = pg.evaluate(POS)
+        pruef("ganz nach rechts gewischt: laeuft trotzdem weiter",
+              not steht(pg, 2) and endstelle < masse2 - 100,
+              f"Ende {masse2:.0f} → {endstelle:.0f}")
 
         print("— Tippen ist nicht Wischen —")
         oeffnen(pg)
@@ -149,13 +200,6 @@ def lauf():
         pruef("danach laeuft er weiter", not steht(pg, 4))
 
         print("— Anhalten —")
-        oeffnen(pg)
-        pg.hover("[data-galerie] li:first-child button")
-        pruef("Zeiger darauf haelt an", steht(pg, 5))
-        pg.mouse.move(5, 5)
-        pg.wait_for_timeout(300)
-        pruef("Zeiger weg, laeuft weiter", not steht(pg, 4))
-
         oeffnen(pg)
         pg.eval_on_selector("[data-galerie] li:first-child button", "e=>e.focus()")
         pg.keyboard.press("Tab")
@@ -173,6 +217,27 @@ def lauf():
         pruef("Kopien nicht im Tabulator",
               pg.eval_on_selector_all("[data-galerie] li.kopie button",
                                       "l=>l.every(e=>e.tabIndex===-1)"))
+
+        # Der Zeiger haelt nur dort an, wo es einen gibt. Diese Seite gibt sich
+        # als Telefon aus — dort klebt :hover nach einem Tipp am Element, und
+        # der Streifen duerfte davon gerade nicht stehenbleiben. Also wird das
+        # Anhalten auf einem schmalen Fenster ohne Beruehrung geprueft.
+        print("— Der Zeiger, wo es einen gibt —")
+        zeigerseite = b.new_page(viewport={"width": 390, "height": 844})
+        oeffnen(zeigerseite)
+        pruef("dieses Fenster kennt einen Zeiger",
+              zeigerseite.evaluate("matchMedia('(hover: hover)').matches"))
+        zeigerseite.hover("[data-galerie] li:first-child button")
+        pruef("Zeiger darauf haelt an", steht(zeigerseite, 5))
+        zeigerseite.mouse.move(5, 5)
+        zeigerseite.wait_for_timeout(300)
+        pruef("Zeiger weg, laeuft weiter", not steht(zeigerseite, 4))
+        zeigerseite.close()
+
+        print("— Auf dem Telefon klebt kein Zeiger —")
+        oeffnen(pg)
+        pg.hover("[data-galerie] li:first-child button")
+        pruef("Beruehrung: der Zeiger haelt nicht an", not steht(pg, 4))
 
         print("— Ausserhalb des Bildes —")
         oeffnen(pg)

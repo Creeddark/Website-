@@ -730,10 +730,12 @@ body.is-scrolled .hero__scroll { opacity: 0; }
 .galerie button:hover img { transform: scale(1.03); }
 .galerie button:active { transform: scale(0.99); }
 
-/* Der Streifen wischt von selbst (siehe bilderlauf in einladung.js). Waehrend
-   das laeuft, darf nichts einrasten — das Rasten zoege ihn bei jedem
-   Einzelbild auf das naechste Foto zurueck. Ohne JavaScript wird die Klasse
-   nie gesetzt und das Wischen rastet wie zuvor. */
+/* Sobald der Streifen von selbst wischt (siehe bilderlauf in einladung.js),
+   faellt das Rasten weg. Es zoege den laufenden Streifen bei jedem Einzelbild
+   auf das naechste Foto zurueck, und waehrend einer Wischgeste des Gastes
+   wuerde es sie mitten im Zug abwuergen. Ohne JavaScript wird die Klasse nie
+   gesetzt und das Wischen rastet wie zuvor — dort laeuft ja auch nichts von
+   selbst. */
 .galerie.laeuft { scroll-snap-type: none; }
 
 /* Ab Tabletbreite wird aus dem Wischstreifen ein Raster. Es ist breiter als
