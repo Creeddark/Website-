@@ -187,6 +187,9 @@ main:focus { outline: none; }
     scroll-behavior: auto !important;
   }
   .rise { opacity: 1; transform: none; }
+  /* Sonst kuerzt die Regel oben die Wanderung auf einen Wimpernschlag und
+     das Foto bliebe am rechten Anschlag stehen. */
+  .galerie img { animation: none; transform: none; }
 }
 
 /* ------------------------------------------------------------- Bedienung -- */
@@ -729,6 +732,39 @@ body.is-scrolled .hero__scroll { opacity: 0; }
 }
 .galerie button:hover img { transform: scale(1.03); }
 .galerie button:active { transform: scale(0.99); }
+
+/* Die Fotos wandern langsam nach rechts. Ein Standbild in einem festen
+   Rahmen wirkt wie ein Aushang; eine Aufnahme, die sich bewegt, wirkt wie
+   eine Erinnerung.
+
+   Damit dabei nie ein Rand frei wird, ist das Bild um 16 Prozent groesser
+   als sein Rahmen. Es haengt also acht Prozent ueber jede Seite und darf
+   hoechstens acht Prozent wandern — sechs sind es hier, mit Luft nach
+   beiden Seiten.
+
+   Gleichmaessig und ohne Anlauf: eine Kurve mit weichen Enden hielte das
+   Bild an beiden Umkehrpunkten sekundenlang fast still, und genau das faellt
+   auf. Am Ende laeuft es ebenso ruhig zurueck. Ein harter Sprung an den
+   Anfang waere nach einer halben Minute das Einzige, was man noch sieht;
+   die Umkehr bei anderthalb Bildpunkten je Sekunde bemerkt niemand. */
+@keyframes wandern {
+  from { transform: translateX(-6%) scale(1.16); }
+  to   { transform: translateX(6%)  scale(1.16); }
+}
+.galerie img {
+  animation: wandern 30s linear infinite alternate;
+}
+/* Vier verschiedene Dauern, vier verschiedene Startpunkte. Im Gleichschritt
+   sieht es nach Technik aus, versetzt nach Leben. Die negativen Verzoegerungen
+   liegen alle im ersten Durchgang, damit anfangs alles nach rechts laeuft. */
+.galerie li:nth-child(1) img { animation-duration: 26s; animation-delay: -2s; }
+.galerie li:nth-child(2) img { animation-duration: 34s; animation-delay: -8s; }
+.galerie li:nth-child(3) img { animation-duration: 29s; animation-delay: -5s; }
+.galerie li:nth-child(4) img { animation-duration: 37s; animation-delay: -13s; }
+
+/* Wer hinsieht, will das Bild anhalten — und gleich darauf antippen. */
+.galerie button:hover img,
+.galerie button:focus-visible img { animation-play-state: paused; }
 
 /* Ab Tabletbreite wird aus dem Wischstreifen ein Raster. Es ist breiter als
    die Lesespalte, aber nicht randlos — randlos sieht auf dem Rechner nach
