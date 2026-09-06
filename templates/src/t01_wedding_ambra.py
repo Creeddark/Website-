@@ -17,11 +17,11 @@ GREEN = "#9BA88C"
 
 FAMILIES = {"Playfair Display", "Montserrat", "Great Vibes", "Cormorant Garamond"}
 
-FOIL = ("background-image:linear-gradient(103deg,#8A6A3A 0%,#C9A465 12%,"
-        "#F3E3B8 24%,#FFF8E3 33%,#D9B978 44%,#A8834C 58%,#E8D2A0 70%,"
-        "#FBF1D6 82%,#C29B5C 92%,#8A6A3A 100%);"
-        "-webkit-background-clip:text;background-clip:text;"
-        "-webkit-text-fill-color:transparent;")
+# Kein Verlauf auf Text: Canva liest beim HTML-Import die effektive Textfarbe.
+# background-clip:text mit transparenter Fuellung kommt dort als Schwarz an.
+# Deshalb bekommt Foliengold eine echte Farbe — die metallische Wirkung traegt
+# die Grafikebene, die als Bild eingebettet wird.
+GOLD_FOIL = "#A8823F"
 
 
 def _defs():
@@ -124,8 +124,7 @@ def p_invitation():
              family="Playfair Display", weight=400, color=INK, line=1.04,
              tracking=0.005),
         text("&amp;", left=155, top=442, width=440, size=48,
-             family="Great Vibes", weight=400, color=GOLD, line=1.0,
-             extra=FOIL),
+             family="Great Vibes", weight=400, color=GOLD_FOIL, line=1.0),
         text("Julian", left=155, top=492, width=440, size=68,
              family="Playfair Display", weight=400, color=INK, line=1.04,
              tracking=0.005),
@@ -251,8 +250,7 @@ def p_thanks():
                     + art.tapered_rule(W / 2, 668, 128, color=GOLD, thickness=1.3))
     t = [
         text("Thank you", left=175, top=344, width=400, size=60,
-             family="Great Vibes", weight=400, color=GOLD, line=1.1,
-             extra=FOIL),
+             family="Great Vibes", weight=400, color=GOLD_FOIL, line=1.1),
         text("FOR CELEBRATING WITH US", left=175, top=444, width=400, size=10.5,
              family="Montserrat", weight=400, color=INK_SOFT, tracking=0.3),
         text("Your presence made our day complete.<br>We are so grateful for "

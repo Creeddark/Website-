@@ -461,15 +461,33 @@ def balloon(cx, cy, r, gid, *, tilt=-8, string=True, string_len=210,
     return (f'<g transform="rotate({tilt} {_fmt(cx)} {_fmt(cy)})">{g}</g>')
 
 
-def confetti(n, w, h, colors, *, seed=4, rmin=3, rmax=11, shapes=("rect", "circle")):
-    """Konfetti mit Tiefenschaerfe — hintere Teile kleiner, blasser, unschaerfer."""
+def confetti(n, w, h, colors, *, seed=4, rmin=3, rmax=11,
+             shapes=("rect", "circle"), avoid=(), tries=40):
+    """
+    Konfetti mit Tiefenschaerfe — hintere Teile kleiner und blasser.
+
+    avoid  Liste von (x, y, breite, hoehe): dort wird nichts gesetzt. Ohne
+           solche Sperrzonen landen Schnipsel mitten in der Schrift und die
+           Karte wirkt unsauber statt lebendig.
+    """
     rnd = random.Random(seed)
+
+    def blocked(x, y, pad):
+        for (ax, ay, aw, ah) in avoid:
+            if ax - pad <= x <= ax + aw + pad and ay - pad <= y <= ay + ah + pad:
+                return True
+        return False
+
     out = []
     for i in range(n):
         depth = rnd.random()
         size = rmin + (rmax - rmin) * (depth ** 0.8)
-        x = rnd.random() * w
-        y = rnd.random() * h
+        for _ in range(tries):
+            x, y = rnd.random() * w, rnd.random() * h
+            if not blocked(x, y, size * 1.6):
+                break
+        else:
+            continue
         col = colors[i % len(colors)]
         op = 0.32 + depth * 0.62
         rot = rnd.random() * 360
@@ -494,3 +512,300 @@ def starfield(n, w, h, *, seed=2, color="#FFFFFF", rmin=0.6, rmax=2.4):
         out.append(f'<circle cx="{_fmt(x)}" cy="{_fmt(y)}" r="{_fmt(r)}" '
                    f'fill="{color}" opacity="{op:.2f}"/>')
     return "\n".join(out)
+
+
+# ------------------------------------------------- Verlaeufe und Lichtstimmung
+
+def linear_bg(gid, stops, angle=90):
+    """Linearer Verlauf. stops = [(offset, farbe), ...] oder [(o, farbe, alpha)]."""
+    a = math.radians(angle)
+    x1, y1 = 0.5 - math.cos(a) / 2, 0.5 - math.sin(a) / 2
+    x2, y2 = 0.5 + math.cos(a) / 2, 0.5 + math.sin(a) / 2
+    body = ""
+    for st in stops:
+        o, c = st[0], st[1]
+        op = f' stop-opacity="{st[2]}"' if len(st) > 2 else ""
+        body += f'<stop offset="{o}" stop-color="{c}"{op}/>'
+    return (f'<linearGradient id="{gid}" x1="{x1:.3f}" y1="{y1:.3f}" '
+            f'x2="{x2:.3f}" y2="{y2:.3f}">{body}</linearGradient>')
+
+
+def radial_bg(gid, stops, cx=0.5, cy=0.5, r=0.75):
+    body = ""
+    for st in stops:
+        o, c = st[0], st[1]
+        op = f' stop-opacity="{st[2]}"' if len(st) > 2 else ""
+        body += f'<stop offset="{o}" stop-color="{c}"{op}/>'
+    return (f'<radialGradient id="{gid}" cx="{cx}" cy="{cy}" r="{r}">'
+            f'{body}</radialGradient>')
+
+
+def glow(cx, cy, r, color, *, opacity=0.5, gid=None):
+    """Weicher Lichtschein. Braucht radial_bg(gid, ...) in den defs."""
+    return (f'<circle cx="{_fmt(cx)}" cy="{_fmt(cy)}" r="{_fmt(r)}" '
+            f'fill="url(#{gid})" opacity="{opacity}"/>')
+
+
+def bokeh(n, w, h, color, *, seed=6, rmin=8, rmax=52, opacity=0.16):
+    """Unscharfe Lichtpunkte — gibt flachen Verlaeufen Tiefe."""
+    rnd = random.Random(seed)
+    out = []
+    for _ in range(n):
+        x, y = rnd.random() * w, rnd.random() * h
+        r = rmin + rnd.random() * (rmax - rmin)
+        op = opacity * (0.35 + rnd.random() * 0.65)
+        out.append(f'<circle cx="{_fmt(x)}" cy="{_fmt(y)}" r="{_fmt(r)}" '
+                   f'fill="{color}" opacity="{op:.3f}"/>')
+    return "".join(out)
+
+
+# --------------------------------------------------------------- 3D-Bausteine
+
+def bauble(cx, cy, r, gid, *, cap="#C9A465", string_top=0, tilt=0,
+           highlight=True):
+    """
+    Christbaumkugel: Koerper, Glanzlicht, Bodenreflex, Kappe, Aufhaenger.
+    Braucht sphere_gradients(gid, ...) in den defs.
+    """
+    cap_w, cap_h = r * 0.44, r * 0.30
+    cap_y = cy - r - cap_h * 0.72
+    parts = [
+        f'<line x1="{_fmt(cx)}" y1="{_fmt(string_top)}" x2="{_fmt(cx)}" '
+        f'y2="{_fmt(cap_y)}" stroke="{cap}" stroke-width="1.4" opacity="0.7"/>',
+        f'<circle cx="{_fmt(cx)}" cy="{_fmt(cy)}" r="{_fmt(r)}" fill="url(#{gid}-body)"/>',
+        f'<ellipse cx="{_fmt(cx + r * 0.3)}" cy="{_fmt(cy + r * 0.55)}" '
+        f'rx="{_fmt(r * 0.44)}" ry="{_fmt(r * 0.26)}" fill="url(#{gid}-bounce)"/>',
+    ]
+    if highlight:
+        parts.append(
+            f'<ellipse cx="{_fmt(cx - r * 0.36)}" cy="{_fmt(cy - r * 0.4)}" '
+            f'rx="{_fmt(r * 0.3)}" ry="{_fmt(r * 0.2)}" fill="url(#{gid}-spec)" '
+            f'transform="rotate(-28 {_fmt(cx - r * 0.36)} {_fmt(cy - r * 0.4)})"/>')
+    parts += [
+        f'<path d="M{_fmt(cx - cap_w / 2)},{_fmt(cap_y + cap_h)} '
+        f'L{_fmt(cx - cap_w / 2)},{_fmt(cap_y)} L{_fmt(cx + cap_w / 2)},{_fmt(cap_y)} '
+        f'L{_fmt(cx + cap_w / 2)},{_fmt(cap_y + cap_h)} Z" fill="{cap}"/>',
+        f'<circle cx="{_fmt(cx)}" cy="{_fmt(cap_y - r * 0.13)}" r="{_fmt(r * 0.13)}" '
+        f'fill="none" stroke="{cap}" stroke-width="{_fmt(r * 0.06)}"/>',
+    ]
+    g = "".join(parts)
+    return f'<g transform="rotate({tilt} {_fmt(cx)} {_fmt(cy)})">{g}</g>'
+
+
+def snowflake(cx, cy, r, *, arms=6, color="#FFFFFF", stroke_width=1.4,
+              opacity=0.85, seed=1, barbs=3):
+    """Sechsstrahlige Schneeflocke mit Seitenaesten."""
+    rnd = random.Random(seed)
+    out = []
+    for i in range(arms):
+        a = math.radians(i * 360 / arms)
+        ex, ey = cx + math.cos(a) * r, cy + math.sin(a) * r
+        out.append(f'<line x1="{_fmt(cx)}" y1="{_fmt(cy)}" x2="{_fmt(ex)}" '
+                   f'y2="{_fmt(ey)}" stroke="{color}" stroke-width="{stroke_width}" '
+                   f'stroke-linecap="round"/>')
+        for b in range(1, barbs + 1):
+            t = b / (barbs + 1)
+            bx, by = cx + math.cos(a) * r * t, cy + math.sin(a) * r * t
+            bl = r * 0.3 * (1 - t) * (0.8 + rnd.random() * 0.4)
+            for s in (1, -1):
+                ba = a + math.radians(52 * s)
+                out.append(
+                    f'<line x1="{_fmt(bx)}" y1="{_fmt(by)}" '
+                    f'x2="{_fmt(bx + math.cos(ba) * bl)}" '
+                    f'y2="{_fmt(by + math.sin(ba) * bl)}" stroke="{color}" '
+                    f'stroke-width="{stroke_width * 0.72:.2f}" stroke-linecap="round"/>')
+    return f'<g opacity="{opacity}">{"".join(out)}</g>'
+
+
+def snowfall(n, w, h, *, seed=3, color="#FFFFFF", avoid=(), tries=30):
+    """
+    Schneefall mit Tiefe: vorne gross und deckend, hinten klein und blass.
+
+    avoid  Sperrzonen (x, y, breite, hoehe) — sonst liegen Flocken auf der
+           Schrift und die Karte wirkt fleckig statt verschneit.
+    """
+    rnd = random.Random(seed)
+
+    def blocked(x, y):
+        return any(ax <= x <= ax + aw and ay <= y <= ay + ah
+                   for (ax, ay, aw, ah) in avoid)
+
+    out = []
+    for _ in range(n):
+        depth = rnd.random()
+        for _ in range(tries):
+            x, y = rnd.random() * w, rnd.random() * h
+            if not blocked(x, y):
+                break
+        else:
+            continue
+        r = 1.1 + depth * 3.4
+        op = 0.18 + depth * 0.6
+        out.append(f'<circle cx="{_fmt(x)}" cy="{_fmt(y)}" r="{_fmt(r)}" '
+                   f'fill="{color}" opacity="{op:.2f}"/>')
+    return "".join(out)
+
+
+# ------------------------------------------------------------------ Halloween
+
+def moon(cx, cy, r, *, color="#F6E6BE", craters=7, seed=4, crater_color="#E3CE9B"):
+    """Vollmond mit dezenten Kratern."""
+    rnd = random.Random(seed)
+    out = [f'<circle cx="{_fmt(cx)}" cy="{_fmt(cy)}" r="{_fmt(r)}" fill="{color}"/>']
+    for _ in range(craters):
+        a = rnd.random() * math.tau
+        d = rnd.random() ** 0.6 * r * 0.76
+        cr = r * (0.06 + rnd.random() * 0.13)
+        out.append(f'<circle cx="{_fmt(cx + math.cos(a) * d)}" '
+                   f'cy="{_fmt(cy + math.sin(a) * d)}" r="{_fmt(cr)}" '
+                   f'fill="{crater_color}" opacity="{0.3 + rnd.random() * 0.35:.2f}"/>')
+    return "".join(out)
+
+
+def bat(cx, cy, w, *, color="#14121A", flap=0.0, rotate=0):
+    """
+    Fledermaus-Silhouette mit gezackter Fluegelhinterkante.
+
+    Die Zacken sind das Erkennungsmerkmal — ohne sie liest sich die Form als
+    Schnurrbart statt als Fledermaus. flap zwischen -1 und 1 hebt und senkt die
+    Fluegelspitzen, damit ein Schwarm nicht aus identischen Stempeln besteht.
+
+    Der Pfad laeuft in einem Zug: vom Kopf ueber den linken Fluegel nach unten
+    zur Schwanzspitze und ueber den rechten Fluegel zurueck.
+    """
+    h = w * 0.5
+    lift = flap * 0.16
+
+    def P(ux, uy):
+        return f"{cx + ux * w:.2f},{cy + uy * h:.2f}"
+
+    def wing(sgn, forward):
+        """Eine Fluegelhaelfte. forward=True zeichnet vom Kopf zur Schwanzspitze."""
+        knots = [
+            ("C", (sgn * 0.09, -0.20), (sgn * 0.22, -0.30 - lift),
+             (sgn * 0.34, -0.34 - lift * 1.4)),
+            ("C", (sgn * 0.42, -0.36 - lift * 1.5), (sgn * 0.48, -0.30 - lift),
+             (sgn * 0.50, -0.20 - lift)),
+            ("L", (sgn * 0.41, -0.05 - lift * 0.6)),
+            ("C", (sgn * 0.40, -0.16), (sgn * 0.33, -0.14), (sgn * 0.29, -0.04)),
+            ("L", (sgn * 0.22, 0.10)),
+            ("C", (sgn * 0.20, -0.02), (sgn * 0.14, -0.02), (sgn * 0.09, 0.06)),
+        ]
+        if forward:
+            return " ".join(k[0] + " ".join(P(*pt) for pt in k[1:]) for k in knots)
+        # rueckwaerts: Reihenfolge der Knoten und der Stuetzpunkte umdrehen
+        pts = [(0.09, 0.06)]
+        for k in knots:
+            pts.extend(k[1:])
+        pts = [(sgn * abs(x) if x else x, y) for x, y in pts]
+        out, i = [], len(pts) - 1
+        rev = list(reversed(pts))
+        j = 1
+        for k in reversed(knots):
+            if k[0] == "L":
+                out.append("L" + P(*rev[j]))
+                j += 1
+            else:
+                out.append("C" + " ".join(P(*rev[j + n]) for n in range(3)))
+                j += 3
+        return " ".join(out)
+
+    d = (f"M{P(0, -0.14)} " + wing(-1, True)
+         + f" L{P(0, 0.30)} " + wing(1, False) + " Z")
+    ears = (f'<path d="M{P(-0.05, -0.20)} L{P(-0.08, -0.44)} L{P(-0.01, -0.24)} Z" '
+            f'fill="{color}"/>'
+            f'<path d="M{P(0.05, -0.20)} L{P(0.08, -0.44)} L{P(0.01, -0.24)} Z" '
+            f'fill="{color}"/>')
+    body = (f'<ellipse cx="{_fmt(cx)}" cy="{_fmt(cy - h * 0.02)}" '
+            f'rx="{_fmt(w * 0.062)}" ry="{_fmt(h * 0.26)}" fill="{color}"/>')
+    return (f'<g transform="rotate({rotate} {_fmt(cx)} {_fmt(cy)})">'
+            f'<path d="{d}" fill="{color}"/>{body}{ears}</g>')
+
+
+def bat_swarm(n, x, y, w, h, *, seed=8, color="#14121A", size=34):
+    """Schwarm: Groesse, Neigung und Fluegelstellung streuen."""
+    rnd = random.Random(seed)
+    out = []
+    for _ in range(n):
+        depth = rnd.random()
+        out.append(bat(x + rnd.random() * w, y + rnd.random() * h,
+                       size * (0.4 + depth * 0.85), color=color,
+                       flap=rnd.uniform(-0.8, 0.9),
+                       rotate=rnd.uniform(-18, 18)))
+    return "".join(out)
+
+
+def spider_web(cx, cy, r, *, spokes=7, rings=5, color="#6B6478",
+               stroke_width=1.1, start=180, end=270, sag=0.16):
+    """Eckennetz — Faeden zwischen den Speichen haengen leicht durch."""
+    out = []
+    a0, a1 = math.radians(start), math.radians(end)
+    angs = [a0 + (a1 - a0) * i / (spokes - 1) for i in range(spokes)]
+    for a in angs:
+        out.append(f'<line x1="{_fmt(cx)}" y1="{_fmt(cy)}" '
+                   f'x2="{_fmt(cx + math.cos(a) * r)}" y2="{_fmt(cy + math.sin(a) * r)}" '
+                   f'stroke="{color}" stroke-width="{stroke_width}" opacity="0.75"/>')
+    for k in range(1, rings + 1):
+        rr = r * k / rings
+        d = ""
+        for i, a in enumerate(angs):
+            px, py = cx + math.cos(a) * rr, cy + math.sin(a) * rr
+            if i == 0:
+                d = f"M{_fmt(px)},{_fmt(py)}"
+            else:
+                pa = angs[i - 1]
+                mx = cx + math.cos((a + pa) / 2) * rr * (1 - sag)
+                my = cy + math.sin((a + pa) / 2) * rr * (1 - sag)
+                d += f" Q{_fmt(mx)},{_fmt(my)} {_fmt(px)},{_fmt(py)}"
+        out.append(f'<path d="{d}" fill="none" stroke="{color}" '
+                   f'stroke-width="{stroke_width * 0.85:.2f}" opacity="0.68"/>')
+    return "".join(out)
+
+
+
+def pine_garland(cx, cy, half_w, sag, *, n=19, length=20.0, stroke="#2E6247",
+                 stroke_light=None, stroke_width=1.1, seed=5, up_ratio=0.42,
+                 spread=26, pairs=12):
+    """
+    Tannengirlande entlang einer Haengekurve.
+
+    Je Ansatzpunkt wachsen mehrere Wedel nach unten und ein kuerzerer nach
+    oben. Laenge, Winkel und Dichte streuen — ohne diese Streuung sieht eine
+    Girlande aus wie ein Kamm mit gleich langen Zinken.
+    """
+    rnd = random.Random(seed)
+    stroke_light = stroke_light or stroke
+    out = []
+
+    def point(t):
+        x = cx - half_w + 2 * half_w * t
+        y = cy + sag * math.sin(math.pi * t)
+        return x, y
+
+    for i in range(n):
+        t = i / (n - 1)
+        x, y = point(t)
+        x2, y2 = point(min(t + 0.01, 1.0))
+        tangent = math.degrees(math.atan2(y2 - y, x2 - x))
+        # in der Mitte haengt die Girlande am dichtesten
+        env = 0.6 + 0.4 * math.sin(math.pi * t) ** 0.5
+        fronds = [(90, 1.0), (90, 0.78), (90, 0.62)]
+        if rnd.random() < up_ratio:
+            fronds.append((-90, 0.5))
+        for base_ang, scale in fronds:
+            ang = tangent + base_ang + rnd.uniform(-spread, spread)
+            ln = length * env * scale * rnd.uniform(0.82, 1.18)
+            reach = ln * 5.2
+            a = math.radians(ang)
+            ex, ey = x + math.cos(a) * reach, y + math.sin(a) * reach
+            bend = rnd.uniform(-0.22, 0.22)
+            c1 = (x + math.cos(a) * reach * 0.35 - math.sin(a) * reach * bend * 0.5,
+                  y + math.sin(a) * reach * 0.35 + math.cos(a) * reach * bend * 0.5)
+            c2 = (x + math.cos(a) * reach * 0.7 - math.sin(a) * reach * bend,
+                  y + math.sin(a) * reach * 0.7 + math.cos(a) * reach * bend)
+            col = stroke_light if scale > 0.9 and rnd.random() < 0.35 else stroke
+            out.append(fern_frond((x, y), c1, c2, (ex, ey),
+                                  pairs=pairs, length=ln, stroke=col,
+                                  stroke_width=stroke_width,
+                                  seed=seed * 13 + i * 5 + int(scale * 10)))
+    return "".join(out)
