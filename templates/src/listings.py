@@ -17,42 +17,82 @@ PREV = BASE / "previews"
 OUT = BASE / "listings"
 
 SUITES = [
-    {
-        "slug": "01-wedding-ambra", "badge_ink": "#3A342B", "name": "AMBRA",
-        "kind": "Wedding Invitation Suite",
-        "bg": "linear-gradient(150deg,#EFE7DA 0%,#E4D8C6 55%,#D8C9B3 100%)",
-        "ink": "#3A342B", "accent": "#A8823F", "badge_bg": "#FFFFFF",
-    },
-    {
-        "slug": "02-birthday-confetti", "badge_ink": "#2A1550", "name": "CONFETTI",
-        "kind": "Birthday Invitation Suite",
-        "bg": "linear-gradient(150deg,#2A1550 0%,#3E1F63 55%,#5C2A78 100%)",
-        "ink": "#FFF6E6", "accent": "#F3C75E", "badge_bg": "#FFF6E6",
-    },
-    {
-        "slug": "03-gender-reveal", "badge_ink": "#3B3340", "name": "REVEAL",
-        "kind": "Gender Reveal Suite",
-        "bg": "linear-gradient(150deg,#FBE6EC 0%,#F6EDE6 50%,#E2EEF8 100%)",
-        "ink": "#3B3340", "accent": "#CFA45F", "badge_bg": "#FFFFFF",
-    },
-    {
-        "slug": "04-baby-shower", "badge_ink": "#39382F", "name": "OH BABY",
-        "kind": "Baby Shower Suite",
-        "bg": "linear-gradient(150deg,#EDF0E8 0%,#F3EDE2 55%,#E7DACB 100%)",
-        "ink": "#39382F", "accent": "#C58A69", "badge_bg": "#FFFFFF",
-    },
-    {
-        "slug": "05-christmas-noel", "badge_ink": "#0D2820", "name": "NOËL",
-        "kind": "Christmas Invitation Suite",
-        "bg": "linear-gradient(150deg,#0D2820 0%,#16412F 55%,#1E5038 100%)",
-        "ink": "#F8F1E2", "accent": "#D9B369", "badge_bg": "#F8F1E2",
-    },
-    {
-        "slug": "06-halloween-midnight", "badge_ink": "#141020", "name": "MIDNIGHT",
-        "kind": "Halloween Party Suite",
-        "bg": "linear-gradient(150deg,#0A0912 0%,#1B1428 55%,#2B1B3E 100%)",
-        "ink": "#EDE6D6", "accent": "#FF7A29", "badge_bg": "#EDE6D6",
-    },
+    dict(slug="01-wedding-ambra", badge_ink="#3A342B", name="AMBRA",
+         kind="Wedding Invitation Suite",
+         bg="linear-gradient(150deg,#EFE7DA 0%,#E4D8C6 55%,#D8C9B3 100%)",
+         ink="#3A342B", accent="#A8823F", badge_bg="#FFFFFF"),
+    dict(slug="02-birthday-confetti", badge_ink="#2A1550", name="CONFETTI",
+         kind="Birthday Invitation Suite",
+         bg="linear-gradient(150deg,#2A1550 0%,#3E1F63 55%,#5C2A78 100%)",
+         ink="#FFF6E6", accent="#F3C75E", badge_bg="#FFF6E6"),
+    dict(slug="03-gender-reveal", badge_ink="#3B3340", name="REVEAL",
+         kind="Gender Reveal Suite",
+         bg="linear-gradient(150deg,#FBE6EC 0%,#F6EDE6 50%,#E2EEF8 100%)",
+         ink="#3B3340", accent="#CFA45F", badge_bg="#FFFFFF"),
+    dict(slug="04-baby-shower", badge_ink="#39382F", name="OH BABY",
+         kind="Baby Shower Suite",
+         bg="linear-gradient(150deg,#EDF0E8 0%,#F3EDE2 55%,#E7DACB 100%)",
+         ink="#39382F", accent="#C58A69", badge_bg="#FFFFFF"),
+    dict(slug="05-christmas-noel", badge_ink="#0D2820", name="NO\u00cbL",
+         kind="Christmas Invitation Suite",
+         bg="linear-gradient(150deg,#0D2820 0%,#16412F 55%,#1E5038 100%)",
+         ink="#F8F1E2", accent="#D9B369", badge_bg="#F8F1E2"),
+    dict(slug="06-halloween-midnight", badge_ink="#141020", name="MIDNIGHT",
+         kind="Halloween Party Suite",
+         bg="linear-gradient(150deg,#0A0912 0%,#1B1428 55%,#2B1B3E 100%)",
+         ink="#EDE6D6", accent="#FF7A29", badge_bg="#EDE6D6"),
+
+    dict(slug="07-ornament-birthday", badge_ink="#2A1219", name="ORNEMENT",
+         kind="Victorian Birthday Suite",
+         bg="linear-gradient(150deg,#2A1219 0%,#3B1D23 55%,#4A252C 100%)",
+         ink="#F2E7CE", accent="#D8B87E", badge_bg="#F2E7CE"),
+    dict(slug="07-ornament-wedding", badge_ink="#0D211C", name="ORNEMENT",
+         kind="Victorian Wedding Suite",
+         bg="linear-gradient(150deg,#0D211C 0%,#153029 55%,#1D3E34 100%)",
+         ink="#EFE6D2", accent="#D6B87C", badge_bg="#EFE6D2"),
+    dict(slug="07-ornament-ivory", badge_ink="#33291E", name="ORNEMENT",
+         kind="Ivory Wedding Suite",
+         bg="linear-gradient(150deg,#F4EDE0 0%,#EAE0CD 55%,#DFD3BC 100%)",
+         ink="#33291E", accent="#9C7A3C", badge_bg="#FFFFFF"),
+    dict(slug="07-ornament-gothic", badge_ink="#0B0A12", name="ORNEMENT",
+         kind="Gothic Night Suite",
+         bg="linear-gradient(150deg,#0B0A12 0%,#14131E 55%,#1E1C2C 100%)",
+         ink="#EAECF3", accent="#C3C6D4", badge_bg="#EAECF3"),
+
+    dict(slug="08-times-birthday", badge_ink="#16150F", name="THE TIMES",
+         kind="Birthday Newspaper Suite",
+         bg="linear-gradient(150deg,#EFEADC 0%,#E6E0CF 55%,#D8D0B9 100%)",
+         ink="#16150F", accent="#7A6E4E", badge_bg="#FFFFFF"),
+    dict(slug="08-times-wedding", badge_ink="#16150F", name="THE TIMES",
+         kind="Wedding Newspaper Suite",
+         bg="linear-gradient(150deg,#EFEADC 0%,#E4DDCA 55%,#D3CAB2 100%)",
+         ink="#16150F", accent="#7A6E4E", badge_bg="#FFFFFF"),
+    dict(slug="08-times-baby", badge_ink="#16150F", name="THE TIMES",
+         kind="Baby Announcement Suite",
+         bg="linear-gradient(150deg,#EFEADC 0%,#E8E2D2 55%,#DAD3BE 100%)",
+         ink="#16150F", accent="#7A6E4E", badge_bg="#FFFFFF"),
+
+    dict(slug="09-ruban-birthday", badge_ink="#141414", name="RUBAN",
+         kind="Coquette Birthday Suite",
+         bg="linear-gradient(150deg,#FBFAF7 0%,#F1EFE9 55%,#E4E1D8 100%)",
+         ink="#141414", accent="#8A8378", badge_bg="#FFFFFF"),
+    dict(slug="09-ruban-bridal", badge_ink="#3A2A2A", name="RUBAN",
+         kind="Bridal Shower Suite",
+         bg="linear-gradient(150deg,#FDF8F6 0%,#F7EDE9 55%,#EEDFD8 100%)",
+         ink="#3A2A2A", accent="#B87C7C", badge_bg="#FFFFFF"),
+    dict(slug="09-ruban-baby", badge_ink="#2C332A", name="RUBAN",
+         kind="Baby Shower Suite",
+         bg="linear-gradient(150deg,#FAFBF7 0%,#EFF2EA 55%,#E1E7DA 100%)",
+         ink="#2C332A", accent="#7C8B70", badge_bg="#FFFFFF"),
+
+    dict(slug="10-cover-birthday", badge_ink="#12100F", name="COVER",
+         kind="Birthday Magazine Suite",
+         bg="linear-gradient(150deg,#12100F 0%,#232019 55%,#332E24 100%)",
+         ink="#FBF7EF", accent="#E4C98E", badge_bg="#FBF7EF"),
+    dict(slug="10-cover-wedding", badge_ink="#1A1214", name="COVER",
+         kind="Wedding Magazine Suite",
+         bg="linear-gradient(150deg,#1A1214 0%,#2C1F21 55%,#3D2B2C 100%)",
+         ink="#FDF6F3", accent="#E8B7B0", badge_bg="#FDF6F3"),
 ]
 
 
@@ -140,7 +180,7 @@ def included(s):
        font-size:14px;color:{s['ink']};opacity:.6;font-weight:500">What you get</div>
   <div style="position:absolute;left:0;top:126px;width:1000px;text-align:center;
        font-family:'Playfair Display',Georgia,serif;font-size:56px;
-       color:{s['ink']};letter-spacing:.02em">{s['name']} Suite</div>
+       color:{s['ink']};letter-spacing:.02em">{s['name']}</div>
   <div class="rule" style="left:440px;top:214px;width:120px;
        background:{s['accent']};opacity:.85"></div>
   <div class="grid" style="left:{left:.0f}px;top:280px">{cells}</div>
