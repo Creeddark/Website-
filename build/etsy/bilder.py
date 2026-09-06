@@ -207,7 +207,7 @@ def b06_preis() -> str:
     Ihr seht sie fertig,<br>bevor ihr zahlt.
   </p>
   <p class="klein" style="margin-top:46px; font-size:26px">
-    Zweite Sprache 29 € · Eigene Domain 39 € · Verlängerung um 12 Monate 19 €
+    Zweite Sprache enthalten · Eigene Domain 39 € · Verlängerung 12 Monate 19 €
   </p>
 </div>"""
 

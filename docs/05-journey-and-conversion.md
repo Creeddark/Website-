@@ -190,7 +190,7 @@ Die richtige Frage ist nicht „Wie verkaufen wir noch ein 29-€-Produkt?", son
      ↓    oder direkt als Bundle
   169 €   THE EXPERIENCE               spart 27 €
      ↓
-  +29 €   Zweite Sprache
+  +29 €   Übersetzung (die zweite Sprache selbst ist enthalten)
   +19 €   Laufzeitverlängerung
      ↓
    14 €   Thank-You-Karte nach der Hochzeit

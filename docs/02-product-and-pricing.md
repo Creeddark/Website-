@@ -189,7 +189,7 @@ Template-Niveau, und es erlaubt echten Service.
 
 | Add-on | Preis |
 |---|---|
-| Zweite Sprache | **29 €** |
+| Zweite Sprache | **enthalten** — das Theme ist zweisprachig gebaut. Nur wenn wir übersetzen: **29 €** |
 | Eigene Domain (Anbindung, ohne Domainkosten) | **39 €** |
 | Laufzeitverlängerung +12 Monate | **19 €** |
 | Priority Setup (48 h) | **49 €** |

@@ -93,8 +93,9 @@ elegante einladung
 >    eigenen Zugang zu den Rückmeldungen.
 >
 > **89 € einmalig, 18 Monate online.** Änderungen in dieser Zeit kosten nichts.
-> Zweite Sprache eingerichtet 29 € · Eigene Domain angebunden 39 € ·
-> Verlängerung um 12 Monate 19 €
+> **Deutsch und Englisch sind enthalten**, wenn ihr die Texte in beiden
+> Sprachen liefert. Sollen wir übersetzen, kostet das 29 €.
+> Eigene Domain angebunden 39 € · Verlängerung um 12 Monate 19 €
 >
 > ---
 >
