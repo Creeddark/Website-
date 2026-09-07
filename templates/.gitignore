@@ -1,0 +1,5 @@
+# Zwischenstufen: alle aus src/ neu erzeugbar, zusammen aber ueber 120 MB.
+dist-demo/
+previews-demo/
+video/*.html
+src/__pycache__/
