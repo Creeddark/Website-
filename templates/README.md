@@ -111,8 +111,8 @@ Zwei getrennte Fassungen, mit Absicht:
 Jeder Anlass hat sein eigenes Foto — ein Hochzeitskuss in einer Geburtsanzeige
 wäre schlimmer als ein grauer Platzhalter. `demo_render.DEMO_SUITES` ordnet
 Suite und Anlass einander zu; wer dort fehlt, behält auch im Verkaufsbild den
-Platzhalter. Zurzeit belegt: **wedding** und **baby**. Für die beiden
-Geburtstags-Suiten fehlt noch ein passendes Foto.
+Platzhalter. Belegt sind **wedding**, **baby** und **birthday** — damit
+haben alle fünf Suiten mit Bildfenster ein Beispielfoto.
 
 Umgeschaltet wird über `common.DEMO_PHOTOS`; `demo_render.py` setzt die
 Variable je Suite und schreibt nach `dist-demo/` und `previews-demo/`.

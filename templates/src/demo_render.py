@@ -29,9 +29,11 @@ MODULES = ["t08_times", "t10_cover"]
 # ein grauer Kasten — der Kasten ist erkennbar ein Platzhalter, das falsche
 # Foto sieht nach Schlamperei aus.
 DEMO_SUITES = {
-    "08-times-wedding": "wedding",
-    "08-times-baby":    "baby",
-    "10-cover-wedding": "wedding",
+    "08-times-wedding":  "wedding",
+    "08-times-baby":     "baby",
+    "08-times-birthday": "birthday",
+    "10-cover-wedding":  "wedding",
+    "10-cover-birthday": "birthday",
 }
 
 

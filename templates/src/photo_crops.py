@@ -41,6 +41,16 @@ PHOTOS = {
         "square":    ((0.508, 0.216), 1.0),
         "tall":      ((0.508, 0.216), 1.0),
     }),
+    "birthday": ("photo-example-birthday.jpg", {
+        # Gesicht und Sektglas im oberen Drittel, die Torte ganz unten. Beides
+        # in einen Querschnitt zu bekommen geht nicht — sie liegen zu weit
+        # auseinander. Also traegt das breite Fenster die Person, und das
+        # Detailfenster daneben die Torte mit den Kerzen.
+        "landscape": ((0.420, 0.240), 1.0),
+        "portrait":  ((0.620, 0.860), 1.9),
+        "square":    ((0.420, 0.260), 1.0),
+        "tall":      ((0.420, 0.240), 1.0),
+    }),
     "baby": ("photo-example-baby.jpg", {
         "landscape": ((0.470, 0.500), 1.0),
         # Teddy, Schuhe und Geschenke als Detail: enger Ausschnitt rechts

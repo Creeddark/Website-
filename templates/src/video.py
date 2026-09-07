@@ -42,6 +42,17 @@ SCENES = {
         "en": ("The wedding gazette",
                "Front &middot; Inside &middot; Details &middot; Thanks"),
     },
+    "birthday": {
+        "slug": "08-times-birthday",
+        "photo": "demo-birthday-landscape.png",
+        "slot": (64, 462, 622, 366),
+        "thumbs": ["02-birthday-confetti-1-invitation.png",
+                   "09-ruban-birthday-1-invitation.png"],
+        "de": ("Geburtstagszeitung",
+               "Titel &middot; Innenseite &middot; Details &middot; Dank"),
+        "en": ("The birthday gazette",
+               "Front &middot; Inside &middot; Details &middot; Thanks"),
+    },
     "baby": {
         "slug": "08-times-baby",
         "photo": "demo-baby-landscape.png",
