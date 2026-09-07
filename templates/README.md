@@ -28,6 +28,7 @@ src/
   photo_crops.py  schneidet das Beispielfoto auf die vier Bildfenster zu
   demo_render.py  zweiter Durchlauf der Foto-Suiten mit eingesetztem Foto
   video.py        Erklärvideo und Angebotsvideo als HTML-Szene
+  copy.py         Etsy-Angebotstexte, geprüft gegen Titel- und Tag-Grenzen
   render.js       schießt Seiten als PNG (Faktor 2 = 300 DPI)
   capture.js      nimmt eine Video-Szene Bild für Bild auf
   encode.sh       Einzelbilder → mp4 (H.264)
@@ -37,6 +38,7 @@ dist-demo/        dieselben Suiten mit Beispielfoto, nur für Verkaufsbilder
 previews/         Druckvorlagen 1500 × 2100 px
 previews-demo/    dieselben Seiten mit Foto
 listings/         Etsy-Bilder 2000 × 2000 px
+listing-copy.json Titel, Tags und Beschreibung je Suite
 video/            Erklärvideo (1920 × 1080) und Angebotsvideo (1080 × 1080)
 fonts/            Schriften unter SIL Open Font License
 ```
@@ -57,6 +59,7 @@ node src/sheet.js /tmp/pruef.png 4 330 previews/01-*.png
 python3 src/photo_crops.py                # Beispielfoto → vier Zuschnitte
 python3 src/demo_render.py                # Foto-Suiten nach previews-demo/
 
+python3 src/copy.py                       # Angebotstexte + Grenzen prüfen
 python3 src/listings.py                   # alle Verkaufsbilder
 node src/render.js dist/_listings.html listings 2 ".sheet" "data-name"
 
